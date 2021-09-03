@@ -1,0 +1,58 @@
+@import 'apps/light/src/app/styles/oldStyles/base/variables';
+$size: 0.7rem;
+:host {
+  display: flex;
+  justify-content: center;
+  height: 100%;
+  padding: 2rem;
+  div {
+    z-index: 999;
+    top: 33px;
+    width: $size;
+    height: $size;
+    border-radius: 50%;
+    background: $app-color-primary;
+    animation-timing-function: cubic-bezier(0, 1, 1, 0);
+
+    &:nth-child(1) {
+      animation: lds-ellipsis1 0.6s infinite;
+    }
+
+    &:nth-child(2) {
+      animation: lds-ellipsis2 0.6s infinite;
+      margin-right: $size;
+    }
+
+    &:nth-child(3) {
+      animation: lds-ellipsis2 0.6s infinite;
+    }
+
+    &:nth-child(4) {
+      animation: lds-ellipsis3 0.6s infinite;
+    }
+  }
+}
+@keyframes lds-ellipsis1 {
+  0% {
+    transform: scale(0);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+@keyframes lds-ellipsis3 {
+  0% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(0);
+  }
+}
+@keyframes lds-ellipsis2 {
+  0% {
+    transform: translate(-$size, 0);
+  }
+  100% {
+    transform: translate($size, 0);
+  }
+}

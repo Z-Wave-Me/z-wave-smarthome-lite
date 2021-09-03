@@ -1,0 +1,15 @@
+<ng-container *ngIf="ids$ | async as ids; else loading">
+  <ng-container *ngIf="ids.length; else placeHolder">
+    <div class="device-list">
+      <div *ngFor="let id of ids">
+        <z-wave-widget [id]="id"></z-wave-widget>
+      </div>
+    </div>
+  </ng-container>
+</ng-container>
+<ng-template #loading>
+  <z-wave-load-screen></z-wave-load-screen>
+</ng-template>
+<ng-template #placeHolder>
+  <ng-content></ng-content>
+</ng-template>

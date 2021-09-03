@@ -1,0 +1,63 @@
+<ng-container *transloco="let _t">
+  <!--  <div class="btn-group btn-goup-block btn-goup-5" ng-if="dataHolder.mode === 'default'">-->
+  <div class="btn-group-block">
+    <z-wave-element-sub-menu-filter-by-type></z-wave-element-sub-menu-filter-by-type>
+    <z-wave-element-sub-menu-filter-by-tag></z-wave-element-sub-menu-filter-by-tag>
+
+    <!--    <button class="btn btn-default" ng-click="expandNavi('elCategories', $event)" ng-class="!_.isEmpty(dataHolder.devices.filter) ? 'active':''">-->
+    <!--      <i class="fas fa-filter"></i>-->
+    <!--&lt;!&ndash;      <span class="btn-name" ng-if="dataHolder.devices.filter.deviceType">{{_t(dataHolder.devices.filter.deviceType) | cutText:true:15}}</span>&ndash;&gt;-->
+    <!--&lt;!&ndash;      <span class="btn-name" ng-if="dataHolder.devices.filter.visibility === false">{{_t('hidden_elements') | cutText:true:15}}</span>&ndash;&gt;-->
+    <!--&lt;!&ndash;      <span class="btn-name" ng-if="_.isEmpty(dataHolder.devices.filter)">{{_t('all_elements') | cutText:true:15}}</span>&ndash;&gt;-->
+    <!--&lt;!&ndash;      <span class="btn-name item-cnt"> ({{dataHolder.cnt.collection}})</span>&ndash;&gt;-->
+    <!--    </button>-->
+
+    <z-wave-element-sub-menu-order-by></z-wave-element-sub-menu-order-by>
+    <!--    <div-->
+    <!--      title="{{ _t('drag_drop') }}"-->
+    <!--      class="btn btn-default"-->
+    <!--      ng-show="elementAccess(cfg.role_access.admin)"-->
+    <!--      ng-class="{ active: dataHolder.mode === 'edit' }"-->
+    <!--      ng-click="changeMode(dataHolder.mode === 'default' ? 'edit' : 'default')"-->
+    <!--    >-->
+    <!--      <i class="fas fa-arrows-alt"></i>-->
+    <!--      <span class="btn-name">{{ _t('drag_drop') }}</span>-->
+    <!--    </div>-->
+    <z-wave-element-sub-menu-autocomplete></z-wave-element-sub-menu-autocomplete>
+  </div>
+  <!--  </div>-->
+  <!-- Search and autocomplete -->
+  <!--  <form id="form_search_mobile"-->
+  <!--        class="input-group"-->
+  <!--        ng-if="dataHolder.mode === 'default' && naviExpanded.elSearch"-->
+  <!--        ng-submit="setFilter({q: autocomplete.term})"-->
+  <!--        autocomplete="off" novalidate>-->
+  <!--    &lt;!&ndash; Input &ndash;&gt;-->
+  <!--&lt;!&ndash;    <input id="input_search" type="text" focus="{{dataHolder.devices.filter.q}}" class="form-control" placeholder="{{_t('lb_search')}}"&ndash;&gt;-->
+  <!--&lt;!&ndash;           ng-model="autocomplete.term" bb-key-event="searchMe()" data-toggle="dropdown"&ndash;&gt;-->
+  <!--&lt;!&ndash;           ng-click="elSearchHolder($event)"&ndash;&gt;-->
+  <!--&lt;!&ndash;    />&ndash;&gt;-->
+  <!--    &lt;!&ndash; Search button &ndash;&gt;-->
+  <!--    <span class="input-group-addon clickable" ng-click="setFilter({q: autocomplete.term})">-->
+  <!--        <i class="fas fa-search" ng-class="{'text-success':autocomplete.term}"></i>-->
+  <!--      </span>-->
+  <!--    &lt;!&ndash; <div class="app-dropdown autocomplete" ng-if="autocomplete.results.length">&ndash;&gt;-->
+  <!--    <div class="app-dropdown autocomplete" ng-if="autocompleteExpanded.searchElements">-->
+  <!--      <ul>-->
+  <!--&lt;!&ndash;        <li class="dropdown-entry" title="{{v.title}}" ng-repeat="v in autocomplete.results | orderBy:'title' track by $index">&ndash;&gt;-->
+  <!--          &lt;!&ndash; Title &ndash;&gt;-->
+  <!--          <span class="dropdown-col" ng-click="setFilter({q: autocomplete.term})">-->
+  <!--&lt;!&ndash;              <img class="report-img-s" ng-src="{{v.iconPath}}" alt="{{v.title}}" err-src="{{cfg.img.placeholder}}" />&ndash;&gt;-->
+  <!--&lt;!&ndash;              <span class="aoutocomplete-title">{{v.title|cutText:true:30}}</span>&ndash;&gt;-->
+  <!--            </span>-->
+  <!--          &lt;!&ndash; Ctrl &ndash;&gt;-->
+  <!--          <span class="dropdown-col dropdown-ctrl" title="{{_t('lb_cfg_view')}}">-->
+  <!--&lt;!&ndash;              <a ng-href="#element/{{v.id}}">&ndash;&gt;-->
+  <!--&lt;!&ndash;                <i class="fas fa-cog"></i>&ndash;&gt;-->
+  <!--&lt;!&ndash;              </a>&ndash;&gt;-->
+  <!--            </span>-->
+  <!--&lt;!&ndash;        </li>&ndash;&gt;-->
+  <!--      </ul>-->
+  <!--    </div>-->
+  <!--  </form>-->
+</ng-container>

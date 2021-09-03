@@ -17,7 +17,17 @@
     "forceConsistentCasingInFileNames": true,
     "strict": true,
     "noImplicitReturns": true,
-    "noFallthroughCasesInSwitch": true
+    "noFallthroughCasesInSwitch": true,
+    "baseUrl": "./src",
+    "paths": {
+      "@core/*": ["app/core/*"],
+      "@features/*": ["app/features/*"],
+      "@components/*": ["app/components/*"],
+      "@store/*": ["app/store/*"],
+      "@interfaces/*": ["app/interfaces/*"],
+      "@styles/*": ["app/styles/*"],
+      "@modules/*": ["app/modules/*"],
+    }
   },
   "angularCompilerOptions": {
     "strictInjectionParameters": true,

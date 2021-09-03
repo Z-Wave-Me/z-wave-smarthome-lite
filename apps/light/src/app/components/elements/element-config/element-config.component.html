@@ -1,0 +1,310 @@
+<!-- Element view -->
+<pre>
+  {{ form.value | json }}
+</pre>
+<div *transloco="let _t">
+  <ng-container *ngIf="data$ | async as data">
+    <h2>
+      <span> {{ _t('lb_cfg_view') }} :</span>
+      <span>{{ form.get('title')?.value }}</span>
+    </h2>
+    <form [formGroup]="form" class="form-page" autocomplete="off" (ngSubmit)="submit()" novalidate>
+      <!--      <fieldset ng-show="elementId.input.isFailed && elementId.appType.zwave">-->
+      <!--        <div class="alert alert-danger">-->
+      <!--          <i class="fas fa-exclamation-triangle"></i> {{ _t('zwave_device_failed') }}-->
+      <!--          <a ng-href="#zwave/devices" class="btn btn-default" ng-show="elementAccess(cfg.role_access.admin)">-->
+      <!--            <i class="fas fa-edit text-primary"></i> {{ _t('manage') }}-->
+      <!--          </a>-->
+      <!--        </div>-->
+      <!--      </fieldset>-->
+      <fieldset *appSecure="'admin'">
+        <div class="form-group_ form-inline">
+          <mat-form-field>
+            <mat-label> {{ _t('lb_element_name') }}: </mat-label>
+            <input matInput type="text" formControlName="title" title="{{ _t('lb_element_name') }}" />
+          </mat-form-field>
+        </div>
+      </fieldset>
+      <fieldset>
+        <!-- App type -->
+        <div *appSecure="'admin'">
+          <!-- instance -->
+          <pre>
+          {{ instance$ | async | json }}
+            </pre
+          >
+          <ng-container *ngIf="instance$ | async as instance">
+            <div class="form-group" *ngIf="instance.category !== 'system'">
+              <!--            ng-switch="elementId.appType.instance.moduleId"-->
+              <!--          >-->
+              <label>{{ _t('lb_gen_by_module') }}:</label>
+              <strong>{{ data.title }}</strong>
+              <!--                <br />-->
+              <!--                <br />-->
+              <!-- zwave -->
+              <!--            <a href="#zwave/devices/{{elementId.appType.zwave}}" class="btn btn-default" ng-switch-when="ZWave">-->
+              <!--              <i class="fas fa-cog"></i>-->
+              <!--              <span>-->
+              <!--                <strong>{{_t('lb_zwave_device')}}</strong>-->
+              <!--                #{{elementId.appType.zwave}}-->
+              <!--              </span>-->
+              <!--            </a>-->
+              <!-- enocean -->
+              <!--            <a href="#enocean/manage/{{elementId.appType.enocean}}" class="btn btn-default" ng-switch-when="EnOcean">-->
+              <!--              <i class="fas fa-cog"></i>-->
+              <!--              <strong>{{_t('enocean_device')}}</strong>-->
+              <!--              #{{elementId.appType.enocean}}-->
+              <!--            </a>-->
+              <!-- default -->
+              <!--            <a class="btn btn-default" ng-href="#module/put/{{elementId.appType.instance.id}}" ng-switch-default>-->
+              <!--              <i class="fas fa-cog"></i>-->
+              <!--              <span>-->
+              <!--                <strong>{{elementId.appType.instance.title}}</strong>-->
+              <!--              </span>-->
+              <!--            </a>-->
+            </div>
+          </ng-container>
+          <!-- referenced-->
+          {{ referenced$ | async | json }}
+          <div ng-if="!!elementId.referenced.length" class="form-group">
+            <label>{{ _t('referenced_in') }}:</label>
+            <div class="flex-buttons">
+              <div
+                ng-repeat="reference in elementId.referenced"
+                ng-switch="reference.moduleId"
+                ng-hide="elementId.appType.instance.category == 'system'"
+              >
+                <!-- default -->
+                <!--                <a class="btn btn-default" ng-href="#module/put/{{reference.instanceId}}" ng-switch-default>-->
+                <!--                  <i class="fas fa-cog"></i>-->
+                <!--                  <span>-->
+                <!--                <strong>{{reference.instanceTitle}}</strong>-->
+                <!--              </span>-->
+                <!--                </a>-->
+              </div>
+            </div>
+          </div>
+          <!-- Hide element -->
+          <mat-checkbox formControlName="hideElement" color="primary">{{ _t('hide_element') }} </mat-checkbox>
+          <z-wave-help-text>{{ _t('hide_element_info') }}</z-wave-help-text>
+        </div>
+        <!--            <label for="hide_element">-->
+        <!--              <input type="checkbox" name="hideElement" id="hide_element" [ngModel]="!data.visibility" />-->
+        <!--              &lt;!&ndash;                ng-init="visibility.checked = !elementId.input.visibility"&ndash;&gt;-->
+        <!--              &lt;!&ndash;                ng-model="visibility.checked"&ndash;&gt;-->
+        <!--              &lt;!&ndash;                ng-change="elementId.input.visibility = !visibility.checked"&ndash;&gt;-->
+        <!--              &lt;!&ndash;                ng-checked="!elementId.input.visibility"&ndash;&gt;-->
+        <!--              &lt;!&ndash;              />&ndash;&gt;-->
+        <!--              <span>{{ _t('hide_element') }}</span>-->
+        <!--            </label>-->
+        <!--            <app-help-text>{{ _t('hide_element_info') }}</app-help-text>-->
+        <!--        </div>-->
+        <!-- Add element to Home (Android)-->
+        <!--          <div-->
+        <!--            class='form-group'-->
+        <!--            ng-show="cfg.route.os == 'ZWayMobileAppAndroid'"-->
+        <!--            ng-if="elementId.input.deviceType == 'toggleButton' || elementId.input.deviceType == 'switchBinary'"-->
+        <!--          >-->
+        <!--            <label>{{ _t('lb_add_widget') }}:</label>-->
+        <!--            <br />-->
+        <!--            &lt;!&ndash;          <a title="{{_t('lb_on')}}" class="btn btn-primary" href="{{elementId.input.addOnUrl}}">&ndash;&gt;-->
+        <!--            &lt;!&ndash;            {{_t('lb_on')}}&ndash;&gt;-->
+        <!--            &lt;!&ndash;          </a>&ndash;&gt;-->
+        <!--            &nbsp-->
+        <!--            &lt;!&ndash;          <a&ndash;&gt;-->
+        <!--            &lt;!&ndash;            title="{{ _t('lb_off') }}"&ndash;&gt;-->
+        <!--            &lt;!&ndash;            class="btn btn-primary"&ndash;&gt;-->
+        <!--            &lt;!&ndash;            ng-if="elementId.input.deviceType !== 'toggleButton'"&ndash;&gt;-->
+        <!--            &lt;!&ndash;            href="{{ elementId.input.addOffUrl }}"&ndash;&gt;-->
+        <!--            &lt;!&ndash;          >&ndash;&gt;-->
+        <!--            &lt;!&ndash;            {{ _t('lb_off') }}&ndash;&gt;-->
+        <!--            &lt;!&ndash;          </a>&ndash;&gt;-->
+        <!--            &lt;!&ndash;          <bb-help-text trans="_t('info_add_widget')"></bb-help-text>&ndash;&gt;-->
+        <!--          </div>-->
+        <!--          &lt;!&ndash; Add element to Home (IOS)&ndash;&gt;-->
+        <!--          <div-->
+        <!--            class='form-group'-->
+        <!--            ng-show="cfg.route.os == 'ZWayMobileAppiOS'"-->
+        <!--            ng-if="elementId.input.deviceType == 'toggleButton'"-->
+        <!--          >-->
+        <!--            &lt;!&ndash;          <a title="{{_t('lb_add_today')}}" class="btn btn-primary" href="/?id={{elementId.input.id}}&name={{elementId.input.metrics.title|stringToSlug}}&type={{elementId.input.deviceType}}&state={{elementId.input.metrics.level}}">&ndash;&gt;-->
+        <!--            &lt;!&ndash;            {{ _t('lb_add_today')}}&ndash;&gt;-->
+        <!--            &lt;!&ndash;          </a>&ndash;&gt;-->
+        <!--            &lt;!&ndash;          <bb-help-text trans="_t('info_add_today')"></bb-help-text>&ndash;&gt;-->
+        <!--          </div>-->
+        <!-- Delete element -->
+        <button
+          mat-flat-button
+          color="warn"
+          type="button"
+          title="{{ _t('delete_element') }}"
+          (click)="deleteElement()"
+          ng-click="deleteElement(elementId.input, _t('element_delete_confirm'))"
+        >
+          <i class="fas fa-times"></i> {{ _t('delete_element') }}
+        </button>
+        <z-wave-help-text>{{ _t('deactivate_element_info') }}</z-wave-help-text>
+        <mat-divider></mat-divider>
+        <div class="control-block">
+          <!-- dashboard etc -->
+          <mat-checkbox color="primary" formControlName="onDashboard">{{ _t('lb_add_dashboard') }}</mat-checkbox>
+          <mat-checkbox color="primary" formControlName="hideEvents">{{ _t('lb_hide_events_device') }}</mat-checkbox>
+          <!-- speechassitants -->
+          <!--          <div-->
+          <!--            class='form-group'-->
+          <!--            ng-if='-->
+          <!--            (speechAssistants.Alexa.active && elementId.input.alexaWhitelisted) || speechAssistants.GoogleHome.active-->
+          <!--          '-->
+          <!--          >-->
+          <!--            <div ng-if='speechAssistants.Alexa.active && elementId.input.alexaWhitelisted'>-->
+          <!--              &lt;!&ndash; Alexa &ndash;&gt;-->
+          <!--              <div>-->
+          <!--                <label for='activate_alexa'>-->
+          <!--                  <input-->
+          <!--                    type='checkbox'-->
+          <!--                    name='activate_alexa'-->
+          <!--                    value=''-->
+          <!--                    id='activate_alexa'-->
+          <!--                    ng-model='elementId.input.alexaActivated'-->
+          <!--                    ng-checked_=''-->
+          <!--                  />-->
+          <!--                  <span>{{ _t('lb_activate_alexa') }}</span>-->
+          <!--                </label>-->
+          <!--                &lt;!&ndash;              <bb-help-text trans="_t('alexa_info')"></bb-help-text>&ndash;&gt;-->
+          <!--              </div>-->
+          <!--            </div>-->
+          <!--            <div ng-if='speechAssistants.GoogleHome.active && elementId.input.googleHomeWhitelisted'>-->
+          <!--              &lt;!&ndash; Google Home &ndash;&gt;-->
+          <!--              <div>-->
+          <!--                <label for='activate_google_home'>-->
+          <!--                  <input-->
+          <!--                    type='checkbox'-->
+          <!--                    name='activate_google_home'-->
+          <!--                    value=''-->
+          <!--                    id='activate_google_home'-->
+          <!--                    ng-model='elementId.input.googleHomeActivated'-->
+          <!--                    ng-checked_=''-->
+          <!--                  />-->
+          <!--                  <span>{{ _t('lb_activate_google_home') }}</span>-->
+          <!--                </label>-->
+          <!--                &lt;!&ndash;              <bb-help-text trans="_t('google_home_info')"></bb-help-text>&ndash;&gt;-->
+          <!--              </div>-->
+          <!--            </div>-->
+          <!--            <div ng-if='elementId.input.googleHomeActivated || elementId.input.alexaActivated' class='form-inline'>-->
+          <!--              <label>{{ _t('lb_call_name') }}:</label>-->
+          <!--              &lt;!&ndash;            <input name="google_home_call_name" id="google_home_call_name" type="text" class="form-control" value="{{elementId.input.callName}}"&ndash;&gt;-->
+          <!--              &lt;!&ndash;                   placeholder="{{_t('lb_add_call_name')}}" ng-model="elementId.input.callName" />&ndash;&gt;-->
+          <!--              &lt;!&ndash;            <bb-help-text trans="_t('call_name_info')"></bb-help-text>&ndash;&gt;-->
+          <!--              &lt;!&ndash;            <bb-help-text&ndash;&gt;-->
+          <!--              &lt;!&ndash;              ng-if="speechAssistants.Alexa.instance.params.assign_room && elementId.input.location != 0"&ndash;&gt;-->
+          <!--              &lt;!&ndash;              trans="_t('alexa_room_assigned_info',  {'__call_name__': elementId.input.alexaCallName, '__room_name__': elementId.locations[elementId.input.location].title})|toTrusted"&ndash;&gt;-->
+          <!--              &lt;!&ndash;            ></bb-help-text>&ndash;&gt;-->
+          <!--            </div>-->
+        </div>
+        <mat-divider></mat-divider>
+
+        <!-- Rooms -->
+        <mat-form-field appearance="fill" *appSecure="'admin'">
+          <mat-label>{{ _t('lb_assign_room') }}</mat-label>
+          <mat-select formControlName="location">
+            <mat-option *ngFor="let loc of locations$ | async" [value]="loc.id">
+              {{ loc.title }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </fieldset>
+      <!-- Tags -->
+      <mat-form-field class="tag-list" *appSecure="'admin'" formArrayName="tags">
+        <mat-label>Tags</mat-label>
+        <mat-chip-list #chipList aria-label="Tags">
+          <mat-chip *ngFor="let tag of tags().controls; let i = index">
+            <!--            [selectable]="selectable"-->
+            <!--            [removable]="removable"-->
+            <!--            (removed)="remove(fruit)"-->
+            <!--          >-->
+            {{ tag.value }}
+            <mat-icon matChipRemove (click)="removeTag(i)">cancel</mat-icon>
+          </mat-chip>
+          <input
+            #addTagField
+            [placeholder]="_t('lb_add_tag')"
+            [matAutocomplete]="auto"
+            [matChipInputFor]="chipList"
+            [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+            (matChipInputTokenEnd)="addTag($event)"
+          />
+        </mat-chip-list>
+        <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectedTag($event)">
+          <mat-option *ngFor="let tag of ['1', '2', '3']" [value]="tag">
+            {{ tag }}
+          </mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
+      <!-- Notification -->
+      <div formArrayName="notification">
+        <!--        <legend><h3>{{ _t('notifications') }}</h3></legend>-->
+        <div *ngFor="let notification of notification().controls; let i = index">
+          <!--          {{notification.value | json}}-->
+          {{ i }}
+          {{ notification.value | json }}
+          <div [formGroupName]="i">
+            <input type="text" formControlName="message" />
+          </div>
+          <z-wave-help-text>{{ _t('send_condition_help') }}</z-wave-help-text>
+          <z-wave-help-text>{{ _t('send_channel_help') }}</z-wave-help-text>
+          <z-wave-help-text>{{ _t('custom_message_help') }}</z-wave-help-text>
+          <button mat-flat-button type="button" color="warn" (click)="removeNotification(i)">
+            {{ _t('btn_remove') }}
+          </button>
+        </div>
+        <!--        <div class='form-group form-inline' ng-repeat='n in notifications.device track by $index'>-->
+        <!--          &lt;!&ndash; Events &ndash;&gt;-->
+        <!--          <div-->
+        <!--            ng-include="'app/views/notifications/notifications_form_' + elementId.input.deviceType + '.html'"-->
+        <!--            onLoad='v=n'-->
+        <!--          ></div>-->
+        <!--          &lt;!&ndash; Channel &ndash;&gt;-->
+        <!--          &lt;!&ndash;          <label for="channel_{{v.id}}">{{_t('lb_send_channel')}}</label>&ndash;&gt;-->
+        <!--          &lt;!&ndash;          <select id="channel_{{v.id}}" name="channel" class="form-control form-inline" ng-model="v.channel">&ndash;&gt;-->
+        <!--          &lt;!&ndash;            <option value="" ng-selected="v.channel === ''">&ndash;&gt;-->
+        <!--          &lt;!&ndash;              {{_t('notifications_all_channels')}}&ndash;&gt;-->
+        <!--          &lt;!&ndash;            </option>&ndash;&gt;-->
+        <!--          &lt;!&ndash;            <option value="{{nc.id}}" ng-repeat="nc in notifications.channels" ng-selected="nc.id == v.channel">&ndash;&gt;-->
+        <!--          &lt;!&ndash;              {{nc.name}} ({{nc.userName}})&ndash;&gt;-->
+        <!--          &lt;!&ndash;            </option>&ndash;&gt;-->
+        <!--          &lt;!&ndash;          </select>&ndash;&gt;-->
+        <!--          &lt;!&ndash;          <bb-help-text trans="_t('send_channel_help')"></bb-help-text>&ndash;&gt;-->
+        <!--          &lt;!&ndash; Custom message &ndash;&gt;-->
+        <!--          <label for='customMessage'>{{ _t('custom_message') }}</label>-->
+        <!--          <input class='form-control' id='customMessage' name='customMessage' ng-model='n.msg' />-->
+        <!--          &lt;!&ndash;          <bb-help-text trans="_t('custom_message_help')"></bb-help-text>&ndash;&gt;-->
+        <!--          <button-->
+        <!--            type='button'-->
+        <!--            class='btn btn-danger'-->
+        <!--            ng-click='removeNotification($index)'-->
+        <!--            title="{{ _t('btn_remove') }}"-->
+        <!--          >-->
+        <!--            <i class='fas fa-times'></i> {{ _t('btn_remove') }}-->
+        <!--          </button>-->
+        <!--        </div>-->
+      </div>
+      <button type="button" mat-stroked-button (click)="addNotification()" title="{{ _t('add_notification') }}">
+        <i class="fas fa-plus text-success"></i> {{ _t('add_notification') }}
+      </button>
+      <!-- Submit -->
+      <fieldset class="submit-entry">
+        <button type="button" title="{{ _t('lb_cancel') }}" class="btn btn-default" bb-go-back>
+          <i class="fas fa-reply"></i>
+          <span class="btn-name" ng-bind="_t('lb_cancel')"></span>
+        </button>
+        <button type="submit" title="{{ _t('lb_save') }}" class="btn btn-submit">
+          <i class="fas fa-check"></i>
+          <span class="btn-name" ng-bind="_t('lb_save')"></span>
+        </button>
+      </fieldset>
+    </form>
+    <div ng-if="elementAccess(cfg.role_access.admin)" ng-include="'app/views/elements/element_id_icons.html'"></div>
+    <div ng-if="elementAccess(cfg.role_access.admin)" ng-include="'app/views/elements/element_id_api_info.html'"></div>
+  </ng-container>
+</div>
+<!-- /ng-controller -->

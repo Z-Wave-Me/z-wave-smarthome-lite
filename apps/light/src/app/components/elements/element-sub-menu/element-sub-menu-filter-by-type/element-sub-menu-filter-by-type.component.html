@@ -1,0 +1,32 @@
+<ng-container *transloco="let _t">
+  <z-wave-drop-down *ngIf="{ active: activeFilters$ | async } as filter">
+    <z-wave-drop-down-head>
+      <div class="btn btn-default btn-element-sub-menu" [ngClass]="{ active: filter.active }">
+<!--        <fa-layers [fixedWidth]="true">-->
+<!--          <fa-icon [icon]="[filter.active ? 'fas' : 'fal', 'filter']"></fa-icon>-->
+<!--          <fa-icon [icon]="faLowVision" transform="shrink-3 down-6 left-10" *ngIf="showHiddenActive()"></fa-icon>-->
+<!--        </fa-layers>-->
+        <span class="btn-name" *ngIf="!filter.active"> {{ _t('all_elements') }}</span>
+        <span class="btn-name item-cnt"> ({{ (total$ | async)?.length }})</span>
+      </div>
+    </z-wave-drop-down-head>
+    <z-wave-drop-down-content>
+      <div
+        *ngFor="let device of typesAndCount$ | async; trackBy: trackByFn"
+        class="device-type-selector"
+        (click)="addFilter(device.type)"
+        [ngClass]="{ active: active(device.type) }"
+      >
+        <i class="fas fa-fw" [ngClass]="device.icon"></i>
+        <div class="selector-text">{{ _t(device.type) }}</div>
+        <div>({{ device.count }})</div>
+        <z-wave-slider [checked]="active(device.type)" mode="freeze"></z-wave-slider>
+      </div>
+      <div class="device-type-selector" [ngClass]="{ active: showHiddenActive() }" (click)="showHidden()">
+<!--        <fa-icon [icon]="faLowVision"></fa-icon>-->
+        <div class="selector-text">{{ _t('show_hidden') }}</div>
+        <z-wave-slider [checked]="showHiddenActive()" mode="freeze"></z-wave-slider>
+      </div>
+    </z-wave-drop-down-content>
+  </z-wave-drop-down>
+</ng-container>

@@ -1,0 +1,47 @@
+<ng-container *transloco="let _t">
+  <div *ngIf="room$ | async as room" [ngClass]="{ inactive: !(locations$ | async) }">
+    <!--  long-press-mobile="{{deviceDetector.isMobile()}}" on-long-press="onLongPress(v.id)" on-touch-end="onTouchEnd()"  -->
+    <figure>
+      <a [routerLink]="(locations$ | async) ? [room.id] : []" title="{{ _t('lb_devices_room') }} {{ room.title }}">
+        <img [src]="room.imgSrc" [alt]="room.title" />
+      </a>
+      <div
+        [ngClass]="{
+          'header__long__title': !room.default_img,
+          'header__long__title-compression': room.title.length > 7
+        }"
+        class="header"
+      >
+        <span *ngIf="room.default_img; else fullTitle" class="char">
+          {{ room.title[0].toUpperCase() }}
+        </span>
+        <ng-template #fullTitle>
+          <span class="char long__title">
+            {{ room.title }}
+          </span>
+        </ng-template>
+        <ng-container *ngIf="room.id">
+          <a
+            *appSecure="'configRooms'"
+            [routerLink]="['config/' + room.id]"
+            class="settings"
+            title="{{ _t('lb_update') }}"
+          >
+            <i class="fas fa-cog"></i>
+          </a>
+        </ng-container>
+      </div>
+
+      <figcaption [ngClass]="{ 's-hide': !room.main_sensors }">
+        <div class="title">
+          {{ room.title }}
+          <span class="item-cnt">({{ (locations$ | async) ? (locations$ | async).length : 0 }})</span>
+        </div>
+        <!-- Card sensors -->
+        <div *ngIf="room.main_sensors" class="room-sensors">
+          <z-wave-room-widget-sensor *ngFor="let device of room.main_sensors" [id]="device"></z-wave-room-widget-sensor>
+        </div>
+      </figcaption>
+    </figure>
+  </div>
+</ng-container>

@@ -1,0 +1,21 @@
+<!-- switchBinary -->
+<div class="widget-ctrl" *transloco="let _t">
+  <div class="btn-group" *ngIf="data$ | async as data">
+    <button
+      class="btn btn-off"
+      (click)="off()"
+      [class]="data.level === 'off' ? 'btn-primary' : 'btn-default'"
+      title="{{ _t('lb_off') }}"
+    >
+      <span class="widget-btn-symbol">0</span>
+    </button>
+    <button
+      class="btn btn-on"
+      (click)="on()"
+      [class]="data.level === 'on' ? 'btn-primary' : 'btn-default'"
+      title="{{ _t('lb_on') }}"
+    >
+      <span class="widget-btn-symbol">I</span>
+    </button>
+  </div>
+</div>

@@ -1,0 +1,22 @@
+<ng-container *transloco="let _t">
+  <z-wave-drop-down *ngIf="order$ | async as currentOrder">
+    <z-wave-drop-down-head>
+      <div class="btn btn-default btn-element-sub-menu">
+        <i class="far fa-sort-alpha-down"></i>
+        {{ _t(currentOrder) }}
+      </div>
+    </z-wave-drop-down-head>
+    <z-wave-drop-down-content #content>
+      <div class="device-submenu-wrapper">
+        <div
+          class="device-submenu-selector"
+          [ngClass]="{ active: currentOrder === order.key }"
+          *ngFor="let order of orderList | keyvalue"
+          (click)="setOrder(order.value, order.key); content.toggle()"
+        >
+          {{ _t(order.key) }}
+        </div>
+      </div>
+    </z-wave-drop-down-content>
+  </z-wave-drop-down>
+</ng-container>
