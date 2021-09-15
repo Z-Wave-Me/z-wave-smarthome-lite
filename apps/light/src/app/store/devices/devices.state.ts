@@ -1,10 +1,21 @@
 import { Injectable } from '@angular/core';
-import { Action, createSelector, Selector, State, StateContext, Store } from '@ngxs/store';
+import {
+  Action,
+  createSelector,
+  Selector,
+  State,
+  StateContext,
+  Store,
+} from '@ngxs/store';
 import { ProgressDevice, UpdateDevices } from './devices.actions';
 import { patch } from '@ngxs/store/operators';
 import { IconSupplierService } from '@core/services/icon-supplier/icon-supplier.service';
-import { MenuItem } from '@components/elements/element-sub-menu/element-sub-menu-filter-by-type/element-sub-menu-filter-by-type.component';
-import { FilterState, FilterStateModel, Order } from '@store/filter/filter.state';
+import { MenuItem } from '../../components-old/elements/element-sub-menu/element-sub-menu-filter-by-type/element-sub-menu-filter-by-type.component';
+import {
+  FilterState,
+  FilterStateModel,
+  Order,
+} from '@store/filter/filter.state';
 import { SetTagsList } from '@store/filter/filter.actions';
 
 const orderFactory =
@@ -71,7 +82,10 @@ const defaults: DevicesStateModel = {
 })
 @Injectable()
 export class DevicesState {
-  constructor(private readonly iconSupplier: IconSupplierService, private readonly store: Store) {}
+  constructor(
+    private readonly iconSupplier: IconSupplierService,
+    private readonly store: Store
+  ) {}
 
   @Selector()
   static ids(state: DevicesStateModel): string[] | undefined {
@@ -79,7 +93,10 @@ export class DevicesState {
   }
 
   @Selector([FilterState])
-  static autocomplete({ entities }: DevicesStateModel, { showHidden, autocomplete }: FilterStateModel): string[] {
+  static autocomplete(
+    { entities }: DevicesStateModel,
+    { showHidden, autocomplete }: FilterStateModel
+  ): string[] {
     return Object.values(entities)
       .filter((entre) => {
         if (!showHidden && !entre.visibility) {
@@ -98,7 +115,13 @@ export class DevicesState {
   @Selector([FilterState])
   static showDevice(
     { entities }: DevicesStateModel,
-    { filter, showHidden, tag, orderBy: { order, desc, place }, search }: FilterStateModel,
+    {
+      filter,
+      showHidden,
+      tag,
+      orderBy: { order, desc, place },
+      search,
+    }: FilterStateModel
   ): string[] {
     const orderBy = orderFactory(order, place, desc);
     return Object.values(entities)
@@ -115,7 +138,9 @@ export class DevicesState {
 
         return Object.entries(filter).every(([key, predicate]) => {
           if (Array.isArray(predicate)) {
-            return predicate.length ? predicate.some((predict) => entre[key] === predict) : true;
+            return predicate.length
+              ? predicate.some((predict) => entre[key] === predict)
+              : true;
           }
           return entre[key] === predicate;
         });
@@ -127,7 +152,7 @@ export class DevicesState {
   @Selector([FilterState])
   static devicesTypeAndCount(
     { entities }: DevicesStateModel,
-    { showHidden }: FilterStateModel,
+    { showHidden }: FilterStateModel
   ): Pick<MenuItem, 'type' | 'count'>[] {
     return [
       ...Object.values(entities)
@@ -156,20 +181,24 @@ export class DevicesState {
       ...new Set<string>(
         Object.values(entities).reduce((acc, cur) => {
           return [...acc, ...cur.tags];
-        }, Array<string>()),
+        }, Array<string>())
       ),
     ];
   }
 
   @Action(UpdateDevices)
   update(
-    { patchState, setState, getState }: StateContext<DevicesStateModel>,
-    { payload: { devices, structureChanged } }: { payload: { devices: []; structureChanged: boolean } },
+    { setState }: StateContext<DevicesStateModel>,
+    {
+      payload: { devices, structureChanged },
+    }: { payload: { devices: []; structureChanged: boolean } }
   ): void {
     const ids: string[] = [];
     const entities: { [index: string]: any } = {};
     const locations: { [id: number]: string[] } = {};
-    const dashboard = this.store.selectSnapshot((state) => state.localStorage.dashboard);
+    const dashboard = this.store.selectSnapshot(
+      (state) => state.localStorage.dashboard
+    );
     let tagsList = new Set<string>();
     devices.map((device: Device) => {
       ids.push(device.id);
@@ -198,13 +227,16 @@ export class DevicesState {
       setState(
         patch({
           entities: patch({ ...entities }),
-        }),
+        })
       );
     }
   }
 
   @Action(ProgressDevice)
-  progress({ setState }: StateContext<DevicesStateModel>, { payload: { id, inProgress } }: ProgressDevice): void {
+  progress(
+    { setState }: StateContext<DevicesStateModel>,
+    { payload: { id, inProgress } }: ProgressDevice
+  ): void {
     setState(
       patch({
         entities: patch({
@@ -212,7 +244,7 @@ export class DevicesState {
             inProgress,
           }),
         }),
-      }),
+      })
     );
   }
 }

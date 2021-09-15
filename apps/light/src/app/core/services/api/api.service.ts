@@ -88,13 +88,17 @@ export class ApiService {
   };
   private remoteApiList = {
     // JamesBox request
-    jamesbox_request: 'https://storage.z-wave.me/zbu_ui_handling.php?action=request',
+    jamesbox_request:
+      'https://storage.z-wave.me/zbu_ui_handling.php?action=request',
     // JamesBox update
-    jamesbox_update: 'https://storage.z-wave.me/zbu_ui_handling.php?action=update',
+    jamesbox_update:
+      'https://storage.z-wave.me/zbu_ui_handling.php?action=update',
     // JamesBox update info
-    jamesbox_updateinfo: 'https://storage.z-wave.me/zbu_ui_handling.php?action=updateinfo',
+    jamesbox_updateinfo:
+      'https://storage.z-wave.me/zbu_ui_handling.php?action=updateinfo',
     // JamesBox cancel update
-    jamesbox_cancel_update: 'https://storage.z-wave.me/zbu_ui_handling.php?action=cancelupdate',
+    jamesbox_cancel_update:
+      'https://storage.z-wave.me/zbu_ui_handling.php?action=cancelupdate',
     // RSS feed
     rss_feed: 'https://service.z-wave.me/rssFeed/index.php',
   };
@@ -107,18 +111,21 @@ export class ApiService {
     });
   }
 
-  send(event: string, payload?: Payload): Observable<any> {
+  send<T>(event: string, payload?: Payload): Observable<T> {
     const url = this.apiList[event];
     if (!url) {
-      return throwError(new Error('Bad Api event ' + event));
+      throw new Error('Bad Api event ' + event);
     }
-    const params = payload?.params ? '?' + payload.params.map(({ key, value }) => key + '=' + value).join('&') : '';
+    const params = payload?.params
+      ? '?' +
+        payload.params.map(({ key, value }) => key + '=' + value).join('&')
+      : '';
     const command = payload?.command ? '/' + payload.command : '';
     // console.log(this.apiUrl + url + command + params, payload?.data);
     if (payload?.data) {
-      return this.http.post(url + command + params, payload?.data);
+      return this.http.post<T>(url + command + params, payload?.data);
     } else {
-      return this.http.get(url + command + params);
+      return this.http.get<T>(url + command + params);
     }
   }
 }

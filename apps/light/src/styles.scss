@@ -1,25 +1,25 @@
-@import 'app/styles/newStyles/clearing';
-
-// Variables
-@import 'app/styles/variables';
-
-// Libs
-@import 'app/styles/newStyles/vendor/font-awesome/fontawesome';
-
-// New Styles
-@import 'app/styles/newStyles/main';
-@import 'app/styles/newStyles/base/base';
-@import 'app/styles/newStyles/base/button';
-
-// Old Styles
-@import 'app/styles/oldStyles/vendor/fontawesome/all';
-@import 'app/styles/oldStyles/base/variables';
-@import 'app/styles/oldStyles/base/mixins';
-@import 'app/styles/oldStyles/main';
-
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
-
-@import "~@angular/material/prebuilt-themes/deeppurple-amber.css";
-@import "apps/light/src/app/styles/matterial/index";
-
+//@import 'app/styles/newStyles/clearing';
+//
+//// Variables
+//@import 'app/styles/variables';
+//
+//// Libs
+//@import 'app/styles/newStyles/vendor/font-awesome/fontawesome';
+//
+//// New Styles
+//@import 'app/styles/newStyles/main';
+//@import 'app/styles/newStyles/base/base';
+//@import 'app/styles/newStyles/base/button';
+//
+//// Old Styles
+//@import 'app/styles/oldStyles/vendor/fontawesome/all';
+//@import 'app/styles/oldStyles/base/variables';
+//@import 'app/styles/oldStyles/base/mixins';
+//@import 'app/styles/oldStyles/main';
+//
+//html, body { height: 100%; }
+//body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+//
+//@import "~@angular/material/prebuilt-themes/deeppurple-amber.css";
+//@import "apps/light/src/app/styles/matterial/index";
+//

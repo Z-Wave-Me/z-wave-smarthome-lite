@@ -9,46 +9,57 @@ const routes: Routes = [
     children: [
       {
         path: 'elements',
-        loadChildren: () => import('@components/elements/elements.module').then(({ ElementsModule }) => ElementsModule),
+        loadChildren: () =>
+          import('../../components-old/elements/elements.module').then(
+            ({ ElementsModule }) => ElementsModule
+          ),
         data: { animation: 'elements' },
       },
       {
         path: 'element',
         loadChildren: () =>
-          import('@components/elements/element-config/element-config.module').then(
-            ({ ElementConfigModule }) => ElementConfigModule,
-          ),
+          import(
+            '../../components-old/elements/element-config/element-config.module'
+          ).then(({ ElementConfigModule }) => ElementConfigModule),
         data: { animation: 'element' },
       },
       {
         path: 'personal-settings',
         loadChildren: () =>
-          import('@components/personal-settings/personal-settings.module').then(
-            ({ PersonalSettingsModule }) => PersonalSettingsModule,
-          ),
+          import(
+            '../../components-old/personal-settings/personal-settings.module'
+          ).then(({ PersonalSettingsModule }) => PersonalSettingsModule),
       },
       {
         path: 'rooms',
-        loadChildren: () => import('@components/rooms/rooms.module').then(({ RoomsModule }) => RoomsModule),
+        loadChildren: () =>
+          import('../../components-old/rooms/rooms.module').then(
+            ({ RoomsModule }) => RoomsModule
+          ),
         data: { animation: 'rooms' },
       },
       {
         path: 'dashboard',
         loadChildren: () =>
-          import('@components/dashboard/dashboard.module').then(({ DashboardModule }) => DashboardModule),
+          import('../../components-old/dashboard/dashboard.module').then(
+            ({ DashboardModule }) => DashboardModule
+          ),
         data: { animation: 'dashboard' },
       },
       {
         path: 'control',
         loadChildren: () =>
-          import('@components/element-control/element-control.module').then(
-            ({ ElementControlModule }) => ElementControlModule,
-          ),
+          import(
+            '../../components-old/element-control/element-control.module'
+          ).then(({ ElementControlModule }) => ElementControlModule),
         data: { animation: 'control' },
       },
       {
         path: 'devices',
-        loadChildren: () => import('@components/devices/devices.module').then(({ DevicesModule }) => DevicesModule),
+        loadChildren: () =>
+          import('../../components-old/devices/devices.module').then(
+            ({ DevicesModule }) => DevicesModule
+          ),
       },
       {
         path: '**',

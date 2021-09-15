@@ -1,4 +1,4 @@
-import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Actions, ofActionDispatched, Select, Store } from '@ngxs/store';
 import { Router } from '@angular/router';
 import { TranslocoService } from '@ngneat/transloco';
@@ -15,18 +15,19 @@ import { takeUntil, tap } from 'rxjs/operators';
 })
 export class AppComponent implements OnInit, OnDestroy {
   @Select(LocalStorageState.lang) lang$!: Observable<string>;
+  @Select(LocalStorageState.nightMode) nightMode$!: Observable<boolean>;
   private subscription: Subscription = Subscription.EMPTY;
   constructor(
     private readonly actions: Actions,
     private readonly router: Router,
     private readonly store: Store,
     private readonly translocoService: TranslocoService,
-    private readonly destroyService$: DestroyService,
+    private readonly destroyService$: DestroyService
   ) {
     this.lang$
       .pipe(
         takeUntil(destroyService$),
-        tap((lang) => translocoService.setActiveLang(lang)),
+        tap((lang) => translocoService.setActiveLang(lang))
       )
       .subscribe();
   }

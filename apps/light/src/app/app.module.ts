@@ -1,3 +1,12 @@
+import { NgDompurifySanitizer } from '@tinkoff/ng-dompurify';
+import {
+  TuiRootModule,
+  TuiDialogModule,
+  TuiNotificationsModule,
+  TUI_SANITIZER,
+  TuiModeModule,
+  TuiThemeNightModule,
+} from '@taiga-ui/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { APP_INITIALIZER, NgModule } from '@angular/core';
 
@@ -10,7 +19,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { TranslocoRootModule } from './transloco/transloco-root.module';
 import { ConfigService } from '@core/services/config/config.service';
 import { environment } from '../environments/environment';
-import { TestComponent } from '@components/test/test.component';
+import { TestComponent } from './components-old/test/test.component';
 import { NgxsStoragePluginModule } from '@ngxs/storage-plugin';
 import { ApiModule } from '@core/services/api/api.module';
 
@@ -22,13 +31,14 @@ import { EmptyLayoutModule } from './layouts/empty-layout/empty-layout.module';
 import { APP_BASE_HREF } from '@angular/common';
 import { DropDownModule } from '@modules/drop-down/drop-down.module';
 import { LocalStorageState } from '@store/local-storage/local-storage.state';
-// import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { DestroyService } from '@core/services/destroy/destroy.service';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { DialogModule } from '@modules/dialog/dialog.module';
 import { WebsocketModule } from '@core/services/websocket/websocket.module';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
-export const initApp = (configurationService: ConfigService) => () => configurationService.load().toPromise();
+export const initApp = (configurationService: ConfigService) => () =>
+  configurationService.load().toPromise();
 
 @NgModule({
   declarations: [AppComponent, TestComponent],
@@ -60,12 +70,17 @@ export const initApp = (configurationService: ConfigService) => () => configurat
     MainLayoutModule,
     EmptyLayoutModule,
     DropDownModule,
-    // FontAwesomeModule,
+    FontAwesomeModule,
     MatSnackBarModule,
     DialogModule,
     WebsocketModule.config({
       url: environment.ws,
     }),
+    TuiRootModule,
+    TuiDialogModule,
+    TuiNotificationsModule,
+    TuiThemeNightModule,
+    TuiModeModule,
   ],
   providers: [
     {
@@ -78,11 +93,8 @@ export const initApp = (configurationService: ConfigService) => () => configurat
       provide: APP_BASE_HREF,
       useValue: '/light',
     },
-    // {
-    //   provide: LOGGER,
-    //   useValue: { log: 'mockLogger'},
-    // }
     DestroyService,
+    { provide: TUI_SANITIZER, useClass: NgDompurifySanitizer },
   ],
   bootstrap: [AppComponent],
 })

@@ -1,0 +1,20 @@
+<tui-tabs>
+  <button tuiTab>
+    <tui-svg src="tuiIconCard" class="tui-space_right-2"></tui-svg>
+    Maps
+  </button>
+  <button tuiTab>
+    <tui-svg src="tuiIconCall" class="tui-space_right-2"></tui-svg>
+    Calls
+  </button>
+  <tui-toggle
+    style="align-self: center"
+    class="tui-space_right-1"
+    size="m"
+    [formControl]="themeSwitcher"
+  ></tui-toggle>
+  <button tuiTab>
+    <tui-svg src="tuiIconSettings" class="tui-space_right-2"></tui-svg>
+    Settings
+  </button>
+</tui-tabs>

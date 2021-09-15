@@ -17,9 +17,12 @@
             "polyfills": "apps/light/src/polyfills.ts",
             "tsConfig": "apps/light/tsconfig.app.json",
             "inlineStyleLanguage": "scss",
-            "assets": ["apps/light/src/favicon.ico", "apps/light/src/assets"],
-            "styles": ["apps/light/src/styles.scss"],
-            "scripts": []
+            "assets": ["apps/light/src/favicon.ico","apps/light/src/assets",{"glob":"**/*","input":"node_modules/@taiga-ui/icons/src","output":"assets/taiga-ui/icons"}],
+            "styles": ["apps/light/src/styles.scss","node_modules/@taiga-ui/core/styles/taiga-ui-global.less","node_modules/@taiga-ui/core/styles/taiga-ui-theme.less"],
+            "scripts": [],
+              "allowedCommonJsDependencies": [
+                "angular2-text-mask"
+              ]
           },
           "configurations": {
             "production": {

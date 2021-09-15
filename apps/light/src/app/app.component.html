@@ -1,3 +1,9 @@
-<!--<app-test></app-test>-->
-<router-outlet></router-outlet>
-<!--<div (click)="changeLang('ru')">switch</div>-->
+<ng-container *ngIf="{ nightMode: nightMode$ | async } as settings">
+  <tui-theme-night *ngIf="settings.nightMode"></tui-theme-night>
+  <tui-root
+    class="z-wave-root"
+    [tuiMode]="settings.nightMode ? 'onDark' : 'onLight'"
+  >
+    <router-outlet></router-outlet>
+  </tui-root>
+</ng-container>

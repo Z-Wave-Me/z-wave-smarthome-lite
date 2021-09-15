@@ -1,6 +1,12 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { ApiService, Payload } from '@core/services/api/api.service';
-import { exhaustMap, finalize, map, switchMap, takeUntil } from 'rxjs/operators';
+import {
+  exhaustMap,
+  finalize,
+  map,
+  switchMap,
+  takeUntil,
+} from 'rxjs/operators';
 import { Observable, of, Subject, timer } from 'rxjs';
 import { ServerStreamConfig } from '@core/services/server-stream/server-stream-config';
 import { DeviceResponseInterface } from '@core/services/server-stream/device-response.interface';
@@ -20,10 +26,14 @@ export class ServerStreamService implements OnDestroy {
   constructor(
     private readonly apiService: ApiService,
     private webSocketService: WebsocketService,
-    private store: Store,
+    private store: Store
   ) {
     this.connection$ = of(false);
     // this.connection$ = webSocketService.isConnect();
+    // webSocketService
+    //   .on<void>('connectionStatusEvent')
+    //   .pipe(takeUntil(this.destroy$))
+    //   .subscribe();
   }
 
   ngOnDestroy(): void {
@@ -38,7 +48,7 @@ export class ServerStreamService implements OnDestroy {
           console.log('Connection status ', isConnect);
           return isConnect ? this.wsAccess(config) : this.httpAccess(config);
         }),
-        takeUntil(this.destroy$),
+        takeUntil(this.destroy$)
       )
       .subscribe();
   }
@@ -58,30 +68,44 @@ export class ServerStreamService implements OnDestroy {
     return this.webSocketService.on('me.z-wave.devices.level');
   }
 
-  private updateDevices({ api, timeBetweenRequests }: ServerStreamConfig): Observable<void> {
+  private updateDevices({
+    api,
+    timeBetweenRequests,
+  }: ServerStreamConfig): Observable<void> {
     let params: Payload | undefined;
     return timer(0, timeBetweenRequests ?? 3000).pipe(
-      exhaustMap(() => this.apiService.send(api, params)),
+      exhaustMap(() =>
+        this.apiService.send<{
+          data: DeviceResponseInterface<DeviceInterface>;
+        }>(api, params)
+      ),
       map(({ data }: { data: DeviceResponseInterface<DeviceInterface> }) => {
         return data;
       }),
       map(({ updateTime, structureChanged, devices }) => {
-        this.store.dispatch(new UpdateDevices({ devices, structureChanged: !params }));
+        this.store.dispatch(
+          new UpdateDevices({ devices, structureChanged: !params })
+        );
         this.store.dispatch(new ServerTime(updateTime * 1000));
-        params = structureChanged ? undefined : { params: [{ key: 'since', value: updateTime }] };
+        params = structureChanged
+          ? undefined
+          : { params: [{ key: 'since', value: updateTime }] };
         console.groupEnd();
       }),
-      finalize(() => console.log('Http UpdateDevices complete')),
+      finalize(() => console.log('Http UpdateDevices complete'))
     );
   }
 
-  private updateLocations({ api, timeBetweenRequests }: ServerStreamConfig): Observable<void> {
+  private updateLocations({
+    api,
+    timeBetweenRequests,
+  }: ServerStreamConfig): Observable<void> {
     return timer(0, timeBetweenRequests ?? 6000).pipe(
-      exhaustMap(() => this.apiService.send(api)),
+      exhaustMap(() => this.apiService.send<{ data: Location[] }>(api)),
       map(({ data: locations }: { data: Location[] }) => {
         this.store.dispatch(new UpdateLocations({ locations }));
       }),
-      finalize(() => console.log('Http UpdateLocations complete')),
+      finalize(() => console.log('Http UpdateLocations complete'))
     );
   }
 }

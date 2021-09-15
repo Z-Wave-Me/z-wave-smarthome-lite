@@ -1,10 +1,26 @@
 import { Injectable } from '@angular/core';
-import { Action, createSelector, Selector, State, StateContext, Store } from '@ngxs/store';
-import { Pages, ShowOptions, SupportLanguages } from '@modules/interfaces/pages.interfaces';
+import {
+  Action,
+  createSelector,
+  Selector,
+  State,
+  StateContext,
+  Store,
+} from '@ngxs/store';
+import {
+  Pages,
+  ShowOptions,
+  SupportLanguages,
+} from '@modules/interfaces/pages.interfaces';
 import { Observable, of, Subscription } from 'rxjs';
 import { finalize, mapTo, tap } from 'rxjs/operators';
 import { ApiService } from '@core/services/api/api.service';
-import { Login, Logout, UpdateProfile } from '@store/local-storage/local-storage.actions';
+import {
+  Login,
+  Logout,
+  NightMode,
+  UpdateProfile,
+} from '@store/local-storage/local-storage.actions';
 import { TranslocoService } from '@ngneat/transloco';
 import { AlertService } from '@core/services/alert/alert.service';
 
@@ -24,7 +40,7 @@ export class LocalStorageStateModel {
   interval?: number;
   login?: string;
   name?: string;
-  nightMode?: boolean;
+  nightMode!: boolean;
   rooms?: number[];
   // uuid: "3c879de0-846b-4195-490d-ae1ad8c08790"
 }
@@ -33,6 +49,7 @@ const defaults: LocalStorageStateModel = {
   lang: 'en',
   dashboard: [],
   hideSingleDeviceEvents: [],
+  nightMode: false,
 };
 
 @State<LocalStorageStateModel>({
@@ -45,8 +62,12 @@ export class LocalStorageState {
     private readonly apiService: ApiService,
     private readonly translocoService: TranslocoService,
     private readonly store: Store,
-    private readonly alertService: AlertService,
+    private readonly alertService: AlertService
   ) {}
+  @Selector()
+  static nightMode({ nightMode }: LocalStorageStateModel): boolean {
+    return nightMode;
+  }
   @Selector()
   static lang({ lang }: LocalStorageStateModel): string {
     return lang;
@@ -60,16 +81,23 @@ export class LocalStorageState {
   static token(state: LocalStorageStateModel): string | undefined {
     return state.token;
   }
-  static showOptions(place: Pages): (state: LocalStorageStateModel) => ShowOptions | undefined {
-    return (state: LocalStorageStateModel) => state.showOptions?.find((option) => place === option.place);
+  static showOptions(
+    place: Pages
+  ): (state: LocalStorageStateModel) => ShowOptions | undefined {
+    return (state: LocalStorageStateModel) =>
+      state.showOptions?.find((option) => place === option.place);
   }
   static isEventsHideById(id: string): (...args: any) => boolean {
-    return createSelector([LocalStorageStateModel], ({ hideSingleDeviceEvents }) =>
-      hideSingleDeviceEvents.includes(id),
+    return createSelector(
+      [LocalStorageStateModel],
+      ({ hideSingleDeviceEvents }) => hideSingleDeviceEvents.includes(id)
     );
   }
   @Action(Login)
-  login({ patchState }: StateContext<LocalStorageStateModel>, { payload, payload: { login } }: Login): Observable<any> {
+  login(
+    { patchState }: StateContext<LocalStorageStateModel>,
+    { payload, payload: { login } }: Login
+  ): Observable<any> {
     return this.apiService.send('login', { data: payload }).pipe(
       tap((data) => console.warn(data)),
       tap(
@@ -80,13 +108,15 @@ export class LocalStorageState {
         },
         ({ statusText }) => {
           this.alertService.error(statusText);
-        },
-      ),
+        }
+      )
     );
   }
 
   @Action(Logout)
-  logout({ setState }: StateContext<LocalStorageStateModel>): Observable<boolean> {
+  logout({
+    setState,
+  }: StateContext<LocalStorageStateModel>): Observable<boolean> {
     setState(defaults);
     // TODO temporary
     return of(true);
@@ -116,13 +146,16 @@ export class LocalStorageState {
   // uuid: "3c879de0-846b-4195-490d-ae1ad8c08790"
 
   @Action(UpdateProfile)
-  updateProfile({ getState, patchState }: StateContext<LocalStorageStateModel>): void {
+  updateProfile({
+    getState,
+    patchState,
+  }: StateContext<LocalStorageStateModel>): void {
     const id = getState().id;
     if (id === undefined) {
       return;
     }
     const subscription: Subscription = this.apiService
-      .send('profiles', { command: id })
+      .send<any>('profiles', { command: id })
       .pipe(
         tap(
           ({
@@ -161,11 +194,19 @@ export class LocalStorageState {
               role,
               rooms,
             });
-          },
+          }
         ),
         mapTo(void 0),
-        finalize(() => subscription.unsubscribe()),
+        finalize(() => subscription.unsubscribe())
       )
       .subscribe();
+  }
+
+  @Action(NightMode)
+  changeTheme(
+    { patchState }: StateContext<LocalStorageStateModel>,
+    { nightMode }: { nightMode: boolean }
+  ) {
+    patchState({ nightMode });
   }
 }

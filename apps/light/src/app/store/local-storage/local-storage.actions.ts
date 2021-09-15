@@ -10,3 +10,8 @@ export class Logout {
 export class UpdateProfile {
   static readonly type = '[LocalStorage] Update Profile';
 }
+
+export class NightMode {
+  static readonly type = '[LocalStorage] Change Theme';
+  constructor(public nightMode: boolean) {}
+}
