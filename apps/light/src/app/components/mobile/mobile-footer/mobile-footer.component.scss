@@ -1,0 +1,9 @@
+@import '~@taiga-ui/core/styles/taiga-ui-local';
+.footer-menu {
+  a {
+    flex: 1 1 auto;
+    justify-content: center;
+    margin: 0;
+  }
+  @include shadow(6);
+}

@@ -1,0 +1,6 @@
+.server-status {
+  display: flex;
+}
+.vertical {
+  flex-direction: column;
+}

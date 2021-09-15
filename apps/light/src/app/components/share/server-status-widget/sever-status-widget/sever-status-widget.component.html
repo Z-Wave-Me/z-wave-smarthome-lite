@@ -1,0 +1,19 @@
+<div
+  *ngIf="{ online: (online$ | async), time: (serverTime$ | async) } as data"
+  class="server-status"
+  [ngClass]="{ vertical: orientation }"
+>
+  <i
+    *ngIf="locationType() === 'local'"
+    [ngClass]="data.online ? 'text-success' : 'text-danger'"
+    class="fad fa-home"
+  ></i>
+  <i
+    *ngIf="locationType() === 'remote'"
+    [ngClass]="data.online ? 'text-success' : 'text-danger'"
+    class="fad fa-globe"
+  ></i>
+  <span [ngClass]="{ pause: !data.online }">
+    {{ data.time | date: 'HH:mm:ss' }}</span
+  >
+</div>

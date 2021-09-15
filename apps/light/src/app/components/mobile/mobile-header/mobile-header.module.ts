@@ -4,6 +4,8 @@ import { MobileHeaderComponent } from '@components/mobile/mobile-header/mobile-h
 import { TuiTabsModule, TuiToggleModule } from '@taiga-ui/kit';
 import { TuiSvgModule } from '@taiga-ui/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { SettingsMenuModule } from '@components/share/settings-menu/settings-menu.module';
+import { ServerStatusWidgetModule } from '@components/share/server-status-widget/server-status-widget.module';
 
 @NgModule({
   declarations: [MobileHeaderComponent],
@@ -14,6 +16,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     TuiToggleModule,
     FormsModule,
     ReactiveFormsModule,
+    SettingsMenuModule,
+    ServerStatusWidgetModule,
   ],
   exports: [MobileHeaderComponent],
 })

@@ -1,0 +1,12 @@
+@import '~@taiga-ui/core/styles/taiga-ui-local';
+
+:root {
+  --header-heigth: 56px;
+}
+
+:host {
+  .content {
+    overflow: auto;
+    height: calc(100% - 2 * var(--header-heigth));
+  }
+}

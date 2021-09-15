@@ -22,12 +22,15 @@ const defaults: LocationsStateModel = {
 })
 @Injectable()
 export class LocationsState {
-  constructor(private readonly translocoService: TranslocoService, private readonly configService: ConfigService) {}
+  constructor(
+    private readonly translocoService: TranslocoService,
+    private readonly configService: ConfigService
+  ) {}
 
   @Action(UpdateLocations)
   update(
     { patchState, setState }: StateContext<LocationsStateModel>,
-    { payload: { locations } }: { payload: { locations: Location[] } },
+    { payload: { locations } }: { payload: { locations: Location[] } }
   ): void {
     const ids: number[] = [];
     const entities: { [id: number]: Location } = {};
@@ -36,12 +39,17 @@ export class LocationsState {
       .sort((a, b) => a.title.localeCompare(b.title))
       .map((location) => {
         if (location.id === 0) {
-          location.title = this.translocoService.translate(location.title);
+          location.title = 'Global';
+          // this.translocoService.translate('globalRoom');
+          // console.log(location.title);
           location.imgSrc = 'assets/img/rooms/unassigned.png';
         } else if (location.img_type === 'default' && location.default_img) {
           location.imgSrc = 'assets/img/rooms/' + location.default_img;
         } else if (location.img_type === 'user' && location.user_img) {
-          location.imgSrc = this.configService.get('apiUrl') + 'load/image/' + location.user_img;
+          location.imgSrc =
+            this.configService.get('apiUrl') +
+            'load/image/' +
+            location.user_img;
         } else {
           location.imgSrc = 'assets/img/placeholder-img.png';
         }
@@ -53,7 +61,7 @@ export class LocationsState {
       patch({
         entities: patch(entities),
         ids,
-      }),
+      })
     );
   }
 }
