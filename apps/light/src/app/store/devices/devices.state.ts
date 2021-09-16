@@ -7,7 +7,12 @@ import {
   StateContext,
   Store,
 } from '@ngxs/store';
-import { ProgressDevice, UpdateDevices } from './devices.actions';
+import {
+  ChangeLevel,
+  ProgressDevice,
+  ToggleLevel,
+  UpdateDevices,
+} from './devices.actions';
 import { patch } from '@ngxs/store/operators';
 import { IconSupplierService } from '@core/services/icon-supplier/icon-supplier.service';
 import { MenuItem } from '../../components-old/elements/element-sub-menu/element-sub-menu-filter-by-type/element-sub-menu-filter-by-type.component';
@@ -17,6 +22,10 @@ import {
   Order,
 } from '@store/filter/filter.state';
 import { SetTagsList } from '@store/filter/filter.actions';
+import { ApiService } from '@core/services/api/api.service';
+import { WsApiService } from '@core/services/ws-api/ws-api.service';
+import { EMPTY, of } from 'rxjs';
+import { ServerTime } from '@store/locals/locals.actions';
 
 const orderFactory =
   (order: Order, place: OrderByLocations, decs: boolean = false) =>
@@ -84,7 +93,8 @@ const defaults: DevicesStateModel = {
 export class DevicesState {
   constructor(
     private readonly iconSupplier: IconSupplierService,
-    private readonly store: Store
+    private readonly store: Store,
+    private readonly wsApiService: WsApiService
   ) {}
 
   @Selector()
@@ -200,8 +210,12 @@ export class DevicesState {
       (state) => state.localStorage.dashboard
     );
     let tagsList = new Set<string>();
+    let serverTime = 0;
     devices.map((device: Device) => {
       ids.push(device.id);
+      if (serverTime < device.updateTime) {
+        serverTime = device.updateTime;
+      }
       const additional = {
         iconPath: this.iconSupplier.assignElementIcon(device),
         title: device.metrics.title,
@@ -219,7 +233,7 @@ export class DevicesState {
       locations[device.location].push(device.id);
       entities[device.id] = { ...device, ...additional };
     });
-
+    this.store.dispatch(new ServerTime(serverTime));
     this.store.dispatch(new SetTagsList([...tagsList]));
     if (structureChanged) {
       setState(patch({ ids, entities, locations }));
@@ -246,5 +260,54 @@ export class DevicesState {
         }),
       })
     );
+  }
+  @Action(ChangeLevel)
+  changeLevel(
+    { setState }: StateContext<DevicesStateModel>,
+    {
+      payload: { id, level },
+    }: { payload: { id: string; level: number | string } }
+  ) {
+    setState(
+      patch({
+        entities: patch({
+          [id]: patch({
+            metrics: patch({
+              level,
+            }),
+          }),
+        }),
+      })
+    );
+    if (typeof level === 'number') {
+      return this.wsApiService.send('devices', {
+        command: id + '/command/exact',
+        params: [
+          {
+            key: 'level',
+            value: level,
+          },
+        ],
+      });
+    }
+    return this.wsApiService.send('devices', {
+      command: id + '/command/' + level,
+    });
+  }
+
+  @Action(ToggleLevel)
+  toggleLevel(ctx: StateContext<DevicesStateModel>, { id }: { id: string }) {
+    console.log('here');
+    const device = ctx.getState().entities[id];
+    let level;
+    if (device.deviceType === 'switchMultilevel') {
+      level = device.metrics.level > 0 ? 0 : 99;
+    }
+    if (device.deviceType === 'switchBinary') {
+      level = device.metrics.level === 'on' ? 'off' : 'on';
+    }
+    if (level !== undefined)
+      return this.store.dispatch(new ChangeLevel({ id, level }));
+    return of(void 0);
   }
 }

@@ -1,6 +1,7 @@
 export interface WsMessage<T> {
-  event: string;
+  event?: string;
   data: T;
+  type?: string;
 }
 export interface WebSocketConfig {
   url: string;

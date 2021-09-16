@@ -1,6 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { ServerStreamService } from '@core/services/server-stream/server-stream.service';
 import { SERVER_SYNCHRONIZATION } from '../../main-layout/tokens/server-synchronization.token';
+import { SubscriptionManagerService } from '@core/services/subscription-manager/subscription-manager.service';
 
 const deviceFactory = (serverStreamService: ServerStreamService) => {
   serverStreamService.subscribe({ api: 'devices' });
@@ -21,6 +22,7 @@ const locationFactory = (serverStreamService: ServerStreamService) => {
   styleUrls: ['./mobile-layout.component.scss'],
   providers: [
     ServerStreamService,
+    SubscriptionManagerService,
     {
       provide: SERVER_SYNCHRONIZATION,
       useFactory: deviceFactory,
@@ -37,6 +39,7 @@ const locationFactory = (serverStreamService: ServerStreamService) => {
 })
 export class MobileLayoutComponent {
   constructor(
-    @Inject(SERVER_SYNCHRONIZATION) serverSynchronization: string[]
+    @Inject(SERVER_SYNCHRONIZATION) serverSynchronization: string[],
+    private readonly SubscriptionManagerService: SubscriptionManagerService
   ) {}
 }

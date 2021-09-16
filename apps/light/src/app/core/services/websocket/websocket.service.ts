@@ -13,14 +13,15 @@ import {
 } from '@core/services/websocket/websocket.interfaces';
 
 @Injectable({
-  providedIn: 'any',
+  providedIn: 'root',
 })
 export class WebsocketService {
-  private websocket$: WebSocketSubject<WsMessage<unknown>>;
+  private static readonly baseEvent = 'me.z-wave.';
+
+  private readonly websocket$: WebSocketSubject<WsMessage<unknown>>;
   private readonly configuration: WebSocketSubjectConfig<WsMessage<unknown>>;
   private readonly connect$ = new ReplaySubject<boolean>(1);
   private RECONNECT_INTERVAL = 3_000;
-
   constructor(@Inject(config) private readonly wsConfig: WebSocketConfig) {
     this.connect$.next(false);
     this.configuration = {
@@ -41,7 +42,11 @@ export class WebsocketService {
     unsubMsg: () => unknown = () => null
   ): Observable<T> {
     return this.websocket$
-      .multiplex(subMsg, unsubMsg, (value) => value?.event === event)
+      .multiplex(
+        subMsg,
+        unsubMsg,
+        (value) => !!(value.type ?? value.event)?.startsWith(event)
+      )
       .pipe(
         share(),
         map((value) => value?.data as T),
@@ -49,7 +54,7 @@ export class WebsocketService {
       );
   }
 
-  send(event: string, data: any): void {
+  send<T>(event: string, data: T): void {
     this.websocket$.next({ event, data });
   }
 

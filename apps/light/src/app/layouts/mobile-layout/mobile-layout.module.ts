@@ -5,6 +5,7 @@ import { MobileLayoutComponent } from './mobile-layout/mobile-layout.component';
 import { MobileHeaderModule } from '@components/mobile/mobile-header/mobile-header.module';
 import { MobileFooterModule } from '@components/mobile/mobile-footer/mobile-footer.module';
 import { TuiOverscrollModule } from '@taiga-ui/cdk';
+import { MobileTitleService } from '@core/services/mobile-title/mobile-title.service';
 
 @NgModule({
   declarations: [MobileLayoutComponent],
@@ -15,6 +16,6 @@ import { TuiOverscrollModule } from '@taiga-ui/cdk';
     MobileFooterModule,
     TuiOverscrollModule,
   ],
-  bootstrap: [MobileLayoutComponent],
+  providers: [MobileTitleService],
 })
 export class MobileLayoutModule {}

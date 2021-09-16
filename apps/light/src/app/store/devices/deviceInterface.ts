@@ -22,7 +22,7 @@ export interface DeviceInterface {
   };
   permanently_hidden: boolean;
   probeType: string;
-  tags: any[];
+  tags: string[];
   updateTime: number;
   visibility: boolean;
 }

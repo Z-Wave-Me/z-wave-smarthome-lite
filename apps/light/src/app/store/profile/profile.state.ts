@@ -11,6 +11,9 @@ import { patch } from '@ngxs/store/operators';
 import { TranslocoService } from '@ngneat/transloco';
 import { Observable, Subscription } from 'rxjs';
 import { WsMessage } from '@core/services/websocket/websocket.interfaces';
+import { WsApiService } from '@core/services/ws-api/ws-api.service';
+import { webSocket } from 'rxjs/webSocket';
+import { WebsocketService } from '@core/services/websocket/websocket.service';
 
 export class ProfileStateModel implements ProfileInterface {
   authTokens?: AuthTokenInterface[];
@@ -66,14 +69,13 @@ export class ProfileState implements OnDestroy {
     return store;
   }
   constructor(
-    private apiService: ApiService,
-    private translocoService: TranslocoService
+    private readonly apiService: ApiService,
+    private readonly translocoService: TranslocoService
   ) {
     translocoService.setFallbackLangForMissingTranslation({
       fallbackLang: 'en',
     });
   }
-
   @Action(SetProfile)
   setProfile({ setState }: StateContext<ProfileStateModel>): Observable<any> {
     return this.apiService

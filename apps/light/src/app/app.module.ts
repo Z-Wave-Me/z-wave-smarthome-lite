@@ -7,12 +7,12 @@ import {
   TuiModeModule,
   TuiThemeNightModule,
 } from '@taiga-ui/core';
-import { BrowserModule } from '@angular/platform-browser';
-import { APP_INITIALIZER, NgModule } from '@angular/core';
+import { BrowserModule, HammerModule } from '@angular/platform-browser';
+import { APP_INITIALIZER, Injectable, NgModule } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { getActionTypeFromInstance, NgxsModule } from '@ngxs/store';
+import { NgxsModule } from '@ngxs/store';
 import { NgxsReduxDevtoolsPluginModule } from '@ngxs/devtools-plugin';
 import { NgxsLoggerPluginModule } from '@ngxs/logger-plugin';
 import { HttpClientModule } from '@angular/common/http';
@@ -45,6 +45,7 @@ export const initApp = (configurationService: ConfigService) => () =>
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
+    HammerModule,
     AppRoutingModule,
     NgxsModule.forRoot(states, {
       developmentMode: !environment.production,
@@ -93,6 +94,7 @@ export const initApp = (configurationService: ConfigService) => () =>
       provide: APP_BASE_HREF,
       useValue: '/light',
     },
+    { provide: 'Window', useValue: window },
     DestroyService,
     { provide: TUI_SANITIZER, useClass: NgDompurifySanitizer },
   ],

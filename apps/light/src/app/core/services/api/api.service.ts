@@ -125,6 +125,7 @@ export class ApiService {
     if (payload?.data) {
       return this.http.post<T>(url + command + params, payload?.data);
     } else {
+      console.log(url + command + params);
       return this.http.get<T>(url + command + params);
     }
   }

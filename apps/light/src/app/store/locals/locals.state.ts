@@ -30,12 +30,18 @@ export class LocalsState {
   }
 
   @Action(ServerStatus)
-  setServerStatus({ setState }: StateContext<LocalsStateModel>, { serverAvailable }: ServerStatus): void {
+  setServerStatus(
+    { setState }: StateContext<LocalsStateModel>,
+    { serverAvailable }: ServerStatus
+  ): void {
     setState(patch({ serverAvailable }));
   }
 
   @Action(ServerTime)
-  setServerTime({ setState }: StateContext<LocalsStateModel>, { serverTime }: ServerTime): void {
-    setState(patch({ serverTime }));
+  setServerTime(
+    { setState }: StateContext<LocalsStateModel>,
+    { serverTime }: ServerTime
+  ): void {
+    setState(patch({ serverTime: serverTime * 1_000 }));
   }
 }

@@ -6,6 +6,7 @@ import {
   map,
   switchMap,
   takeUntil,
+  tap,
 } from 'rxjs/operators';
 import { Observable, of, Subject, timer } from 'rxjs';
 import { ServerStreamConfig } from '@core/services/server-stream/server-stream-config';
@@ -17,9 +18,14 @@ import { ServerTime } from '@store/locals/locals.actions';
 import { Location } from '@store/locations/location';
 import { UpdateLocations } from '@store/locations/locations.action';
 import { WebsocketService } from '@core/services/websocket/websocket.service';
+import { WsMessage } from '@core/services/websocket/websocket.interfaces';
+import { HttpEncapsulatedRequest } from '@core/services/ws-api/http-encapsulated-request';
+import { apiList, baseApiUrl } from '@core/services/ws-api/api-list';
 
 @Injectable()
 export class ServerStreamService implements OnDestroy {
+  private static readonly apiList = apiList;
+  private static readonly baseApiUrl = baseApiUrl;
   private readonly connection$: Observable<boolean>;
   private destroy$ = new Subject<void>();
 
@@ -28,7 +34,7 @@ export class ServerStreamService implements OnDestroy {
     private webSocketService: WebsocketService,
     private store: Store
   ) {
-    this.connection$ = of(false);
+    this.connection$ = of(true);
     // this.connection$ = webSocketService.isConnect();
     // webSocketService
     //   .on<void>('connectionStatusEvent')
@@ -64,10 +70,95 @@ export class ServerStreamService implements OnDestroy {
   }
 
   private wsAccess(config: ServerStreamConfig): Observable<void> {
-    // return this.webSocketService.on<void>(config.api).pipe(finalize(() => console.log('Web Socket complete')));
-    return this.webSocketService.on('me.z-wave.devices.level');
+    if (config.api === 'devices') {
+      this.subscribeDevices();
+    }
+    if (config.api === 'locations') {
+      this.subscribeLocations();
+    }
+    return of(void 0);
   }
 
+  private subscribeDevices() {
+    this.webSocketService
+      .on<{ body: string }>('ws-reply')
+      .pipe(
+        takeUntil(this.destroy$),
+        map((data) => {
+          try {
+            return JSON.parse(data.body).data;
+          } catch (e) {
+            console.error('ws-reply Error parse', e);
+          }
+        }),
+        tap((response) => {
+          if (response && 'devices' in response) {
+            this.store.dispatch(new UpdateDevices(response));
+          }
+        })
+      )
+      .subscribe();
+    this.webSocketService
+      .on<DeviceInterface>(
+        'me.z-wave.devices',
+        (): WsMessage<HttpEncapsulatedRequest> => ({
+          event: 'httpEncapsulatedRequest',
+          data: {
+            url:
+              ServerStreamService.baseApiUrl +
+              ServerStreamService.apiList['devices'],
+            method: 'GET',
+          },
+        })
+      )
+      .pipe(
+        takeUntil(this.destroy$),
+        tap((device) => {
+          this.store.dispatch(
+            new UpdateDevices({ devices: [device], structureChanged: false })
+          );
+        })
+      )
+      .subscribe();
+  }
+  private subscribeLocations() {
+    this.webSocketService
+      .on<{ body: string }>('ws-reply')
+      .pipe(
+        takeUntil(this.destroy$),
+        map((data) => {
+          try {
+            return JSON.parse(data.body).data;
+          } catch (e) {
+            console.error('ws-reply Error parse', e);
+          }
+        }),
+        tap((locations) => {
+          if (Array.isArray(locations)) {
+            this.store.dispatch(new UpdateLocations({ locations }));
+          }
+        })
+      )
+      .subscribe();
+    this.webSocketService
+      .on<DeviceInterface>(
+        'me.z-wave.devices.level',
+        (): WsMessage<HttpEncapsulatedRequest> => ({
+          event: 'httpEncapsulatedRequest',
+          data: {
+            url:
+              ServerStreamService.baseApiUrl +
+              ServerStreamService.apiList['locations'],
+            method: 'GET',
+          },
+        })
+      )
+      .pipe(
+        takeUntil(this.destroy$),
+        tap((device) => {})
+      )
+      .subscribe();
+  }
   private updateDevices({
     api,
     timeBetweenRequests,
@@ -86,7 +177,7 @@ export class ServerStreamService implements OnDestroy {
         this.store.dispatch(
           new UpdateDevices({ devices, structureChanged: !params })
         );
-        this.store.dispatch(new ServerTime(updateTime * 1000));
+        this.store.dispatch(new ServerTime(updateTime));
         params = structureChanged
           ? undefined
           : { params: [{ key: 'since', value: updateTime }] };

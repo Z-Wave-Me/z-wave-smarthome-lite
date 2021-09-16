@@ -1,0 +1,23 @@
+<div class="widget" #widget *ngIf="context$ | async as context">
+  <tui-avatar
+    class="icon"
+    [avatarUrl]="context.iconPath"
+    size="m"
+    [rounded]="true"
+  ></tui-avatar>
+  <div class="title">
+    <tui-line-clamp
+      [content]="context.title"
+      [lineHeight]="20"
+      [linesLimit]="1"
+    ></tui-line-clamp>
+    <tui-line-clamp
+      *ngIf="location$ | async as location"
+      class="location"
+      [content]="location"
+      [lineHeight]="20"
+      [linesLimit]="1"
+    ></tui-line-clamp>
+  </div>
+  <ng-content></ng-content>
+</div>
