@@ -19,5 +19,14 @@
       [linesLimit]="1"
     ></tui-line-clamp>
   </div>
-  <ng-content></ng-content>
+  <div class="metric" [ngSwitch]="context.deviceType">
+    <z-wave-multilevel-sensor
+      *ngIf="
+        ['sensorMultilevel', 'switchMultilevel'].includes(context.deviceType)
+      "
+      class="tui-text_body-l-2"
+      [scale]="context.scale ?? ''"
+      [currentValue]="context.level ?? 0"
+    ></z-wave-multilevel-sensor>
+  </div>
 </div>

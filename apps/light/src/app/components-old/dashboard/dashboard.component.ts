@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { Store } from '@ngxs/store';
 import { SetOrder, UpdateFilter } from '@store/filter/filter.actions';
 
@@ -7,11 +7,9 @@ import { SetOrder, UpdateFilter } from '@store/filter/filter.actions';
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss'],
 })
-export class DashboardComponent implements OnInit {
+export class DashboardComponent {
   constructor(private readonly store: Store) {
-    // this.ids$ = store.select(DevicesState.withFilter({ onDashboard: true }));
     this.store.dispatch(new UpdateFilter({ onDashboard: true }));
     this.store.dispatch(new SetOrder('dashboard'));
   }
-  ngOnInit(): void {}
 }

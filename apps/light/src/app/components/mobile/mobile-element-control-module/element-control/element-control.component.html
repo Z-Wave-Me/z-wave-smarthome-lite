@@ -1,0 +1,43 @@
+<div class="element-control" *ngIf="context$ | async as context">
+  <div class="back-wrapper">
+    <div class="name">
+      <tui-avatar
+        class="icon tui-space_left-3"
+        [avatarUrl]="context.iconPath"
+        size="s"
+        [rounded]="true"
+      ></tui-avatar>
+      <div class="title">
+        <tui-line-clamp
+          [content]="context.title"
+          [lineHeight]="20"
+          [linesLimit]="1"
+        ></tui-line-clamp>
+        <tui-line-clamp
+          *ngIf="context.location.name"
+          class="location"
+          [content]="context.location.name"
+          [lineHeight]="20"
+          [linesLimit]="1"
+        ></tui-line-clamp>
+      </div>
+    </div>
+    <tui-badge
+      zWaveBackButton
+      status="custom"
+      class="tui-space_right-3 back-button"
+    >
+      <tui-svg src="tuiIconRemoveLarge"></tui-svg>
+    </tui-badge>
+  </div>
+  <tui-scrollbar class="content" [hidden]="true" tuiOverscroll="scroll">
+    <z-wave-sensor
+      [id]="context.id"
+      [metrics]="context.metrics"
+      [type]="context.deviceType"
+    ></z-wave-sensor>
+    <z-wave-default-element-control
+      [context]="context"
+    ></z-wave-default-element-control>
+  </tui-scrollbar>
+</div>

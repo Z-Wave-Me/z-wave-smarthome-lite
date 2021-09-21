@@ -1,0 +1,15 @@
+<div class="sensor" [ngClass]="mode">
+  <tui-scrollbar class="wrapper" [hidden]="true" #border>
+    <div class="switch" #switcher [ngClass]="{ transition: transition }">
+      <fa-icon
+        [icon]="faPowerOff"
+        size="4x"
+        *ngIf="mode === 'binary'"
+        class="icon"
+      ></fa-icon>
+    </div>
+    <div *ngIf="mode === 'multi'" class="absolute-icon">
+      {{ currentValue }}
+    </div>
+  </tui-scrollbar>
+</div>

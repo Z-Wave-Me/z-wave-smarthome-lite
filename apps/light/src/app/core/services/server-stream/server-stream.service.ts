@@ -22,7 +22,9 @@ import { WsMessage } from '@core/services/websocket/websocket.interfaces';
 import { HttpEncapsulatedRequest } from '@core/services/ws-api/http-encapsulated-request';
 import { apiList, baseApiUrl } from '@core/services/ws-api/api-list';
 
-@Injectable()
+@Injectable({
+  providedIn: 'any',
+})
 export class ServerStreamService implements OnDestroy {
   private static readonly apiList = apiList;
   private static readonly baseApiUrl = baseApiUrl;
@@ -121,6 +123,7 @@ export class ServerStreamService implements OnDestroy {
       )
       .subscribe();
   }
+
   private subscribeLocations() {
     this.webSocketService
       .on<{ body: string }>('ws-reply')
@@ -154,11 +157,12 @@ export class ServerStreamService implements OnDestroy {
         })
       )
       .pipe(
-        takeUntil(this.destroy$),
-        tap((device) => {})
+        takeUntil(this.destroy$)
+        // tap((device) => {})
       )
       .subscribe();
   }
+
   private updateDevices({
     api,
     timeBetweenRequests,

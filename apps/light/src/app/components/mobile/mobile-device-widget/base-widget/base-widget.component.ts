@@ -1,5 +1,4 @@
 import {
-  AfterViewInit,
   ChangeDetectionStrategy,
   Component,
   ElementRef,
@@ -8,26 +7,14 @@ import {
   Renderer2,
   ViewChild,
 } from '@angular/core';
-import {
-  concatMap,
-  delay,
-  filter,
-  first,
-  map,
-  mapTo,
-  mergeMap,
-  switchMap,
-  take,
-  takeUntil,
-  takeWhile,
-  tap,
-} from 'rxjs/operators';
+import { filter, switchMap } from 'rxjs/operators';
 import { LocationsStateModel } from '@store/locations/locations.state';
 import { Store } from '@ngxs/store';
-import { fromEvent, merge, Observable, timer } from 'rxjs';
+import { Observable, timer } from 'rxjs';
 import { DestroyService } from '@core/services/destroy/destroy.service';
 import { MobileActionsService } from '@core/services/mobile-actions/mobile-actions.service';
 import { ToggleLevel } from '@store/devices/devices.actions';
+import { Router } from '@angular/router';
 
 interface Report {
   iconPath: string;
@@ -35,6 +22,9 @@ interface Report {
   inProgress: boolean;
   location: number;
   updateTime: number;
+  deviceType: string;
+  scale?: string;
+  level?: number;
 }
 
 @Component({
@@ -45,16 +35,18 @@ interface Report {
   providers: [DestroyService],
 })
 export class BaseWidgetComponent {
-  @ViewChild('widget', { read: ElementRef })
-  private readonly elementRef!: ElementRef;
   @Input() id!: string;
   context$: Observable<Report>;
   location$: Observable<string>;
+  @ViewChild('widget', { read: ElementRef })
+  private readonly elementRef!: ElementRef;
+
   constructor(
     private readonly store: Store,
     private readonly destroy$: DestroyService,
-    private renderer: Renderer2,
-    private readonly mobileActionsService: MobileActionsService
+    private readonly renderer: Renderer2,
+    private readonly mobileActionsService: MobileActionsService,
+    private readonly router: Router
   ) {
     this.context$ = store.select(
       ({
@@ -67,6 +59,9 @@ export class BaseWidgetComponent {
         inProgress: device.inProgress,
         location: device.location,
         updateTime: device.updateTime * 1e3,
+        deviceType: device.deviceType,
+        scale: device.metrics.scaleTitle,
+        level: device.metrics.level,
       })
     );
     this.location$ = this.context$.pipe(
@@ -79,14 +74,18 @@ export class BaseWidgetComponent {
       )
     );
   }
+
   @HostListener('swiperight')
   swipeRight() {
     console.log('swipeRight');
   }
+
   @HostListener('doubletap', ['$event'])
   doubleTap(event: TouchEvent) {
+    this.router.navigate(['/element', this.id]);
     console.log('doubleTap', event.type, event);
   }
+
   @HostListener('press')
   press() {
     this.store.dispatch(new ToggleLevel(this.id));
@@ -98,10 +97,12 @@ export class BaseWidgetComponent {
     });
     console.log('press');
   }
+
   @HostListener('touchend')
   cancel() {
     this.renderer.removeClass(this.elementRef.nativeElement, 'dirty');
   }
+
   @HostListener('touchstart')
   start() {
     this.renderer.addClass(this.elementRef.nativeElement, 'dirty');

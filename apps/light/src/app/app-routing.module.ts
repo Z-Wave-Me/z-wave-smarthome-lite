@@ -2,10 +2,20 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { EmptyLayoutComponent } from './layouts/empty-layout/empty-layout.component';
 import { AuthGuard } from '@core/services/auth/auth.guard';
+import { LoginComponent } from '@components/share/login/login.component';
 
 const isMobile = true;
 const routes: Routes = [
-  { path: 'login', component: EmptyLayoutComponent },
+  {
+    path: 'login',
+    component: EmptyLayoutComponent,
+    children: [
+      {
+        path: '',
+        component: LoginComponent,
+      },
+    ],
+  },
   {
     path: '',
     loadChildren: () => {
@@ -20,6 +30,7 @@ const routes: Routes = [
     },
     canActivate: [AuthGuard],
   },
+
   { path: '**', redirectTo: '' },
 ];
 

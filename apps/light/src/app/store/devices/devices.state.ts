@@ -22,9 +22,8 @@ import {
   Order,
 } from '@store/filter/filter.state';
 import { SetTagsList } from '@store/filter/filter.actions';
-import { ApiService } from '@core/services/api/api.service';
 import { WsApiService } from '@core/services/ws-api/ws-api.service';
-import { EMPTY, of } from 'rxjs';
+import { of } from 'rxjs';
 import { ServerTime } from '@store/locals/locals.actions';
 
 const orderFactory =
@@ -46,11 +45,14 @@ const orderFactory =
   };
 
 interface Metric {
-  [index: string]: string | number;
   level: number | string;
   icon: string;
+
+  [index: string]: string | number;
 }
+
 export type OrderByLocations = 'rooms' | 'elements' | 'dashboard';
+
 export interface Device {
   deviceType: string;
   inProgress?: boolean;
@@ -64,12 +66,14 @@ export interface Device {
   hasHistory?: boolean;
   showNotification?: boolean;
   onDashboard: boolean;
+  hideEvents: boolean;
   id: string;
   iconPath: string;
   metrics: Metric;
   order: {
     [key in OrderByLocations]: number;
   };
+
   [key: string]: any;
 }
 
@@ -224,6 +228,7 @@ export class DevicesState {
         intChartUrl: device.metrics.intchartUrl,
         hasHistory: device.hasHistory, // TODO something wrong here
         showNotification: !device.hasHistory, // TODO something wrong here
+        hideEvents: device.hide_events,
       };
       if (device.tags.length) {
         tagsList = new Set<string>([...tagsList, ...device.tags]);
@@ -261,6 +266,7 @@ export class DevicesState {
       })
     );
   }
+
   @Action(ChangeLevel)
   changeLevel(
     { setState }: StateContext<DevicesStateModel>,
@@ -297,7 +303,6 @@ export class DevicesState {
 
   @Action(ToggleLevel)
   toggleLevel(ctx: StateContext<DevicesStateModel>, { id }: { id: string }) {
-    console.log('here');
     const device = ctx.getState().entities[id];
     let level;
     if (device.deviceType === 'switchMultilevel') {

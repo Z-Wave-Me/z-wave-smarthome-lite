@@ -1,0 +1,8 @@
+<div class="sensor simple">
+  <div class="wrapper" [ngClass]="{ column: long }">
+    <span [ngClass]="{ 'tui-space_right-1': !long }">
+      {{ value }}
+    </span>
+    <span> {{ scale }} </span>
+  </div>
+</div>

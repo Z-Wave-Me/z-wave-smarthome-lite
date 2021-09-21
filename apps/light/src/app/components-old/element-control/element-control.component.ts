@@ -1,17 +1,16 @@
 import {
   Component,
   ComponentFactoryResolver,
-  OnInit,
   ViewChild,
   ViewContainerRef,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
 import { filter, first, map, switchMap, tap } from 'rxjs/operators';
-import { DefaultElementControlComponent } from '../element-control/default-element-control/default-element-control.component';
+import { DefaultElementControlComponent } from './default-element-control/default-element-control.component';
 import { Store } from '@ngxs/store';
 import { DevicesStateModel } from '@store/devices/devices.state';
-import { SwitchMultilevelControlComponent } from '../element-control/switch-multilevel-control/switch-multilevel-control.component';
+import { SwitchMultilevelControlComponent } from './switch-multilevel-control/switch-multilevel-control.component';
 
 @Component({
   selector: 'z-wave-element-control',
@@ -22,10 +21,10 @@ export class ElementControlComponent {
   private static readonly componentList: { [index: string]: any } = {
     switchMultilevel: SwitchMultilevelControlComponent,
   };
-  private component = DefaultElementControlComponent;
   data$: Observable<string>;
   @ViewChild('control', { static: true, read: ViewContainerRef })
   control!: ViewContainerRef;
+  private component = DefaultElementControlComponent;
 
   constructor(
     private readonly activatedRoute: ActivatedRoute,

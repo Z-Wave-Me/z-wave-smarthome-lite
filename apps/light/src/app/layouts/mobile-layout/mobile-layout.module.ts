@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { Inject, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MobileLayoutRoutingModule } from './mobile-layout-routing.module';
 import { MobileLayoutComponent } from './mobile-layout/mobile-layout.component';
@@ -6,6 +6,22 @@ import { MobileHeaderModule } from '@components/mobile/mobile-header/mobile-head
 import { MobileFooterModule } from '@components/mobile/mobile-footer/mobile-footer.module';
 import { TuiOverscrollModule } from '@taiga-ui/cdk';
 import { MobileTitleService } from '@core/services/mobile-title/mobile-title.service';
+import { ServerStreamService } from '@core/services/server-stream/server-stream.service';
+import { SubscriptionManagerService } from '@core/services/subscription-manager/subscription-manager.service';
+import { SERVER_SYNCHRONIZATION } from '../main-layout/tokens/server-synchronization.token';
+
+const deviceFactory = (serverStreamService: ServerStreamService) => {
+  serverStreamService.subscribe({ api: 'devices' });
+  return 'devices';
+};
+
+const locationFactory = (serverStreamService: ServerStreamService) => {
+  serverStreamService.subscribe({
+    api: 'locations',
+    timeBetweenRequests: 6000,
+  });
+  return 'locations';
+};
 
 @NgModule({
   declarations: [MobileLayoutComponent],
@@ -16,6 +32,25 @@ import { MobileTitleService } from '@core/services/mobile-title/mobile-title.ser
     MobileFooterModule,
     TuiOverscrollModule,
   ],
-  providers: [MobileTitleService],
+  providers: [
+    {
+      provide: SERVER_SYNCHRONIZATION,
+      useFactory: deviceFactory,
+      deps: [ServerStreamService],
+      multi: true,
+    },
+    {
+      provide: SERVER_SYNCHRONIZATION,
+      useFactory: locationFactory,
+      deps: [ServerStreamService],
+      multi: true,
+    },
+    SubscriptionManagerService,
+    MobileTitleService,
+  ],
 })
-export class MobileLayoutModule {}
+export class MobileLayoutModule {
+  constructor(
+    @Inject(SERVER_SYNCHRONIZATION) serverSynchronization: string[]
+  ) {}
+}

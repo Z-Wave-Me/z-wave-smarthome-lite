@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { MobileLayoutComponent } from './mobile-layout/mobile-layout.component';
-import { DashboardModule } from '@components/share/dashboard/dashboard.module';
+import { EmptyLayoutComponent } from '../empty-layout/empty-layout.component';
 
 const routes: Routes = [
   {
@@ -53,11 +53,28 @@ const routes: Routes = [
             ({ AutomationsModule }) => AutomationsModule
           ),
       },
+    ],
+  },
+  {
+    path: '',
+    component: EmptyLayoutComponent,
+    children: [
       {
-        path: '**',
-        redirectTo: 'dashboard',
+        path: 'element',
+        loadChildren: () =>
+          import(
+            '@components/mobile/mobile-element-control-module/mobile-element-control-module.module'
+          ).then(
+            ({ MobileElementControlModuleModule }) =>
+              MobileElementControlModuleModule
+          ),
+        data: { animation: 'element' },
       },
     ],
+  },
+  {
+    path: '**',
+    redirectTo: 'dashboard',
   },
 ];
 

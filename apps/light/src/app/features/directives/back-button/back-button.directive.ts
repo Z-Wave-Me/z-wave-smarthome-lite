@@ -1,14 +1,16 @@
-import { Directive, HostListener } from '@angular/core';
+import { Directive, ElementRef, HostListener } from '@angular/core';
 import { Location } from '@angular/common';
 
 @Directive({
-  selector: '[appBackButton]',
+  selector: '[zWaveBackButton]',
 })
 export class BackButtonDirective {
-  constructor(private readonly location: Location) {}
-
+  constructor(
+    private readonly elementRef: ElementRef,
+    private readonly location: Location
+  ) {}
   @HostListener('click')
-  onClick(): void {
+  back() {
     this.location.back();
   }
 }

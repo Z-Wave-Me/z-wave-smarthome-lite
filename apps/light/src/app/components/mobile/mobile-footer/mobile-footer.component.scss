@@ -1,6 +1,7 @@
 @import '~@taiga-ui/core/styles/taiga-ui-local';
 .footer-menu {
   background-color: var(--tui-base-01);
+  font: var(--tui-font-text-xl);
   a {
     flex: 1 1 auto;
     justify-content: center;

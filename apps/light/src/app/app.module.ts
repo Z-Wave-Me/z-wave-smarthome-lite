@@ -36,12 +36,13 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { DialogModule } from '@modules/dialog/dialog.module';
 import { WebsocketModule } from '@core/services/websocket/websocket.module';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { LoginComponent } from '@components/share/login/login.component';
 
 export const initApp = (configurationService: ConfigService) => () =>
   configurationService.load().toPromise();
 
 @NgModule({
-  declarations: [AppComponent, TestComponent],
+  declarations: [AppComponent, TestComponent, LoginComponent],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
