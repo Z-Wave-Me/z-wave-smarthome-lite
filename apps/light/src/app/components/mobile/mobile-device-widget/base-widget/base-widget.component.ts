@@ -97,14 +97,4 @@ export class BaseWidgetComponent {
     });
     console.log('press');
   }
-
-  @HostListener('touchend')
-  cancel() {
-    this.renderer.removeClass(this.elementRef.nativeElement, 'dirty');
-  }
-
-  @HostListener('touchstart')
-  start() {
-    this.renderer.addClass(this.elementRef.nativeElement, 'dirty');
-  }
 }

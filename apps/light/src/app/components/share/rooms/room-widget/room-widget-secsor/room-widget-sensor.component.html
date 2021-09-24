@@ -1,0 +1,14 @@
+<div
+  *ngIf="device$ | async as device"
+  class="sensor"
+  title="{{ device.title + ': ' + device.level + ' ' + device.scaleTitle }}"
+>
+  <div class="sensor-img">
+    <img [src]="device.iconPath" alt="img" class="sensor-preview-img img-circle" />
+  </div>
+  <div class="sensor-ctrl">
+    <span class="sensor-level">{{ device.level }}</span>
+    <span class="sensor-scale">{{ device.scaleTitle }}</span>
+    &nbsp;
+  </div>
+</div>

@@ -1,4 +1,9 @@
-<div class="widget" #widget *ngIf="context$ | async as context">
+<tui-island
+  tuiTouchable="transform"
+  class="widget"
+  #widget
+  *ngIf="context$ | async as context"
+>
   <tui-avatar
     class="icon"
     [avatarUrl]="context.iconPath"
@@ -29,4 +34,4 @@
       [currentValue]="context.level ?? 0"
     ></z-wave-multilevel-sensor>
   </div>
-</div>
+</tui-island>

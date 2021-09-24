@@ -17,6 +17,7 @@ export class AppComponent implements OnInit, OnDestroy {
   @Select(LocalStorageState.lang) lang$!: Observable<string>;
   @Select(LocalStorageState.nightMode) nightMode$!: Observable<boolean>;
   private subscription: Subscription = Subscription.EMPTY;
+
   constructor(
     private readonly actions: Actions,
     private readonly router: Router,
@@ -31,6 +32,7 @@ export class AppComponent implements OnInit, OnDestroy {
       )
       .subscribe();
   }
+
   ngOnInit(): void {
     this.actions.pipe(ofActionDispatched(Logout)).subscribe(() => {
       this.router.navigate(['/login']);

@@ -8,6 +8,7 @@ import {
 import { DeviceWidgetComponent } from '@components/mobile/mobile-device-widget/device-widget.component';
 import { BaseWidgetComponent } from './base-widget/base-widget.component';
 import { SensorModule } from '@components/mobile/sensor/sensor.module';
+import { TuiTouchableModule } from '@taiga-ui/addon-mobile';
 
 @NgModule({
   declarations: [DeviceWidgetComponent, BaseWidgetComponent],
@@ -18,6 +19,7 @@ import { SensorModule } from '@components/mobile/sensor/sensor.module';
     TuiAvatarModule,
     TuiLineClampModule,
     SensorModule,
+    TuiTouchableModule,
   ],
 })
 export class MobileDeviceWidgetModule {}

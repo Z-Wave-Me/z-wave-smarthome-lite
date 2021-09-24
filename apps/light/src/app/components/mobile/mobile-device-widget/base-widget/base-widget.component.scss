@@ -3,13 +3,9 @@
 :host {
   .widget {
     @include shadow(1);
-    background-color: var(--tui-base-01);
     display: flex;
     align-items: center;
-    border-radius: 8px;
-    margin: 0 0.3rem;
-    transform: scale(1);
-    transition: transform 0.1s, background 0s 0.5s;
+    padding: 0 0.2rem;
     .metric {
       flex: 1 1 auto;
       display: flex;
@@ -28,9 +24,6 @@
     .location {
       font: var(--tui-font-text-s);
     }
-  }
-  .dirty {
-    transform: scale(0.97);
   }
   @keyframes shake {
     from,

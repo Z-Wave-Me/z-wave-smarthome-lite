@@ -6,6 +6,11 @@ import { EmptyLayoutComponent } from '../empty-layout/empty-layout.component';
 const routes: Routes = [
   {
     path: '',
+    pathMatch: 'full',
+    redirectTo: 'dashboard',
+  },
+  {
+    path: '',
     component: MobileLayoutComponent,
     children: [
       {
