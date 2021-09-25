@@ -10,6 +10,7 @@ import { ServerStreamService } from '@core/services/server-stream/server-stream.
 import { SubscriptionManagerService } from '@core/services/subscription-manager/subscription-manager.service';
 import { SERVER_SYNCHRONIZATION } from '../main-layout/tokens/server-synchronization.token';
 import { TuiScrollbarModule } from '@taiga-ui/core';
+import { SwipeNavigationModule } from '@features/directives/swipe-navigation/swipe-navigation.module';
 
 const deviceFactory = (serverStreamService: ServerStreamService) => {
   serverStreamService.subscribe({ api: 'devices' });
@@ -33,6 +34,7 @@ const locationFactory = (serverStreamService: ServerStreamService) => {
     MobileFooterModule,
     TuiOverscrollModule,
     TuiScrollbarModule,
+    SwipeNavigationModule,
   ],
   providers: [
     {
