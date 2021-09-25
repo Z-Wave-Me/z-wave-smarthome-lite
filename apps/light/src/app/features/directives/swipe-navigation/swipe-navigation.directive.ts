@@ -2,19 +2,14 @@ import { Directive, HostListener } from '@angular/core';
 import { Event, NavigationEnd, Router } from '@angular/router';
 import { DestroyService } from '@core/services/destroy/destroy.service';
 import { filter, takeUntil, tap } from 'rxjs/operators';
+import { routeOrder } from '../../../layouts/mobile-layout/route-order';
 
 @Directive({
   selector: '[zWaveSwipeNavigation]',
   providers: [DestroyService],
 })
 export class SwipeNavigationDirective {
-  private readonly navigationList = [
-    '/dashboard',
-    '/rooms',
-    '/elements',
-    '/events',
-    '/automations',
-  ];
+  private readonly navigationList = routeOrder;
   private currentRoute = -1;
 
   constructor(

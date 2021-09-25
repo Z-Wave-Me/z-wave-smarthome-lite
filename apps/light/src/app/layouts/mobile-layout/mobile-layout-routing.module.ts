@@ -19,7 +19,7 @@ const routes: Routes = [
           import('@components/share/elements/elements.module').then(
             ({ ElementsModule }) => ElementsModule
           ),
-        data: { animation: 'elements' },
+        data: { animation: '/elements' },
       },
       {
         path: 'personal-settings',
@@ -34,7 +34,7 @@ const routes: Routes = [
           import('@components/share/rooms/rooms.module').then(
             ({ RoomsModule }) => RoomsModule
           ),
-        data: { animation: 'rooms' },
+        data: { animation: '/rooms' },
       },
       {
         path: 'dashboard',
@@ -42,7 +42,7 @@ const routes: Routes = [
           import('@components/share/dashboard/dashboard.module').then(
             ({ DashboardModule }) => DashboardModule
           ),
-        data: { animation: 'dashboard' },
+        data: { animation: '/dashboard' },
       },
       {
         path: 'events',
@@ -50,6 +50,7 @@ const routes: Routes = [
           import('@components/share/events/events.module').then(
             ({ EventsModule }) => EventsModule
           ),
+        data: { animation: '/events' },
       },
       {
         path: 'automations',
@@ -57,6 +58,7 @@ const routes: Routes = [
           import('@components/share/automations/automations.module').then(
             ({ AutomationsModule }) => AutomationsModule
           ),
+        data: { animation: '/automations' },
       },
     ],
   },
