@@ -1,6 +1,8 @@
 :host {
   .rooms {
     display: flex;
+    gap: 0.3rem;
     flex-direction: column;
+    padding: 0 0.3rem;
   }
 }

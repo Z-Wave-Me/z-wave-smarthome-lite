@@ -9,6 +9,7 @@ import { MobileTitleService } from '@core/services/mobile-title/mobile-title.ser
 import { ServerStreamService } from '@core/services/server-stream/server-stream.service';
 import { SubscriptionManagerService } from '@core/services/subscription-manager/subscription-manager.service';
 import { SERVER_SYNCHRONIZATION } from '../main-layout/tokens/server-synchronization.token';
+import { TuiScrollbarModule } from '@taiga-ui/core';
 
 const deviceFactory = (serverStreamService: ServerStreamService) => {
   serverStreamService.subscribe({ api: 'devices' });
@@ -31,6 +32,7 @@ const locationFactory = (serverStreamService: ServerStreamService) => {
     MobileHeaderModule,
     MobileFooterModule,
     TuiOverscrollModule,
+    TuiScrollbarModule,
   ],
   providers: [
     {
@@ -51,6 +53,8 @@ const locationFactory = (serverStreamService: ServerStreamService) => {
 })
 export class MobileLayoutModule {
   constructor(
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     @Inject(SERVER_SYNCHRONIZATION) serverSynchronization: string[]
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
   ) {}
 }

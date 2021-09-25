@@ -28,6 +28,7 @@ import { FileNameModule } from '@features/pipes/file-name/file-name.module';
 import { AddRoomComponent } from './add-room/add-room.component';
 import { TuiIslandModule } from '@taiga-ui/kit';
 import { TuiRippleModule } from '@taiga-ui/addon-mobile';
+import { TuiScrollbarModule } from '@taiga-ui/core';
 
 @NgModule({
   declarations: [
@@ -61,6 +62,7 @@ import { TuiRippleModule } from '@taiga-ui/addon-mobile';
     FileNameModule,
     TuiIslandModule,
     TuiRippleModule,
+    TuiScrollbarModule,
   ],
 })
 export class RoomsModule {}

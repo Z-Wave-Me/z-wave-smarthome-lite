@@ -1,0 +1,14 @@
+:host {
+  .widget {
+    padding: 1rem 0 0 0;
+    .title {
+      padding: 0 1rem;
+    }
+    .background {
+      background-repeat: no-repeat;
+      background-size: 100%;
+      background-position: center;
+      min-height: 150px;
+    }
+  }
+}

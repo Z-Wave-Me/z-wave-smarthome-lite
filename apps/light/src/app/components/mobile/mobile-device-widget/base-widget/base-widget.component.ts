@@ -39,8 +39,7 @@ export class BaseWidgetComponent {
   context$: Observable<Report>;
   location$: Observable<string>;
   @ViewChild('widget', { read: ElementRef })
-  private readonly elementRef!: ElementRef;
-
+  private readonly widgetRef!: ElementRef;
   constructor(
     private readonly store: Store,
     private readonly destroy$: DestroyService,
@@ -89,11 +88,11 @@ export class BaseWidgetComponent {
   @HostListener('press')
   press() {
     this.store.dispatch(new ToggleLevel(this.id));
-    this.renderer.addClass(this.elementRef.nativeElement, 'shake');
+    this.renderer.addClass(this.widgetRef.nativeElement, 'shake');
     this.mobileActionsService.shotVibrate();
     timer(310).subscribe({
       complete: () =>
-        this.renderer.removeClass(this.elementRef.nativeElement, 'shake'),
+        this.renderer.removeClass(this.widgetRef.nativeElement, 'shake'),
     });
     console.log('press');
   }

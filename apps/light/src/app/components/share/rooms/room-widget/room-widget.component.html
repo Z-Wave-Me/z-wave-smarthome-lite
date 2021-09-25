@@ -1,17 +1,23 @@
 <ng-container *transloco="let _t">
   <tui-island
     tuiRipple="radial-gradient(circle, #5c0067 0%, #00d4ff 100%)"
+    class="widget"
     *ngIf="room$ | async as room"
-    [ngClass]="{ inactive: !(locations$ | async) }"
+    [ngClass]="{ inactive: (locations$ | async) === 0 }"
   >
-    <div class="tui-island__title">
+    <div class="tui-island__title title">
       {{ room.title }}
     </div>
-    <figure class="tui-island__figure">
-      <img [src]="room.imgSrc" alt="" />
-    </figure>
-    <pre>{{ room | json }}</pre>
-    {{ locations$ | async | json }}
+    <div
+      class="background"
+      [ngStyle]="{ 'background-image': 'url(' + room.imgSrc + ')' }"
+    >
+      <!--    <figure class="tui-island__figure">-->
+      <!--      <img [src]="room.imgSrc" alt="" />-->
+      <!--    </figure>-->
+      <!--    <pre>{{ room | json }}</pre>-->
+      {{ locations$ | async | json }}
+    </div>
   </tui-island>
 </ng-container>
 <!--<ng-container *transloco="let _t">-->
