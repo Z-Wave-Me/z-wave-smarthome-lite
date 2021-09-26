@@ -126,6 +126,11 @@
     "packageManager": "npm"
   },
   "schematics": {
+    "@schematics/angular": {
+      "component": {
+        "changeDetection": "OnPush"
+      }
+    },
     "@nrwl/angular": {
       "application": {
         "linter": "eslint"

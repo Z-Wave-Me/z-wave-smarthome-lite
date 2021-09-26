@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Observable } from 'rxjs';
-import { filter, finalize, map, switchMap, takeUntil, tap } from 'rxjs/operators';
+import { takeUntil, tap } from 'rxjs/operators';
 import { Store } from '@ngxs/store';
 import { DestroyService } from '@core/services/destroy/destroy.service';
 import { SetOrder, UpdateFilter } from '@store/filter/filter.actions';
@@ -18,11 +17,11 @@ interface RoomInfo {
   styleUrls: ['./room.component.scss'],
   providers: [DestroyService],
 })
-export class RoomComponent implements OnInit {
+export class RoomComponent {
   constructor(
     private readonly activatedRoute: ActivatedRoute,
     private readonly store: Store,
-    private readonly destroy$: DestroyService,
+    private readonly destroy$: DestroyService
   ) {
     this.store.dispatch(new SetOrder('rooms'));
     activatedRoute.url
@@ -30,10 +29,8 @@ export class RoomComponent implements OnInit {
         takeUntil(destroy$),
         tap(([{ path }]) => {
           this.store.dispatch(new UpdateFilter({ location: +path }));
-        }),
+        })
       )
       .subscribe();
   }
-
-  ngOnInit(): void {}
 }

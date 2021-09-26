@@ -24,6 +24,7 @@ export class MobileTitleService {
       map((data) => (data as NavigationEnd).url),
       startWith(this.route.url),
       switchMap((route) => {
+        console.log(route);
         if (routeOrder.includes(route)) {
           console.log('here');
           return this.translocoService.selectTranslate<string>(route.slice(1));

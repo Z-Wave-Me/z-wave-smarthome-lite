@@ -4,6 +4,7 @@ import { RoomsComponent } from './rooms.component';
 import { RoomComponent } from './room/room.component';
 import { RoomConfigComponent } from './room-config/room-config.component';
 import { AddRoomComponent } from './add-room/add-room.component';
+import { EmptyLayoutComponent } from '../../../layouts/empty-layout/empty-layout.component';
 
 const routes: Routes = [
   {
@@ -16,6 +17,7 @@ const routes: Routes = [
   },
   {
     path: 'config',
+    component: EmptyLayoutComponent,
     children: [
       {
         path: ':id',

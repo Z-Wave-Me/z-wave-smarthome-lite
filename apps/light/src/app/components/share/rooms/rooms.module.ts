@@ -14,9 +14,8 @@ import { RoomWidgetSensorComponent } from './room-widget/room-widget-secsor/room
 import { RoomSubMenuComponent } from './room/room-sub-menu/room-sub-menu.component';
 import { DropDownModule } from '@modules/drop-down/drop-down.module';
 import { RoomSelectComponent } from './room/room-select/room-select.component';
-import { DeviceListModule } from '@modules/device-list/device-list.module';
 import { LoadScreenModule } from '@modules/load-screen/load-screen.module';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BackButtonModule } from '@features/directives/back-button/back-button.module';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -26,11 +25,17 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { HelpTextModule } from '@modules/help-text/help-text.module';
 import { FileNameModule } from '@features/pipes/file-name/file-name.module';
 import { AddRoomComponent } from './add-room/add-room.component';
-import { TuiAvatarModule, TuiIslandModule } from '@taiga-ui/kit';
+import {
+  TuiAvatarModule,
+  TuiDataListWrapperModule,
+  TuiIslandModule,
+  TuiSelectModule,
+} from '@taiga-ui/kit';
 import { TuiRippleModule, TuiTouchableModule } from '@taiga-ui/addon-mobile';
-import { TuiScrollbarModule } from '@taiga-ui/core';
+import { TuiDataListModule, TuiScrollbarModule } from '@taiga-ui/core';
 import { MainSensorWidgetComponent } from './main-sensor-widget/main-sensor-widget.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { DeviceListModule } from '@components/share/device-list/device-list.module';
 
 @NgModule({
   declarations: [
@@ -52,7 +57,6 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
     TranslocoModule,
     SecureModule,
     DropDownModule,
-    DeviceListModule,
     LoadScreenModule,
     ReactiveFormsModule,
     BackButtonModule,
@@ -69,6 +73,11 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
     TuiTouchableModule,
     TuiAvatarModule,
     FontAwesomeModule,
+    DeviceListModule,
+    TuiSelectModule,
+    TuiDataListWrapperModule,
+    FormsModule,
+    TuiDataListModule,
   ],
 })
 export class RoomsModule {}

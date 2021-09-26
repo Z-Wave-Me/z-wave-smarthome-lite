@@ -1,32 +1,29 @@
-<!-- longpress-{{longPressSent}}"
-on-long-press="roomBarOnLongPress(room.id)"
-     on-touch-end="roomBarOnTouchEnd()"
-     prevent-click="true"
-     long-press-mobile="{{deviceDetector.isMobile()}}"-->
-<div *ngIf="info$ | async as info" class="elements-room-bar">
-  <!-- Bar row -->
-  <div class="bar-row">
-    <!-- Bar col -->
-    <div class="bar-row-img">
-      <img [src]="info.imgSrc" alt="" />
-    </div>
-    <!-- Bar col -->
-    <z-wave-room-select>
-      <span class="bar-row-title">{{ info.title }} <i class="fas fa-caret-down"></i> </span>
-    </z-wave-room-select>
-    <div class="filler"></div>
-    <z-wave-room-widget-sensor *ngFor="let sensor of info.mainSensors" [id]="sensor"></z-wave-room-widget-sensor>
-    <ng-container *transloco="let _t">
-      <ng-container *ngIf="id">
-        <a
-          *appSecure="'configRooms'"
-          [routerLink]="['../config', id]"
-          class="btn btn-default"
-          title="{{ _t('lb_update') }}"
-        >
-          <i class="fas fa-cog"></i>
-        </a>
-      </ng-container>
-    </ng-container>
-  </div>
-</div>
+<!--<div *ngIf="info$ | async as info" class="elements-room-bar">-->
+<!--  &lt;!&ndash; Bar row &ndash;&gt;-->
+<!--  <div class="bar-row">-->
+<!--    &lt;!&ndash; Bar col &ndash;&gt;-->
+<!--    <div class="bar-row-img">-->
+<!--      <img [src]="info.imgSrc" alt="" />-->
+<!--    </div>-->
+<!-- Bar col -->
+<z-wave-room-select (changeRoom)="changeRoom($event)" [excludeZero]="true">
+</z-wave-room-select>
+<!--    <div class="filler"></div>-->
+<!--    &lt;!&ndash;    <z-wave-room-widget-sensor&ndash;&gt;-->
+<!--    &lt;!&ndash;      *ngFor="let sensor of info.mainSensors"&ndash;&gt;-->
+<!--    &lt;!&ndash;      [id]="sensor"&ndash;&gt;-->
+<!--    &lt;!&ndash;    ></z-wave-room-widget-sensor>&ndash;&gt;-->
+<!--    <ng-container *transloco="let _t">-->
+<!--      <ng-container *ngIf="id">-->
+<!--        <a-->
+<!--          *appSecure="'configRooms'"-->
+<!--          [routerLink]="['../config', id]"-->
+<!--          class="btn btn-default"-->
+<!--          title="{{ _t('lb_update') }}"-->
+<!--        >-->
+<!--          <i class="fas fa-cog"></i>-->
+<!--        </a>-->
+<!--      </ng-container>-->
+<!--    </ng-container>-->
+<!--  </div>-->
+<!--</div>-->
