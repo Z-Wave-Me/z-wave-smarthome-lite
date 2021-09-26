@@ -1,18 +1,24 @@
 <div
   *ngIf="{ online: (online$ | async), time: (serverTime$ | async) } as data"
   class="server-status"
-  [ngClass]="{ vertical: orientation }"
 >
-  <i
+  <fa-icon
+    [icon]="faHome"
+    size="lg"
+    class="tui-space_right-2"
     *ngIf="locationType() === 'local'"
-    [ngClass]="data.online ? 'text-success' : 'text-danger'"
-    class="fad fa-home"
-  ></i>
-  <i
+    [ngStyle]="{
+      color: data.online ? 'var(--tui-success-fill)' : 'var(--tui-error-fill)'
+    }"
+  >
+  </fa-icon>
+  <fa-icon
+    [icon]="faGlobeEurope"
     *ngIf="locationType() === 'remote'"
-    [ngClass]="data.online ? 'text-success' : 'text-danger'"
-    class="fad fa-globe"
-  ></i>
+    [ngStyle]="{
+      color: data.online ? 'var(--tui-success-fill)' : 'var(--tui-error-fill)'
+    }"
+  ></fa-icon>
   <span [ngClass]="{ pause: !data.online }">
     {{ data.time | date: 'HH:mm:ss' }}</span
   >

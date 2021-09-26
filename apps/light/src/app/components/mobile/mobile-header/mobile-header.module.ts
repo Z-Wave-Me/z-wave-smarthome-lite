@@ -6,6 +6,7 @@ import { TuiSvgModule } from '@taiga-ui/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SettingsMenuModule } from '@components/share/settings-menu/settings-menu.module';
 import { ServerStatusWidgetModule } from '@components/share/server-status-widget/server-status-widget.module';
+import { TranslocoModule } from '@ngneat/transloco';
 
 @NgModule({
   declarations: [MobileHeaderComponent],
@@ -18,6 +19,7 @@ import { ServerStatusWidgetModule } from '@components/share/server-status-widget
     ReactiveFormsModule,
     SettingsMenuModule,
     ServerStatusWidgetModule,
+    TranslocoModule,
   ],
   exports: [MobileHeaderComponent],
 })

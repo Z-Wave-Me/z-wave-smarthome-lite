@@ -1,4 +1,10 @@
 {
+  "rooms": "Rooms",
+  "elements": "Devices",
+  "dashboard": "Dashboard",
+  "events": "Events",
+  "automations": "Automations",
+
   "S0": "S0",
   "S2_Access": "S2 Access",
   "S2_Authenticated": "S2 Authenticated",
@@ -1016,5 +1022,5 @@
   "yes": "Yes",
   "z_way_restart": "The system will now be automatically restarted. Redirect to login in __val__ __level__.",
   "zigbee_network": "ZigBee network",
-  "zwave_device_failed": "Z-Wave device is failed",
+  "zwave_device_failed": "Z-Wave device is failed"
 }

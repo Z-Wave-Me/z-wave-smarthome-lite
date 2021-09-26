@@ -8,6 +8,9 @@ import {
   TuiHostedDropdownModule,
   TuiSvgModule,
 } from '@taiga-ui/core';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { TuiToggleModule } from '@taiga-ui/kit';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [SettingsMenuComponent],
@@ -18,6 +21,9 @@ import {
     TuiDataListModule,
     TuiButtonModule,
     TuiDropdownControllerModule,
+    FontAwesomeModule,
+    TuiToggleModule,
+    ReactiveFormsModule,
   ],
   exports: [SettingsMenuComponent],
 })

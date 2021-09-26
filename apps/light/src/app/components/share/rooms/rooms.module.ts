@@ -27,7 +27,7 @@ import { HelpTextModule } from '@modules/help-text/help-text.module';
 import { FileNameModule } from '@features/pipes/file-name/file-name.module';
 import { AddRoomComponent } from './add-room/add-room.component';
 import { TuiIslandModule } from '@taiga-ui/kit';
-import { TuiRippleModule } from '@taiga-ui/addon-mobile';
+import { TuiRippleModule, TuiTouchableModule } from '@taiga-ui/addon-mobile';
 import { TuiScrollbarModule } from '@taiga-ui/core';
 
 @NgModule({
@@ -63,6 +63,7 @@ import { TuiScrollbarModule } from '@taiga-ui/core';
     TuiIslandModule,
     TuiRippleModule,
     TuiScrollbarModule,
+    TuiTouchableModule,
   ],
 })
 export class RoomsModule {}

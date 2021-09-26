@@ -1,22 +1,22 @@
 <tui-hosted-dropdown
-  tuiDropdownAlign="left"
+  tuiDropdownAlign="right"
   [content]="dropdown"
   [(open)]="open"
+  class="icon"
 >
-  <button tuiButton type="button" appearance="flat" [iconRight]="icon">
-    <tui-svg src="tuiIconSettings"></tui-svg>
-  </button>
+  <fa-icon [icon]="faCogs" size="lg"></fa-icon>
 </tui-hosted-dropdown>
 
-<ng-template #icon>
-  <tui-svg
-    src="tuiIconChevronDown"
-    class="icon"
-    [class.icon_rotated]="open"
-  ></tui-svg>
-</ng-template>
 <ng-template #dropdown>
   <tui-data-list>
+    <button tuiOption>
+      <tui-toggle
+        style="align-self: center"
+        class="tui-space_right-1"
+        size="m"
+        [formControl]="themeSwitcher"
+      ></tui-toggle>
+    </button>
     <button *ngFor="let item of items" tuiOption (click)="onClick()">
       {{ item }}
     </button>

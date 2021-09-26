@@ -5,7 +5,7 @@ import {
   faTh,
   faClipboardList,
   faCogs,
-} from '@fortawesome/free-solid-svg-icons';
+} from '@fortawesome/pro-solid-svg-icons';
 @Component({
   selector: 'z-wave-mobile-footer',
   templateUrl: './mobile-footer.component.html',

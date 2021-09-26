@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
+import { LocationsStateModel } from '@store/locations/locations.state';
 
 @Component({
   selector: 'z-wave-rooms-gallery',
@@ -9,7 +10,11 @@ import { Observable } from 'rxjs';
 })
 export class RoomsGalleryComponent {
   readonly ids$: Observable<number[]>;
+
   constructor(private readonly store: Store) {
-    this.ids$ = store.select((state) => state.locations.ids);
+    this.ids$ = store.select(
+      ({ locations: { ids } }: { locations: LocationsStateModel }) =>
+        ids.filter((id) => id)
+    );
   }
 }

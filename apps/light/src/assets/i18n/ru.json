@@ -1,5 +1,10 @@
 {
-    "S0": "S0",
+  "rooms": "Комнаты",
+  "elements": "Устройства",
+  "dashboard": "Избранное",
+  "events": "События",
+  "automations": "Автоматизации",
+  "S0": "S0",
     "S2_Access": "S2 Доступ",
     "S2_Authenticated": "S2 аутентифицирован",
     "S2_Unauthenticated": "S2 не аутентифицирован",

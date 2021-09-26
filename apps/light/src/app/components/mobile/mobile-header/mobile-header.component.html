@@ -1,15 +1,8 @@
-<div class="header">
-  <div class="header-title">
-    {{ title$ | async }}
+<div class="header" *transloco="let _t">
+  <div class="header-title tui-text_h5">
+    {{ _t((title$ | async)?.slice(1)) }}
   </div>
-  <z-wave-sever-status-widget
-    orientation="vertical"
-  ></z-wave-sever-status-widget>
-  <tui-toggle
-    style="align-self: center"
-    class="tui-space_right-1"
-    size="m"
-    [formControl]="themeSwitcher"
-  ></tui-toggle>
+  <z-wave-sever-status-widget></z-wave-sever-status-widget>
+
   <z-wave-settings-menu></z-wave-settings-menu>
 </div>

@@ -22,7 +22,8 @@ export class MultilevelSensorComponent {
   }
   stringValue() {
     return (
-      this.value !== 0 && this.value !== 99 && this.mode !== 'switchMultilevel'
+      (this.value !== 0 && this.value !== 99) ||
+      this.mode !== 'switchMultilevel'
     );
   }
 }
