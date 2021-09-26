@@ -1,0 +1,21 @@
+<div
+  *ngIf="device$ | async as device"
+  class="sensor"
+  [title]="device.title + ': ' + device.level + ' ' + device.scaleTitle"
+>
+  <tui-avatar
+    [avatarUrl]="device.iconPath"
+    [rounded]="true"
+    class="tui-space_right-2"
+  >
+    <!--    <img-->
+    <!--      [src]="device.iconPath"-->
+    <!--      alt="img"-->
+    <!--      class="sensor-preview-img img-circle"-->
+    <!--    />-->
+  </tui-avatar>
+  <div class="tui-text_body-l-2">
+    <span>{{ device.level }}</span>
+    <span> {{ device.scaleTitle }}</span>
+  </div>
+</div>

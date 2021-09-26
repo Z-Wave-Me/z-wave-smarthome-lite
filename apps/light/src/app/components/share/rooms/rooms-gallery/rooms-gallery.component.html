@@ -1,6 +1,3 @@
-<!-- Flex gallery-->
-<!--class longpress-{{longPressSent}}-->
-<!--variables ng-if="rooms.show"-->
 <ng-template #loadingScreen>
   <z-wave-load-screen></z-wave-load-screen>
 </ng-template>
@@ -10,12 +7,3 @@
 >
   <z-wave-room-widget *ngFor="let id of ids" [id]="id"></z-wave-room-widget>
 </div>
-
-<!-- Button for mobile devices -->
-<!--TODO mobile only-->
-<!--<div class="text-center" ng-show="elementAccess(cfg.role_access.config_rooms) && v.id != 0">-->
-<!--  <a class="btn btn-default btn" href="#config-rooms/0">-->
-<!--    <i class="fas fa-plus text-success"></i>-->
-<!--    <span *transloco="let _t" class="btn-name_">{{_t('lb_add_room')}}</span>-->
-<!--  </a>-->
-<!--</div>-->

@@ -11,6 +11,6 @@ export class MobileHeaderComponent {
   title$: Observable<string>;
 
   constructor(private readonly mobileTitleService: MobileTitleService) {
-    this.title$ = mobileTitleService.title();
+    this.title$ = mobileTitleService.title$();
   }
 }

@@ -1,14 +1,14 @@
 import { NgDompurifySanitizer } from '@tinkoff/ng-dompurify';
 import {
-  TuiRootModule,
-  TuiDialogModule,
-  TuiNotificationsModule,
   TUI_SANITIZER,
+  TuiDialogModule,
   TuiModeModule,
+  TuiNotificationsModule,
+  TuiRootModule,
   TuiThemeNightModule,
 } from '@taiga-ui/core';
 import { BrowserModule, HammerModule } from '@angular/platform-browser';
-import { APP_INITIALIZER, Injectable, NgModule } from '@angular/core';
+import { APP_INITIALIZER, NgModule } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -67,8 +67,8 @@ export const initApp = (configurationService: ConfigService) => () =>
         ],
     NgxsResetPluginModule.forRoot(),
     HttpClientModule,
-    ApiModule,
     TranslocoRootModule,
+    ApiModule,
     MainLayoutModule,
     EmptyLayoutModule,
     DropDownModule,

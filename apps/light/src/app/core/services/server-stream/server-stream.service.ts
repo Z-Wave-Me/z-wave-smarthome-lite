@@ -36,7 +36,7 @@ export class ServerStreamService implements OnDestroy {
     private webSocketService: WebsocketService,
     private store: Store
   ) {
-    this.connection$ = of(true);
+    this.connection$ = of(false);
     // this.connection$ = webSocketService.isConnect();
     // webSocketService
     //   .on<void>('connectionStatusEvent')

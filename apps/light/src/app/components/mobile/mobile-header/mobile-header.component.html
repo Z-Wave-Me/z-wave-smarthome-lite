@@ -1,6 +1,6 @@
-<div class="header" *transloco="let _t">
+<div class="header">
   <div class="header-title tui-text_h5">
-    {{ _t((title$ | async)?.slice(1)) }}
+    {{ title$ | async }}
   </div>
   <z-wave-sever-status-widget></z-wave-sever-status-widget>
 

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
 import { LocationsStateModel } from '@store/locations/locations.state';
@@ -7,6 +7,7 @@ import { LocationsStateModel } from '@store/locations/locations.state';
   selector: 'z-wave-rooms-gallery',
   templateUrl: './rooms-gallery.component.html',
   styleUrls: ['./rooms-gallery.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RoomsGalleryComponent {
   readonly ids$: Observable<number[]>;

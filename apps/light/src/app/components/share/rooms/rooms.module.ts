@@ -26,9 +26,11 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { HelpTextModule } from '@modules/help-text/help-text.module';
 import { FileNameModule } from '@features/pipes/file-name/file-name.module';
 import { AddRoomComponent } from './add-room/add-room.component';
-import { TuiIslandModule } from '@taiga-ui/kit';
+import { TuiAvatarModule, TuiIslandModule } from '@taiga-ui/kit';
 import { TuiRippleModule, TuiTouchableModule } from '@taiga-ui/addon-mobile';
 import { TuiScrollbarModule } from '@taiga-ui/core';
+import { MainSensorWidgetComponent } from './main-sensor-widget/main-sensor-widget.component';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 @NgModule({
   declarations: [
@@ -42,6 +44,7 @@ import { TuiScrollbarModule } from '@taiga-ui/core';
     RoomSubMenuComponent,
     RoomSelectComponent,
     AddRoomComponent,
+    MainSensorWidgetComponent,
   ],
   imports: [
     CommonModule,
@@ -64,6 +67,8 @@ import { TuiScrollbarModule } from '@taiga-ui/core';
     TuiRippleModule,
     TuiScrollbarModule,
     TuiTouchableModule,
+    TuiAvatarModule,
+    FontAwesomeModule,
   ],
 })
 export class RoomsModule {}
