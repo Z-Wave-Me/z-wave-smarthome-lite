@@ -28,7 +28,11 @@ import { NgxsResetPluginModule } from 'ngxs-reset-plugin';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MainLayoutModule } from './layouts/main-layout/main-layout.module';
 import { EmptyLayoutModule } from './layouts/empty-layout/empty-layout.module';
-import { APP_BASE_HREF } from '@angular/common';
+import {
+  APP_BASE_HREF,
+  HashLocationStrategy,
+  LocationStrategy,
+} from '@angular/common';
 import { DropDownModule } from '@modules/drop-down/drop-down.module';
 import { LocalStorageState } from '@store/local-storage/local-storage.state';
 import { DestroyService } from '@core/services/destroy/destroy.service';
@@ -37,6 +41,7 @@ import { DialogModule } from '@modules/dialog/dialog.module';
 import { WebsocketModule } from '@core/services/websocket/websocket.module';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { LoginComponent } from '@components/share/login/login.component';
+import { TuiMobileDialogModule } from '@taiga-ui/addon-mobile';
 
 export const initApp = (configurationService: ConfigService) => () =>
   configurationService.load().toPromise();
@@ -79,7 +84,6 @@ export const initApp = (configurationService: ConfigService) => () =>
       url: environment.ws,
     }),
     TuiRootModule,
-    TuiDialogModule,
     TuiNotificationsModule,
     TuiThemeNightModule,
     TuiModeModule,

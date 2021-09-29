@@ -7,6 +7,7 @@ export interface Payload {
   data?: any;
   params?: { key: string; value: string | number }[];
   command?: string | number;
+  method?: 'get' | 'put' | 'post' | 'delete';
 }
 
 @Injectable({
@@ -110,7 +111,6 @@ export class ApiService {
       console.log('data from apiService ', data);
     });
   }
-
   send<T>(event: string, payload?: Payload): Observable<T> {
     const url = this.apiList[event];
     if (!url) {
@@ -121,12 +121,17 @@ export class ApiService {
         payload.params.map(({ key, value }) => key + '=' + value).join('&')
       : '';
     const command = payload?.command ? '/' + payload.command : '';
-    // console.log(this.apiUrl + url + command + params, payload?.data);
-    if (payload?.data) {
-      return this.http.post<T>(url + command + params, payload?.data);
-    } else {
-      console.log(url + command + params);
-      return this.http.get<T>(url + command + params);
+    // console.warn(url + command + params, payload?.data, command, params);
+    if (payload?.method === 'put') {
+      return this.http.put<T>(url + command + params, payload?.data);
     }
+    if (payload?.method === 'delete') {
+      return this.http.delete<T>(url + command + params);
+    }
+    if (payload?.data || payload?.method === 'post') {
+      return this.http.post<T>(url + command + params, payload?.data);
+    }
+    // console.log(url + command + params);
+    return this.http.get<T>(url + command + params);
   }
 }

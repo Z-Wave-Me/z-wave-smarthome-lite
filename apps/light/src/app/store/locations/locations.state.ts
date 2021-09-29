@@ -1,10 +1,15 @@
 import { inject, Injectable } from '@angular/core';
 import { Action, State, StateContext } from '@ngxs/store';
-import { UpdateLocations } from './locations.action';
+import {
+  ChangeLocation,
+  RemoveLocation,
+  UpdateLocations,
+} from './locations.action';
 import { patch } from '@ngxs/store/operators';
 import { Location } from '@store/locations/location';
 import { TranslocoService } from '@ngneat/transloco';
 import { ConfigService } from '@core/services/config/config.service';
+import { ApiService } from '@core/services/api/api.service';
 
 export class LocationsStateModel {
   ids!: number[];
@@ -24,12 +29,13 @@ const defaults: LocationsStateModel = {
 export class LocationsState {
   constructor(
     private readonly translocoService: TranslocoService,
-    private readonly configService: ConfigService
+    private readonly configService: ConfigService,
+    private readonly apiService: ApiService
   ) {}
 
   @Action(UpdateLocations)
   update(
-    { patchState, setState }: StateContext<LocationsStateModel>,
+    { setState }: StateContext<LocationsStateModel>,
     { payload: { locations } }: { payload: { locations: Location[] } }
   ): void {
     const ids: number[] = [];
@@ -63,5 +69,42 @@ export class LocationsState {
         ids,
       })
     );
+  }
+
+  @Action(ChangeLocation)
+  changeLocation(
+    { setState }: StateContext<LocationsStateModel>,
+    { location }: { location: Location }
+  ) {
+    setState(
+      patch({
+        entities: patch({
+          [location.id]: location,
+        }),
+      })
+    );
+
+    return this.apiService.send('locations', {
+      command: location.id,
+      data: location,
+      method: 'put',
+    });
+  }
+  @Action(RemoveLocation)
+  removeLocation(
+    { getState, setState }: StateContext<LocationsStateModel>,
+    { locationId }: { locationId: number }
+  ) {
+    const state = getState();
+    setState({
+      ids: state.ids.filter((id) => id !== locationId),
+      entities: Object.fromEntries(
+        Object.entries(state.entities).filter((_, key) => key !== locationId)
+      ),
+    });
+    return this.apiService.send('locations', {
+      command: locationId,
+      method: 'delete',
+    });
   }
 }

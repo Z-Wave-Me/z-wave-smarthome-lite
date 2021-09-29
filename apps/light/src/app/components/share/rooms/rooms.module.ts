@@ -7,7 +7,6 @@ import { TranslocoModule } from '@ngneat/transloco';
 import { RoomComponent } from './room/room.component';
 import { RoomsSubMenuComponent } from './rooms-sub-menu/rooms-sub-menu.component';
 import { SecureModule } from '@features/directives/secure/secure.module';
-import { RoomConfigComponent } from './room-config/room-config.component';
 import { RoomsGalleryComponent } from './rooms-gallery/rooms-gallery.component';
 import { RoomWidgetComponent } from './room-widget/room-widget.component';
 import { RoomWidgetSensorComponent } from './room-widget/room-widget-secsor/room-widget-sensor.component';
@@ -42,7 +41,6 @@ import { DeviceListModule } from '@components/share/device-list/device-list.modu
     RoomsComponent,
     RoomComponent,
     RoomsSubMenuComponent,
-    RoomConfigComponent,
     RoomsGalleryComponent,
     RoomWidgetComponent,
     RoomWidgetSensorComponent,

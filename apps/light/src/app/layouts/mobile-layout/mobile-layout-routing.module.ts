@@ -77,6 +77,19 @@ const routes: Routes = [
           ),
         data: { animation: 'element' },
       },
+      {
+        path: 'rooms',
+        component: EmptyLayoutComponent,
+        children: [
+          {
+            path: 'config',
+            loadChildren: () =>
+              import('@components/share/room-config/room-config.module').then(
+                ({ RoomConfigModule }) => RoomConfigModule
+              ),
+          },
+        ],
+      },
     ],
   },
   {

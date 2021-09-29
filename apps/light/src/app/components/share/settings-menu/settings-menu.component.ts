@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
 import { TuiHostedDropdownComponent } from '@taiga-ui/core';
 import { faUserCog } from '@fortawesome/pro-regular-svg-icons';
 import { FormBuilder, FormControl } from '@angular/forms';
@@ -13,6 +13,7 @@ import { NightMode } from '@store/local-storage/local-storage.actions';
   templateUrl: './settings-menu.component.html',
   styleUrls: ['./settings-menu.component.scss'],
   providers: [DestroyService],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SettingsMenuComponent {
   themeSwitcher: FormControl;

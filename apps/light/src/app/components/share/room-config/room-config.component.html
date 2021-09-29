@@ -1,0 +1,155 @@
+<ng-container *transloco="let _t">
+  <div
+    class="room-config tui-container_adaptive"
+    *ngIf="data$ | async as loc; else loading"
+  >
+    <div class="back-wrapper shadow">
+      <div class="title tui-text_body-xl">
+        <tui-line-clamp
+          [content]="loc.title"
+          [lineHeight]="26"
+          [linesLimit]="1"
+        ></tui-line-clamp>
+      </div>
+      <tui-badge
+        zWaveBackButton
+        status="custom"
+        class="tui-space_right-3 back-button"
+      >
+        <tui-svg src="tuiIconRemoveLarge"></tui-svg>
+      </tui-badge>
+    </div>
+    <tui-scrollbar class="content" [hidden]="true" tuiOverscroll="scroll">
+      <z-wave-location-carousel
+        [list]="imageList"
+        [current]="loc.imgSrc"
+        (upload)="uploadImg($event)"
+        (selectImg)="changeImg($event)"
+      ></z-wave-location-carousel>
+      <div class="space">
+        <tui-input
+          [required]="true"
+          [ngModel]="loc.title"
+          (focusedChange)="changeName(input, loc, $event)"
+          #input
+          >{{ _t('lb_name') }}</tui-input
+        >
+        <div class="tui-text_h5 tui-space_top-5">
+          {{ _t('lb_devices_in_room') }}
+        </div>
+        <tui-notification
+          >{{ _t('room_main_sensors', { __cnt__: loc.main_sensors.length }) }}
+        </tui-notification>
+        <div
+          tuiGroup
+          orientation="vertical"
+          class="device-group"
+          *ngIf="assignedDevices$ | async as assignedDevices"
+        >
+          <button
+            tuiButton
+            [icon]="remove"
+            *ngFor="let device of assignedDevices; trackBy: tracker"
+            (click)="
+              toggleMainSensor(
+                device.id,
+                ['sensorBinary', 'sensorMultilevel'].includes(device.deviceType)
+              )
+            "
+          >
+            <span class="device-button_name">{{ device.title }}</span>
+
+            <fa-icon
+              *ngIf="
+                ['sensorBinary', 'sensorMultilevel'].includes(device.deviceType)
+              "
+              size="lg"
+              [icon]="
+                loc.main_sensors.includes(device.id) ? faCheckCircle : faCircle
+              "
+              [ngStyle]="{
+                color: loc.main_sensors.includes(device.id)
+                  ? 'var(--tui-success-fill)'
+                  : 'var(--tui-neutral-bg)'
+              }"
+            ></fa-icon>
+          </button>
+        </div>
+        <!--      available Devices-->
+        <div class="tui-text_h5 tui-space_top-5">
+          {{ _t('lb_available_devices') }}
+        </div>
+        <div
+          tuiGroup
+          orientation="vertical"
+          class="device-group"
+          *ngIf="availableDevices$ | async as availableDevices"
+        >
+          <!--        {{ availableDevices. | json }}-->
+          <button
+            tuiButton
+            [icon]="add"
+            *ngFor="let device of availableDevices; trackBy: tracker"
+            (click)="addDevice(device.id)"
+          >
+            <span class="device-button_name">{{ device.title }}</span>
+          </button>
+        </div>
+        <div class="remove-button tui-space_top-15">
+          <button
+            tuiButton
+            type="button"
+            [icon]="trashIcon"
+            appearance="custom"
+            (click)="removeConformation = !removeConformation"
+          >
+            {{ _t('delete_room') }}
+          </button>
+        </div>
+        <tui-expand [expanded]="removeConformation">
+          <ng-template tuiExpandContent>
+            <tui-notification status="error" class="tui-space_top-3">
+              {{ _t('delete_confirm_label', { __label__: loc.title }) }}
+              <div class="button-block">
+                <button
+                  tuiButton
+                  type="button"
+                  appearance="secondary"
+                  (click)="removeConformation = !removeConformation"
+                  size="s"
+                >
+                  {{ _t('lb_cancel') }}
+                </button>
+                <button
+                  tuiButton
+                  type="button"
+                  (click)="removeRoom(loc)"
+                  class="remove-button"
+                  size="s"
+                >
+                  OK
+                </button>
+              </div>
+            </tui-notification>
+          </ng-template>
+        </tui-expand>
+      </div>
+      <div class="filler"></div>
+      <!--      <pre>-->
+      <!--        {{ loc | json }}-->
+      <!--      </pre>-->
+    </tui-scrollbar>
+  </div>
+</ng-container>
+<ng-template #trashIcon>
+  <fa-icon [icon]="faTrash" size="lg"></fa-icon>
+</ng-template>
+
+<ng-template #remove>
+  <fa-icon [icon]="faTrash" size="lg" (click)="removeDevice($event)"></fa-icon>
+</ng-template>
+
+<ng-template #add>
+  <fa-icon [icon]="faLayerPlus" size="lg"></fa-icon>
+</ng-template>
+<ng-template #loading> <z-wave-load-screen></z-wave-load-screen> </ng-template>

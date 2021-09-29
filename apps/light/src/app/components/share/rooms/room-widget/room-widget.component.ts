@@ -4,11 +4,12 @@ import {
   HostListener,
   Input,
 } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, switchMap } from 'rxjs';
 import { Store } from '@ngxs/store';
 import { Location } from '@store/locations/location';
 import { faSort } from '@fortawesome/pro-light-svg-icons';
 import { ActivatedRoute, Router } from '@angular/router';
+import { first, map } from 'rxjs/operators';
 
 @Component({
   selector: 'z-wave-room-widget[id]',
@@ -38,7 +39,19 @@ export class RoomWidgetComponent {
 
   @HostListener('press')
   press() {
-    this.router.navigate([this.id], { relativeTo: this.route });
+    this.locations$
+      .pipe(
+        map((loc) => loc?.length),
+        switchMap((count) =>
+          count
+            ? this.router.navigate([this.id], { relativeTo: this.route })
+            : this.router.navigate(['config', this.id], {
+                relativeTo: this.route,
+              })
+        ),
+        first()
+      )
+      .subscribe();
   }
 
   trackIndex(index: number) {
