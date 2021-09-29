@@ -18,7 +18,9 @@ import {
 import { TuiInputComponent } from '@taiga-ui/kit';
 import {
   ChangeLocation,
+  RemoveCustomImg,
   RemoveLocation,
+  UploadCustomImg,
 } from '@store/locations/locations.action';
 import { TuiNotification, TuiNotificationsService } from '@taiga-ui/core';
 
@@ -51,13 +53,6 @@ export class RoomConfigComponent {
     extension: 'png,jpg,jpeg,gif',
     dimension: '512 x 512',
   };
-  private defaultImages = [
-    'kitchen.jpg',
-    'bathroom.jpg',
-    'sleeping_room.jpg',
-    'living_room.jpg',
-  ].map((img) => 'assets/img/rooms/' + img);
-
   constructor(
     private readonly activatedRoute: ActivatedRoute,
     private readonly destroy$: DestroyService,
@@ -106,9 +101,7 @@ export class RoomConfigComponent {
         customImage: [location.user_img],
         setAsBackground: [location.show_background],
       });
-      this.customImage = ['ZAutomation/api/v1/load/image/' + location.user_img];
-      this.imageList = [...this.defaultImages, ...this.customImage];
-      console.log(this.imageList);
+      this.customImage = [location.user_img];
       console.log(location.user_img);
     });
     // this.form = formBuilder.group({
@@ -162,24 +155,6 @@ export class RoomConfigComponent {
       this.form.patchValue({ img: '', setAsBackground: false });
     } else {
       this.form?.patchValue({ img: image });
-    }
-  }
-
-  updateImageList(target: EventTarget | null = null): void {
-    const image = this.form?.get('customImage')?.value;
-    const rowData = (target as HTMLInputElement)?.files?.[0];
-    if (image && rowData) {
-      const reader = new FileReader();
-      reader.onload = () => {
-        this.form?.get('img')?.setValue(reader.result as string);
-        this.customImage = [reader.result as string];
-        this.imageList = [...this.defaultImages, ...this.customImage];
-      };
-      reader.readAsDataURL(rowData);
-    } else {
-      this.form?.get('customImage')?.setValue('');
-      this.customImage = [];
-      this.imageList = [...this.defaultImages, ...this.customImage];
     }
   }
 
@@ -251,18 +226,23 @@ export class RoomConfigComponent {
       .subscribe();
   }
 
-  uploadImg(file?: File) {
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = () => {
-        this.customImage = [reader.result as string];
-        this.imageList = [...this.defaultImages, ...this.customImage];
-      };
-    } else {
-      this.customImage = [];
-      this.imageList = [...this.defaultImages, ...this.customImage];
-    }
+  uploadImg(id: number, file?: File) {
+    if (file) this.store.dispatch(new UploadCustomImg(id, file));
   }
 
-  changeImg(event?: string) {}
+  changeImg(loc: Location, data?: { url?: string; default: boolean }) {
+    const update: Partial<Location> = {};
+    if (data?.default) {
+      update.img_type = 'default';
+      update.default_img = data.url ?? '';
+    } else {
+      update.img_type = 'user';
+      update.user_img = data?.url ?? '';
+    }
+    this.store.dispatch(new ChangeLocation({ ...loc, ...update }));
+  }
+
+  removeCustomImg(id: number) {
+    this.store.dispatch(new RemoveCustomImg(id));
+  }
 }

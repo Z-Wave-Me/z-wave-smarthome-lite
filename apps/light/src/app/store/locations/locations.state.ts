@@ -1,15 +1,18 @@
-import { inject, Injectable } from '@angular/core';
-import { Action, State, StateContext } from '@ngxs/store';
+import { Injectable } from '@angular/core';
+import { Action, State, StateContext, Store } from '@ngxs/store';
 import {
   ChangeLocation,
+  RemoveCustomImg,
   RemoveLocation,
   UpdateLocations,
+  UploadCustomImg,
 } from './locations.action';
 import { patch } from '@ngxs/store/operators';
 import { Location } from '@store/locations/location';
 import { TranslocoService } from '@ngneat/transloco';
 import { ConfigService } from '@core/services/config/config.service';
 import { ApiService } from '@core/services/api/api.service';
+import { tap } from 'rxjs/operators';
 
 export class LocationsStateModel {
   ids!: number[];
@@ -30,7 +33,8 @@ export class LocationsState {
   constructor(
     private readonly translocoService: TranslocoService,
     private readonly configService: ConfigService,
-    private readonly apiService: ApiService
+    private readonly apiService: ApiService,
+    private readonly store: Store
   ) {}
 
   @Action(UpdateLocations)
@@ -90,6 +94,7 @@ export class LocationsState {
       method: 'put',
     });
   }
+
   @Action(RemoveLocation)
   removeLocation(
     { getState, setState }: StateContext<LocationsStateModel>,
@@ -106,5 +111,75 @@ export class LocationsState {
       command: locationId,
       method: 'delete',
     });
+  }
+
+  @Action(RemoveCustomImg)
+  removeCustomImg(
+    { getState }: StateContext<LocationsStateModel>,
+    { id }: { id: number }
+  ) {
+    const toDelete = getState().entities[id].user_img;
+    return this.apiService
+      .send('locations_image', {
+        command: id,
+        params: [
+          {
+            key: 'user_img',
+            value: toDelete,
+          },
+        ],
+        method: 'delete',
+      })
+      .pipe(
+        tap(() => {
+          this.store.dispatch(
+            new ChangeLocation({
+              ...getState().entities[id],
+              user_img: '',
+              img_type: '',
+              default_img: '',
+            })
+          );
+        })
+      );
+  }
+
+  @Action(UploadCustomImg)
+  uploadCustomImg(
+    { getState }: StateContext<LocationsStateModel>,
+    { id, file }: { id: number; file: File }
+  ) {
+    // const reader = new FileReader();
+    // reader.onload = () => {
+    //   setState(
+    //     patch({
+    //       entities: patch({
+    //         [id]: patch({
+    //           user_img: reader.result as string,
+    //           img_type: 'user',
+    //         }),
+    //       }),
+    //     })
+    //   );
+    // };
+    const toUpload = new FormData();
+    toUpload.append('files_files', file);
+    return this.apiService
+      .send('upload', {
+        method: 'post',
+        data: toUpload,
+      })
+      .pipe(
+        tap(() => {
+          this.store.dispatch(
+            new ChangeLocation({
+              ...getState().entities[id],
+              user_img: file.name,
+              default_img: '',
+              img_type: 'user',
+            })
+          );
+        })
+      );
   }
 }

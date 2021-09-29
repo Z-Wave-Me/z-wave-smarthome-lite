@@ -1,7 +1,6 @@
-import { Inject, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
-import { API_URL } from '@core/services/api/tokens/api.token';
+import { Observable } from 'rxjs';
 
 export interface Payload {
   data?: any;
@@ -15,6 +14,7 @@ export interface Payload {
 })
 export class ApiService {
   private apiList: { [index: string]: string } = {
+    upload: '/ZAutomation/api/v1/upload/file',
     add_dsk: '/ZWaveAPI/AddDSKEntry', // Add DSK
     add_dsk_provisioning_list: '/ZWaveAPI/AddDSKProvisioningEntry', // Add DSK to ProvisioningList (Response with added DSK) POST
     app_built_info: 'app/info.json',
@@ -111,6 +111,7 @@ export class ApiService {
       console.log('data from apiService ', data);
     });
   }
+
   send<T>(event: string, payload?: Payload): Observable<T> {
     const url = this.apiList[event];
     if (!url) {

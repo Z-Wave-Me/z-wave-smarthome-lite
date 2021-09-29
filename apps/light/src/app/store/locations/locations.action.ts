@@ -18,3 +18,13 @@ export class ChangeLocation {
   static readonly type = '[Locations] Change Location';
   constructor(public location: Location) {}
 }
+
+export class RemoveCustomImg {
+  static readonly type = '[Locations] Remove Custom Img';
+  constructor(public id: number) {}
+}
+
+export class UploadCustomImg {
+  static readonly type = '[Locations] Upload Custom Img';
+  constructor(public id: number, public file: File) {}
+}

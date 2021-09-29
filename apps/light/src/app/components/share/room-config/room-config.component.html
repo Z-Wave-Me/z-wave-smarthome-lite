@@ -21,10 +21,11 @@
     </div>
     <tui-scrollbar class="content" [hidden]="true" tuiOverscroll="scroll">
       <z-wave-location-carousel
-        [list]="imageList"
+        [customImg]="loc.user_img"
         [current]="loc.imgSrc"
-        (upload)="uploadImg($event)"
-        (selectImg)="changeImg($event)"
+        (upload)="uploadImg(loc.id, $event)"
+        (selectImg)="changeImg(loc, $event)"
+        (removeCustom)="removeCustomImg(loc.id)"
       ></z-wave-location-carousel>
       <div class="space">
         <tui-input
