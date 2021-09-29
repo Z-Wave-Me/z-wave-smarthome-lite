@@ -1,6 +1,6 @@
 import { FilterPredicate } from '@modules/interfaces/pages.interfaces';
-import { OrderByLocations } from '@store/devices/devices.state';
 import { Order } from '@store/filter/filter.state';
+import { OrderByLocations } from '@store/devices/deviceInterface';
 
 export class UpdateFilter {
   static readonly type = '[Filter] Update Filter';
@@ -36,7 +36,12 @@ export class SetTag {
 
 export class SetOrder {
   static readonly type = '[Filter] Set Order';
-  constructor(public place: OrderByLocations, public orderBy?: Order, public desc?: boolean, public name?: string) {}
+  constructor(
+    public place: OrderByLocations,
+    public orderBy?: Order,
+    public desc?: boolean,
+    public name?: string
+  ) {}
 }
 
 export class SetAutocomplete {

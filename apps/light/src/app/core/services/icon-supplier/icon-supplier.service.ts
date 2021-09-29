@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { IconSupplierConfig } from '@core/services/icon-supplier/icon-supplier';
 import { config } from './icon-supplier.config';
-import { Device } from '@store/devices/devices.state';
+import { Device } from '@store/devices/deviceInterface';
 
 @Injectable({
   providedIn: 'root',
@@ -45,7 +45,10 @@ export class IconSupplierService {
   }
 
   // Default icon
-  assignElementIcon({ metrics: { icon: iconType, level }, customIcons }: Device): string {
+  assignElementIcon({
+    metrics: { icon: iconType, level },
+    customIcons,
+  }: Device): string {
     const baseUrl = this.iconsPath;
     let icon = 'placeholder.png';
     if (/^app\/img/.test(iconType)) {
@@ -53,7 +56,9 @@ export class IconSupplierService {
     }
     if (this.config[iconType]) {
       icon =
-        this.config[iconType].default ?? this.config[iconType].level?.[IconSupplierService.levelMap(level)] ?? icon;
+        this.config[iconType].default ??
+        this.config[iconType].level?.[IconSupplierService.levelMap(level)] ??
+        icon;
     }
     return baseUrl + icon;
   }

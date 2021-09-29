@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { filter, first, map, switchMap, takeUntil } from 'rxjs/operators';
+import { filter, first, switchMap, takeUntil } from 'rxjs/operators';
 import { ActivatedRoute } from '@angular/router';
 import { DestroyService } from '@core/services/destroy/destroy.service';
 import { Store } from '@ngxs/store';
@@ -10,7 +10,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogComponent } from '@modules/dialog/dialog.component';
 import { TranslocoService } from '@ngneat/transloco';
-import { Device, DevicesStateModel } from '@store/devices/devices.state';
+import { DevicesStateModel } from '@store/devices/devices.state';
 
 @Component({
   selector: 'z-wave-room-config',
@@ -30,9 +30,12 @@ export class RoomConfigComponent {
     extension: 'png,jpg,jpeg,gif',
     dimension: '512 x 512',
   };
-  private defaultImages = ['kitchen.jpg', 'bathroom.jpg', 'sleeping_room.jpg', 'living_room.jpg'].map(
-    (img) => 'assets/img/rooms/' + img,
-  );
+  private defaultImages = [
+    'kitchen.jpg',
+    'bathroom.jpg',
+    'sleeping_room.jpg',
+    'living_room.jpg',
+  ].map((img) => 'assets/img/rooms/' + img);
 
   constructor(
     private readonly activatedRoute: ActivatedRoute,
@@ -40,30 +43,35 @@ export class RoomConfigComponent {
     private readonly store: Store,
     private readonly formBuilder: FormBuilder,
     private readonly matDialog: MatDialog,
-    private readonly translocoService: TranslocoService,
+    private readonly translocoService: TranslocoService
   ) {
     this.data$ = activatedRoute.url.pipe(
       takeUntil(destroy$),
       filter(([{ path }]) => +path !== 0),
       switchMap(([{ path }]) =>
-        store.select(({ locations: { entities } }: { locations: LocationsStateModel }) => entities?.[+path]),
+        store.select(
+          ({ locations: { entities } }: { locations: LocationsStateModel }) =>
+            entities?.[+path]
+        )
       ),
-      filter((location) => !!location),
+      filter((location) => !!location)
     );
     this.assignedDevices$ = activatedRoute.url.pipe(
       takeUntil(destroy$),
       switchMap(([{ path }]) =>
-        store.select(({ devices: { entities } }: { devices: DevicesStateModel }) =>
-          Object.values(entities)
-            .filter((device) => device.location === +path)
-            .map((item) => item.title),
-        ),
-      ),
+        store.select(
+          ({ devices: { entities } }: { devices: DevicesStateModel }) =>
+            Object.values(entities)
+              .filter((device) => device.location === +path)
+              .map((item) => item.title)
+        )
+      )
     );
-    this.availedDevices$ = store.select(({ devices: { entities } }: { devices: DevicesStateModel }) =>
-      Object.values(entities)
-        .filter((device) => device.location === 0)
-        .map((item) => item.title),
+    this.availedDevices$ = store.select(
+      ({ devices: { entities } }: { devices: DevicesStateModel }) =>
+        Object.values(entities)
+          .filter((device) => device.location === 0)
+          .map((item) => item.title)
     );
     this.data$.pipe(first()).subscribe((location) => {
       this.form = formBuilder.group({
@@ -150,7 +158,9 @@ export class RoomConfigComponent {
     const dialogRef = this.matDialog.open(DialogComponent, {
       data: {
         title: this.translocoService.translate('delete_confirm_label'),
-        text: this.translocoService.translate('delete_confirm_label', { __label__: this.form?.get('title')?.value }),
+        text: this.translocoService.translate('delete_confirm_label', {
+          __label__: this.form?.get('title')?.value,
+        }),
         confirm: this.translocoService.translate('ok'),
       },
     });

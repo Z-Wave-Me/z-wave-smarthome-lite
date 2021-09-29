@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { Device } from '@store/devices/devices.state';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ExcludeDevice } from '@components/mobile/mobile-element-control-module/interfaces';
+import { Device } from '@store/devices/deviceInterface';
 
 @Component({
   selector: 'z-wave-default-element-control',

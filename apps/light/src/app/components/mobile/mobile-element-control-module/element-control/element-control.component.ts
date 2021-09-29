@@ -7,10 +7,11 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { filter, switchMap } from 'rxjs/operators';
 import { Store } from '@ngxs/store';
-import { Device, DevicesStateModel } from '@store/devices/devices.state';
+import { DevicesStateModel } from '@store/devices/devices.state';
 import { LocationsStateModel } from '@store/locations/locations.state';
 import { ExcludeDevice } from '@components/mobile/mobile-element-control-module/interfaces';
 import { MainSensorComponent } from '@components/mobile/sensor/main-sensor/main-sensor.component';
+import { Device } from '@store/devices/deviceInterface';
 
 @Component({
   selector: 'z-wave-element-control',
