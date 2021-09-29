@@ -1,9 +1,18 @@
-import { AfterViewInit, Component, ElementRef, EventEmitter, Input, Output } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  Output,
+} from '@angular/core';
 
 @Component({
   selector: 'z-wave-slider',
   templateUrl: './slider.component.html',
   styleUrls: ['./slider.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SliderComponent implements AfterViewInit {
   @Input() color = '#287903';

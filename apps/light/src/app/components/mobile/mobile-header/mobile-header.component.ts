@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { Observable } from 'rxjs';
 import { MobileTitleService } from '@core/services/mobile-title/mobile-title.service';
 
@@ -6,6 +6,7 @@ import { MobileTitleService } from '@core/services/mobile-title/mobile-title.ser
   selector: 'z-wave-mobile-header',
   templateUrl: './mobile-header.component.html',
   styleUrls: ['./mobile-header.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MobileHeaderComponent {
   title$: Observable<string>;

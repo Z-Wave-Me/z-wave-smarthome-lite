@@ -24,7 +24,6 @@ export class ChangeLevel {
 
 export class ToggleLevel {
   static readonly type = '[Devices] Toggle Level';
-
   constructor(public id: string) {}
 }
 

@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { DeviceControlService } from '@core/services/device-control/device-control.service';
 import { Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
@@ -9,15 +9,21 @@ interface Report {
   level: number;
   scaleTitle: string;
 }
+
 @Component({
   selector: 'z-wave-sensor-multilevel-widget[id]',
   templateUrl: './sensor-multilevel-widget.component.html',
   styleUrls: ['./sensor-multilevel-widget.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SensorMultilevelWidgetComponent implements OnInit {
+export class SensorMultilevelWidgetComponent {
   @Input() id!: string;
   data$: Observable<Report>;
-  constructor(private readonly store: Store, private readonly deviceControlService: DeviceControlService) {
+
+  constructor(
+    private readonly store: Store,
+    private readonly deviceControlService: DeviceControlService
+  ) {
     this.data$ = store.select(
       ({
         devices: {
@@ -29,12 +35,11 @@ export class SensorMultilevelWidgetComponent implements OnInit {
         updateTime: device.updateTime,
         level: +device.metrics.level,
         scaleTitle: device.metrics.scaleTitle.toString(),
-      }),
+      })
     );
   }
 
   command(action: string): void {
     this.deviceControlService.execute({ id: this.id, action });
   }
-  ngOnInit(): void {}
 }

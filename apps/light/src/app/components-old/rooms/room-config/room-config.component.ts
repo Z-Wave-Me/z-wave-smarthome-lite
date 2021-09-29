@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { filter, first, switchMap, takeUntil } from 'rxjs/operators';
 import { ActivatedRoute } from '@angular/router';
 import { DestroyService } from '@core/services/destroy/destroy.service';
@@ -17,6 +17,7 @@ import { DevicesStateModel } from '@store/devices/devices.state';
   templateUrl: './room-config.component.html',
   styleUrls: ['./room-config.component.scss'],
   providers: [DestroyService],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RoomConfigComponent {
   customImage: string[] = [];

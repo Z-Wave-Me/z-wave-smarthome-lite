@@ -6,7 +6,7 @@ import { Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
 import { LocationsStateModel } from '@store/locations/locations.state';
 import { Location } from '@store/locations/location';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
 import { TranslocoService } from '@ngneat/transloco';
 import { DevicesStateModel } from '@store/devices/devices.state';
 import { faTrash } from '@fortawesome/pro-light-svg-icons';
@@ -30,6 +30,7 @@ interface MainSensorDevice {
   id: string;
   deviceType: string;
 }
+
 @Component({
   selector: 'z-wave-room-config',
   templateUrl: './room-config.component.html',
@@ -42,7 +43,7 @@ export class RoomConfigComponent {
   faCircle = faCircle;
   faCheckCircle = faCheckCircle;
   faLayerPlus = faLayerPlus;
-  customImage: string[] = [];
+  // customImage: string[] = [];
   imageList?: string[];
   removeConformation = false;
   data$: Observable<Location>;
@@ -54,11 +55,11 @@ export class RoomConfigComponent {
     extension: 'png,jpg,jpeg,gif',
     dimension: '512 x 512',
   };
+
   constructor(
     private readonly activatedRoute: ActivatedRoute,
     private readonly destroy$: DestroyService,
     private readonly store: Store,
-    private readonly formBuilder: FormBuilder,
     private readonly translocoService: TranslocoService,
     private readonly router: Router,
     private readonly notifications: TuiNotificationsService
@@ -96,59 +97,14 @@ export class RoomConfigComponent {
           .map((item) => ({ title: item.title, id: item.id }))
     );
     this.data$.pipe(first()).subscribe((location) => {
-      this.form = formBuilder.group({
-        title: [location.title, [Validators.required]],
-        img: [location.imgSrc],
-        customImage: [location.user_img],
-        setAsBackground: [location.show_background],
-      });
-      this.customImage = [location.user_img];
-      console.log(location.user_img);
+      // this.form = formBuilder.group({
+      //   title: [location.title, [Validators.required]],
+      //   img: [location.imgSrc],
+      //   customImage: [location.user_img],
+      //   setAsBackground: [location.show_background],
+      // });
+      // this.customImage = [location.user_img];
     });
-    // this.form = formBuilder.group({
-    //   test: ['wow'],
-    //   title: ['test', [Validators.required]],
-    //   img: [''],
-    //   customImage: [''],
-    //   setAsBackground: [false],
-    // });
-  }
-
-  // $scope.store = function(form, input) {
-  //   if (form.$invalid) {
-  //     return;
-  //   }
-  //   $scope.loading = {
-  //     status: 'loading-spin',
-  //     icon: 'fa-spinner fa-spin',
-  //     message: $scope._t('updating')
-  //   };
-  //   dataFactory.storeApi('locations', input.id, input).then(function(response) {
-  //     $scope.loading = false;
-  //     var id = $filter('hasNode')(response, 'data.data.id');
-  //     if (id) {
-  //       saveRoomIdIntoDevice(response.data, $scope.devicesAssigned);
-  //       removeRoomIdFromDevice($scope.devicesToRemove);
-  //       myCache.removeAll();
-  //       /*myCache.remove('locations');
-  //        myCache.remove('devices');*/
-  //       dataService.showNotifier({
-  //         message: $scope._t('success_updated')
-  //       });
-  //       $location.path('/rooms');
-  //     }
-  //
-  //
-  //   }, function(error) {
-  //     alertify.alertError($scope._t('error_update_data'));
-  //     $scope.loading = false;
-  //
-  //   });
-  //
-  // };
-
-  submit(): void {
-    console.log(this.form);
   }
 
   setImage(image: string): void {
@@ -162,6 +118,7 @@ export class RoomConfigComponent {
   clearSensors(): void {
     throw new Error('clearSensors not implemented');
   }
+
   removeDevice(
     event: Event,
     device: Omit<MainSensorDevice, 'deviceType'>,
@@ -177,6 +134,7 @@ export class RoomConfigComponent {
       );
     this.store.dispatch(new ChangeDevice({ ...device, location: 0 }));
   }
+
   toggleMainSensor(loc: Location, id: string, available: boolean) {
     if (available) {
       let mainSensors = [...loc.main_sensors];
@@ -190,6 +148,7 @@ export class RoomConfigComponent {
       );
     }
   }
+
   addDevice(
     device: Omit<MainSensorDevice, 'deviceType'>,
     location: number

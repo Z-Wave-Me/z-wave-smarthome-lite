@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { Store } from '@ngxs/store';
 import { Router } from '@angular/router';
 import { Login } from '@store/local-storage/local-storage.actions';
@@ -7,6 +7,7 @@ import { Login } from '@store/local-storage/local-storage.actions';
   selector: 'z-wave-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LoginComponent {
   constructor(private store: Store, private router: Router) {}

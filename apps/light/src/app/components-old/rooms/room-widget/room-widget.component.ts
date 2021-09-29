@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Store } from '@ngxs/store';
 import { Location } from '@store/locations/location';
@@ -7,8 +7,9 @@ import { Location } from '@store/locations/location';
   selector: 'z-wave-room-widget[id]',
   templateUrl: './room-widget.component.html',
   styleUrls: ['./room-widget.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class RoomWidgetComponent implements OnInit {
+export class RoomWidgetComponent {
   @Input() id!: number;
   readonly locations$: Observable<any>;
   readonly room$: Observable<Location>;
@@ -17,6 +18,4 @@ export class RoomWidgetComponent implements OnInit {
     this.room$ = store.select((state) => state.locations.entities[this.id]);
     this.locations$ = store.select((state) => state.devices.locations[this.id]);
   }
-
-  ngOnInit(): void {}
 }

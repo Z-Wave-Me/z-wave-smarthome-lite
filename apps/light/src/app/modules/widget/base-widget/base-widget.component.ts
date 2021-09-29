@@ -1,8 +1,7 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
 import { filter, switchMap } from 'rxjs/operators';
-import { LocalsStateModel } from '@store/locals/locals.state';
 import { LocationsStateModel } from '@store/locations/locations.state';
 
 interface Report {
@@ -16,8 +15,9 @@ interface Report {
   selector: 'z-wave-base-widget[id]',
   templateUrl: './base-widget.component.html',
   styleUrls: ['./base-widget.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class BaseWidgetComponent implements OnInit {
+export class BaseWidgetComponent {
   @Input() id!: string;
   data$: Observable<Report>;
   location$: Observable<string | undefined>;
@@ -33,14 +33,16 @@ export class BaseWidgetComponent implements OnInit {
         inProgress: device.inProgress,
         location: device.location,
         updateTime: device.updateTime * 1e3,
-      }),
+      })
     );
     this.location$ = this.data$.pipe(
       filter(({ location }) => location !== 0),
       switchMap(({ location }) =>
-        store.select(({ locations: { entities } }: { locations: LocationsStateModel }) => entities?.[location].title),
-      ),
+        store.select(
+          ({ locations: { entities } }: { locations: LocationsStateModel }) =>
+            entities?.[location].title
+        )
+      )
     );
   }
-  ngOnInit(): void {}
 }

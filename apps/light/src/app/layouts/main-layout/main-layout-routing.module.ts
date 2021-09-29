@@ -16,14 +16,6 @@ const routes: Routes = [
         data: { animation: 'elements' },
       },
       {
-        path: 'element',
-        loadChildren: () =>
-          import(
-            '../../components-old/elements/element-config/element-config.module'
-          ).then(({ ElementConfigModule }) => ElementConfigModule),
-        data: { animation: 'element' },
-      },
-      {
         path: 'personal-settings',
         loadChildren: () =>
           import(

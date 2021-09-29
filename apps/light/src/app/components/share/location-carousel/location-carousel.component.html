@@ -16,6 +16,7 @@
   >
     <ng-template swiperSlide *ngFor="let l of defaultImages; index as i">
       <img
+        loading="lazy"
         [src]="l"
         alt="room"
         class="preview"
@@ -26,6 +27,7 @@
     <ng-template swiperSlide>
       <div class="custom" *ngIf="customImg; else newImg">
         <img
+          loading="lazy"
           [src]="customImg"
           alt="room"
           class="preview custom"

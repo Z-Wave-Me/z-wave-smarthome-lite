@@ -61,6 +61,7 @@ const routes: Routes = [
         data: { animation: '/automations' },
       },
     ],
+    data: { animation: 'mobile' },
   },
   {
     path: '',
@@ -75,7 +76,6 @@ const routes: Routes = [
             ({ MobileElementControlModuleModule }) =>
               MobileElementControlModuleModule
           ),
-        data: { animation: 'element' },
       },
       {
         path: 'rooms',
@@ -91,6 +91,7 @@ const routes: Routes = [
         ],
       },
     ],
+    data: { animation: 'empty' },
   },
   {
     path: '**',

@@ -1,12 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 @Component({
   selector: 'z-wave-element',
   templateUrl: './element.component.html',
   styleUrls: ['./element.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ElementComponent implements OnInit {
-  constructor() {}
-
-  ngOnInit(): void {}
-}
+export class ElementComponent {}

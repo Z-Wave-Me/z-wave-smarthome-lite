@@ -1,4 +1,8 @@
-import { Component, ComponentFactoryResolver, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ComponentFactoryResolver,
+} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Store } from '@ngxs/store';
 import { filter, map, switchMap } from 'rxjs/operators';
@@ -18,14 +22,15 @@ interface Record {
   selector: 'z-wave-switch-multilevel-control',
   templateUrl: './switch-multilevel-control.component.html',
   styleUrls: ['./switch-multilevel-control.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SwitchMultilevelControlComponent implements OnInit {
+export class SwitchMultilevelControlComponent {
   data$: Observable<Record>;
 
   constructor(
     private readonly activatedRoute: ActivatedRoute,
     private readonly componentFactoryResolver: ComponentFactoryResolver,
-    private readonly store: Store,
+    private readonly store: Store
   ) {
     this.data$ = activatedRoute.params.pipe(
       switchMap(({ id }) =>
@@ -39,19 +44,18 @@ export class SwitchMultilevelControlComponent implements OnInit {
           }) => ({
             ...entities[id],
             location: locate?.[entities[id].location]?.title,
-          }),
-        ),
+          })
+        )
       ),
       filter((entry) => !!entry),
       map((device) => ({
         title: device.title,
-        roomTitle: typeof device.location === 'string' ? device.location : undefined,
+        roomTitle:
+          typeof device.location === 'string' ? device.location : undefined,
         level: +device.metrics.level,
         iconPath: device.iconPath,
         id: device.id,
-      })),
+      }))
     );
   }
-
-  ngOnInit(): void {}
 }

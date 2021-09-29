@@ -1,23 +1,27 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { DeviceControlService } from '@core/services/device-control/device-control.service';
 import { Store } from '@ngxs/store';
-import { Observable } from 'rxjs';
 
 // interface Report {}
 @Component({
   selector: 'z-wave-switch-r-g-b-w-widget[id]',
   templateUrl: './switch-r-g-b-w-widget.component.html',
   styleUrls: ['./switch-r-g-b-w-widget.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SwitchRGBWWidgetComponent implements OnInit {
+export class SwitchRGBWWidgetComponent {
   @Input() id!: string;
-  // data$: Observable<Report>;
-  constructor(private readonly store: Store, private readonly deviceControlService: DeviceControlService) {}
 
-  ngOnInit(): void {}
+  // data$: Observable<Report>;
+  constructor(
+    private readonly store: Store,
+    private readonly deviceControlService: DeviceControlService
+  ) {}
+
   command(action: string): void {
     this.deviceControlService.execute({ id: this.id, action });
   }
+
   // $scope.getRgbState = function(rgbId) {
   //   var baseId = rgbId.substr(0, rgbId.indexOf('-')),
   //     rgbIndex = _.findIndex($scope.dataHolder.devices.all, {

@@ -15,18 +15,14 @@ export class MobileTitleService {
     private readonly route: Router,
     private readonly translocoService: TranslocoService,
     private readonly store: Store
-  ) {
-    console.log('MobileTitleService created');
-  }
+  ) {}
   title$(): Observable<string> {
     return this.route.events.pipe(
       filter((event) => event instanceof NavigationEnd),
       map((data) => (data as NavigationEnd).url),
       startWith(this.route.url),
       switchMap((route) => {
-        console.log(route);
         if (routeOrder.includes(route)) {
-          console.log('here');
           return this.translocoService.selectTranslate<string>(route.slice(1));
         }
         return this.store.select(

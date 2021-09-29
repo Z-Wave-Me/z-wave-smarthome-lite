@@ -256,21 +256,14 @@ export class DevicesState {
 
   @Action(ChangeLevel)
   changeLevel(
-    { setState }: StateContext<DevicesStateModel>,
+    { getState }: StateContext<DevicesStateModel>,
     {
       payload: { id, level },
     }: { payload: { id: string; level: number | string } }
   ) {
-    setState(
-      patch({
-        entities: patch({
-          [id]: patch({
-            metrics: patch({
-              level,
-            }),
-          }),
-        }),
-      })
+    const device = getState().entities[id];
+    this.store.dispatch(
+      new ChangeDevice({ ...device, metrics: { ...device.metrics, level } })
     );
     if (typeof level === 'number') {
       return this.apiService.send('devices', {
