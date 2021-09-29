@@ -8,6 +8,7 @@ import {
   Store,
 } from '@ngxs/store';
 import {
+  ChangeDevice,
   ChangeLevel,
   ProgressDevice,
   ToggleLevel,
@@ -22,9 +23,10 @@ import {
   Order,
 } from '@store/filter/filter.state';
 import { SetTagsList } from '@store/filter/filter.actions';
-import { WsApiService } from '@core/services/ws-api/ws-api.service';
 import { of } from 'rxjs';
 import { ServerTime } from '@store/locals/locals.actions';
+import { ApiService } from '@core/services/api/api.service';
+import { Device, OrderByLocations } from '@store/devices/deviceInterface';
 
 const orderFactory =
   (order: Order, place: OrderByLocations, decs: boolean = false) =>
@@ -43,39 +45,6 @@ const orderFactory =
         return 0;
     }
   };
-
-interface Metric {
-  level: number | string;
-  icon: string;
-
-  [index: string]: string | number;
-}
-
-export type OrderByLocations = 'rooms' | 'elements' | 'dashboard';
-
-export interface Device {
-  deviceType: string;
-  inProgress?: boolean;
-  visibility: boolean;
-  tags: string[];
-  creationTime: number;
-  updateTime: number;
-  title: string;
-  creatorId: number;
-  intChartUrl?: string;
-  hasHistory?: boolean;
-  showNotification?: boolean;
-  onDashboard: boolean;
-  hideEvents: boolean;
-  id: string;
-  iconPath: string;
-  metrics: Metric;
-  order: {
-    [key in OrderByLocations]: number;
-  };
-
-  [key: string]: any;
-}
 
 export class DevicesStateModel {
   ids?: string[];
@@ -98,7 +67,7 @@ export class DevicesState {
   constructor(
     private readonly iconSupplier: IconSupplierService,
     private readonly store: Store,
-    private readonly wsApiService: WsApiService
+    private readonly apiService: ApiService
   ) {}
 
   @Selector()
@@ -183,7 +152,7 @@ export class DevicesState {
     });
   }
 
-  static device(id: string, field: string): any {
+  static device(id: string, field: string) {
     return createSelector([DevicesState], ({ entities }: DevicesStateModel) => {
       return entities[id][field];
     });
@@ -202,14 +171,12 @@ export class DevicesState {
 
   @Action(UpdateDevices)
   update(
-    { setState }: StateContext<DevicesStateModel>,
-    {
-      payload: { devices, structureChanged },
-    }: { payload: { devices: []; structureChanged: boolean } }
+    { setState, getState }: StateContext<DevicesStateModel>,
+    { devices, structureChanged }: UpdateDevices
   ): void {
     const ids: string[] = [];
     const entities: { [index: string]: any } = {};
-    const locations: { [id: number]: string[] } = {};
+    let locationChanges = false;
     const dashboard = this.store.selectSnapshot(
       (state) => state.localStorage.dashboard
     );
@@ -233,15 +200,35 @@ export class DevicesState {
       if (device.tags.length) {
         tagsList = new Set<string>([...tagsList, ...device.tags]);
       }
+      if (!locationChanges) {
+        locationChanges = !getState().locations[device.location]?.includes(
+          device.id
+        );
+      }
       // TODO need hide hidden devices
-      locations[device.location] = locations[device.location] ?? [];
-      locations[device.location].push(device.id);
       entities[device.id] = { ...device, ...additional };
     });
     this.store.dispatch(new ServerTime(serverTime));
     this.store.dispatch(new SetTagsList([...tagsList]));
+    let locations;
+    if (structureChanged || locationChanges) {
+      locations = Object.values(getState().entities).reduce((acc, cur) => {
+        if (!acc[cur.location]) {
+          acc[cur.location] = [];
+        }
+        acc[cur.location].push(cur.id);
+        return acc;
+      }, {} as { [id: number]: string[] });
+    }
     if (structureChanged) {
       setState(patch({ ids, entities, locations }));
+    } else if (locationChanges) {
+      setState(
+        patch({
+          entities: patch({ ...entities }),
+          locations,
+        })
+      );
     } else {
       setState(
         patch({
@@ -286,7 +273,7 @@ export class DevicesState {
       })
     );
     if (typeof level === 'number') {
-      return this.wsApiService.send('devices', {
+      return this.apiService.send('devices', {
         command: id + '/command/exact',
         params: [
           {
@@ -296,7 +283,7 @@ export class DevicesState {
         ],
       });
     }
-    return this.wsApiService.send('devices', {
+    return this.apiService.send('devices', {
       command: id + '/command/' + level,
     });
   }
@@ -314,5 +301,26 @@ export class DevicesState {
     if (level !== undefined)
       return this.store.dispatch(new ChangeLevel({ id, level }));
     return of(void 0);
+  }
+
+  @Action(ChangeDevice)
+  changeDevice(
+    { setState, getState }: StateContext<DevicesStateModel>,
+    { device }: { device: Partial<Device> & { id: string } }
+  ) {
+    const updatedDevice = { ...getState().entities[device.id], ...device };
+    setState(
+      patch({
+        entities: patch({
+          [device.id]: patch(updatedDevice),
+        }),
+      })
+    );
+    this.store.dispatch(new UpdateDevices([updatedDevice]));
+    return this.apiService.send('devices', {
+      command: device.id,
+      method: 'put',
+      data: device,
+    });
   }
 }

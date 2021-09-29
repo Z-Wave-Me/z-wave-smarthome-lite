@@ -49,15 +49,20 @@
         >
           <button
             tuiButton
-            [icon]="remove"
             *ngFor="let device of assignedDevices; trackBy: tracker"
             (click)="
               toggleMainSensor(
+                loc,
                 device.id,
                 ['sensorBinary', 'sensorMultilevel'].includes(device.deviceType)
               )
             "
           >
+            <fa-icon
+              [icon]="faTrash"
+              size="lg"
+              (click)="removeDevice($event, device, loc)"
+            ></fa-icon>
             <span class="device-button_name">{{ device.title }}</span>
 
             <fa-icon
@@ -71,7 +76,7 @@
               [ngStyle]="{
                 color: loc.main_sensors.includes(device.id)
                   ? 'var(--tui-success-fill)'
-                  : 'var(--tui-neutral-bg)'
+                  : 'var(--tui-neutral-fill)'
               }"
             ></fa-icon>
           </button>
@@ -86,12 +91,11 @@
           class="device-group"
           *ngIf="availableDevices$ | async as availableDevices"
         >
-          <!--        {{ availableDevices. | json }}-->
           <button
             tuiButton
             [icon]="add"
             *ngFor="let device of availableDevices; trackBy: tracker"
-            (click)="addDevice(device.id)"
+            (click)="addDevice(device, loc.id)"
           >
             <span class="device-button_name">{{ device.title }}</span>
           </button>
@@ -144,10 +148,6 @@
 </ng-container>
 <ng-template #trashIcon>
   <fa-icon [icon]="faTrash" size="lg"></fa-icon>
-</ng-template>
-
-<ng-template #remove>
-  <fa-icon [icon]="faTrash" size="lg" (click)="removeDevice($event)"></fa-icon>
 </ng-template>
 
 <ng-template #add>

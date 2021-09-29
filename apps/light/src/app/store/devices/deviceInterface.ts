@@ -1,28 +1,30 @@
-export interface DeviceInterface {
-  creationTime: number;
-  creatorId: number;
-  customIcons: {};
-  deviceType: string;
-  h: number;
-  hasHistory: boolean;
-  id: string;
-  location: number;
-  locationName: string;
-  metrics: {
-    probeTitle?: string;
-    scaleTitle?: string;
-    title: string;
-    icon: string;
-    level?: string;
-  };
-  order: {
-    rooms: string;
-    elements: string;
-    dashboard: string;
-  };
-  permanently_hidden: boolean;
-  probeType: string;
-  tags: string[];
-  updateTime: number;
-  visibility: boolean;
+export interface Metric {
+  level: number | string;
+  icon: string;
+
+  [index: string]: string | number;
 }
+export interface Device {
+  deviceType: string;
+  inProgress?: boolean;
+  visibility: boolean;
+  tags: string[];
+  creationTime: number;
+  updateTime: number;
+  title: string;
+  creatorId: number;
+  intChartUrl?: string;
+  hasHistory?: boolean;
+  showNotification?: boolean;
+  onDashboard: boolean;
+  hideEvents: boolean;
+  id: string;
+  iconPath: string;
+  metrics: Metric;
+  order: {
+    [key in OrderByLocations]: number;
+  };
+
+  [key: string]: any;
+}
+export type OrderByLocations = 'rooms' | 'elements' | 'dashboard';

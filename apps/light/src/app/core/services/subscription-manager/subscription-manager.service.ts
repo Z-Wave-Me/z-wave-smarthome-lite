@@ -2,12 +2,7 @@ import { Injectable, OnDestroy } from '@angular/core';
 import { WebsocketService } from '@core/services/websocket/websocket.service';
 import { apiList, baseApiUrl } from '@core/services/ws-api/api-list';
 import { Subject } from 'rxjs';
-import { DeviceInterface } from '@store/devices/deviceInterface';
-import { map, takeUntil, tap } from 'rxjs/operators';
 import { Store } from '@ngxs/store';
-import { UpdateDevices } from '@store/devices/devices.actions';
-import { HttpEncapsulatedRequest } from '@core/services/ws-api/http-encapsulated-request';
-import { WsMessage } from '@core/services/websocket/websocket.interfaces';
 
 @Injectable({
   providedIn: 'any',
@@ -16,6 +11,7 @@ export class SubscriptionManagerService implements OnDestroy {
   private static readonly apiList = apiList;
   private static readonly baseApiUrl = baseApiUrl;
   private readonly destroy$ = new Subject<void>();
+
   constructor(
     private readonly webSocketService: WebsocketService,
     private readonly store: Store

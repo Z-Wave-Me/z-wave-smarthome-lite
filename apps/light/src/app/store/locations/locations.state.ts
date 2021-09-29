@@ -13,6 +13,8 @@ import { TranslocoService } from '@ngneat/transloco';
 import { ConfigService } from '@core/services/config/config.service';
 import { ApiService } from '@core/services/api/api.service';
 import { tap } from 'rxjs/operators';
+import { ChangeDevice } from '@store/devices/devices.actions';
+import { DevicesStateModel } from '@store/devices/devices.state';
 
 export class LocationsStateModel {
   ids!: number[];
@@ -40,7 +42,7 @@ export class LocationsState {
   @Action(UpdateLocations)
   update(
     { setState }: StateContext<LocationsStateModel>,
-    { payload: { locations } }: { payload: { locations: Location[] } }
+    { locations }: UpdateLocations
   ): void {
     const ids: number[] = [];
     const entities: { [id: number]: Location } = {};
@@ -78,7 +80,7 @@ export class LocationsState {
   @Action(ChangeLocation)
   changeLocation(
     { setState }: StateContext<LocationsStateModel>,
-    { location }: { location: Location }
+    { location }: ChangeLocation
   ) {
     setState(
       patch({
@@ -98,9 +100,17 @@ export class LocationsState {
   @Action(RemoveLocation)
   removeLocation(
     { getState, setState }: StateContext<LocationsStateModel>,
-    { locationId }: { locationId: number }
+    { locationId }: RemoveLocation
   ) {
     const state = getState();
+    this.store
+      .selectSnapshot(({ devices }: { devices: DevicesStateModel }) =>
+        Object.values(devices.entities)
+      )
+      .filter((el) => el.location === locationId)
+      .map((el) =>
+        this.store.dispatch(new ChangeDevice({ ...el, location: 0 }))
+      );
     setState({
       ids: state.ids.filter((id) => id !== locationId),
       entities: Object.fromEntries(
@@ -149,19 +159,6 @@ export class LocationsState {
     { getState }: StateContext<LocationsStateModel>,
     { id, file }: { id: number; file: File }
   ) {
-    // const reader = new FileReader();
-    // reader.onload = () => {
-    //   setState(
-    //     patch({
-    //       entities: patch({
-    //         [id]: patch({
-    //           user_img: reader.result as string,
-    //           img_type: 'user',
-    //         }),
-    //       }),
-    //     })
-    //   );
-    // };
     const toUpload = new FormData();
     toUpload.append('files_files', file);
     return this.apiService

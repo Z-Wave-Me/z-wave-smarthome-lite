@@ -13,7 +13,6 @@ import { ServerStreamConfig } from '@core/services/server-stream/server-stream-c
 import { DeviceResponseInterface } from '@core/services/server-stream/device-response.interface';
 import { UpdateDevices } from '@store/devices/devices.actions';
 import { Store } from '@ngxs/store';
-import { DeviceInterface } from '@store/devices/deviceInterface';
 import { ServerTime } from '@store/locals/locals.actions';
 import { Location } from '@store/locations/location';
 import { UpdateLocations } from '@store/locations/locations.action';
@@ -21,6 +20,7 @@ import { WebsocketService } from '@core/services/websocket/websocket.service';
 import { WsMessage } from '@core/services/websocket/websocket.interfaces';
 import { HttpEncapsulatedRequest } from '@core/services/ws-api/http-encapsulated-request';
 import { apiList, baseApiUrl } from '@core/services/ws-api/api-list';
+import { Device } from '@store/devices/deviceInterface';
 
 @Injectable({
   providedIn: 'any',
@@ -101,7 +101,7 @@ export class ServerStreamService implements OnDestroy {
       )
       .subscribe();
     this.webSocketService
-      .on<DeviceInterface>(
+      .on<Device>(
         'me.z-wave.devices',
         (): WsMessage<HttpEncapsulatedRequest> => ({
           event: 'httpEncapsulatedRequest',
@@ -116,9 +116,7 @@ export class ServerStreamService implements OnDestroy {
       .pipe(
         takeUntil(this.destroy$),
         tap((device) => {
-          this.store.dispatch(
-            new UpdateDevices({ devices: [device], structureChanged: false })
-          );
+          this.store.dispatch(new UpdateDevices([device]));
         })
       )
       .subscribe();
@@ -138,13 +136,13 @@ export class ServerStreamService implements OnDestroy {
         }),
         tap((locations) => {
           if (Array.isArray(locations)) {
-            this.store.dispatch(new UpdateLocations({ locations }));
+            this.store.dispatch(new UpdateLocations(locations));
           }
         })
       )
       .subscribe();
     this.webSocketService
-      .on<DeviceInterface>(
+      .on<Device>(
         'me.z-wave.devices.level',
         (): WsMessage<HttpEncapsulatedRequest> => ({
           event: 'httpEncapsulatedRequest',
@@ -171,16 +169,14 @@ export class ServerStreamService implements OnDestroy {
     return timer(0, timeBetweenRequests ?? 3000).pipe(
       exhaustMap(() =>
         this.apiService.send<{
-          data: DeviceResponseInterface<DeviceInterface>;
+          data: DeviceResponseInterface<Device>;
         }>(api, params)
       ),
-      map(({ data }: { data: DeviceResponseInterface<DeviceInterface> }) => {
+      map(({ data }: { data: DeviceResponseInterface<Device> }) => {
         return data;
       }),
       map(({ updateTime, structureChanged, devices }) => {
-        this.store.dispatch(
-          new UpdateDevices({ devices, structureChanged: !params })
-        );
+        this.store.dispatch(new UpdateDevices(devices, !params));
         this.store.dispatch(new ServerTime(updateTime));
         params = structureChanged
           ? undefined
@@ -198,7 +194,7 @@ export class ServerStreamService implements OnDestroy {
     return timer(0, timeBetweenRequests ?? 6000).pipe(
       exhaustMap(() => this.apiService.send<{ data: Location[] }>(api)),
       map(({ data: locations }: { data: Location[] }) => {
-        this.store.dispatch(new UpdateLocations({ locations }));
+        this.store.dispatch(new UpdateLocations(locations));
       }),
       finalize(() => console.log('Http UpdateLocations complete'))
     );

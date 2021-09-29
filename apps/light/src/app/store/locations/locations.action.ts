@@ -6,7 +6,7 @@ export class DestroyLocations {
 
 export class UpdateLocations {
   static readonly type = '[Locations] Update';
-  constructor(public payload: { locations: Location[] }) {}
+  constructor(public locations: Location[]) {}
 }
 
 export class RemoveLocation {

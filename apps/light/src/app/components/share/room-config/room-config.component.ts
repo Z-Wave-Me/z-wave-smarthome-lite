@@ -23,6 +23,7 @@ import {
   UploadCustomImg,
 } from '@store/locations/locations.action';
 import { TuiNotification, TuiNotificationsService } from '@taiga-ui/core';
+import { ChangeDevice } from '@store/devices/devices.actions';
 
 interface MainSensorDevice {
   title: string;
@@ -158,40 +159,42 @@ export class RoomConfigComponent {
     }
   }
 
-  deleteRoom(): void {
-    // const dialogRef = this.matDialog.open(DialogComponent, {
-    //   data: {
-    //     title: this.translocoService.translate('delete_confirm_label'),
-    //     text: this.translocoService.translate('delete_confirm_label', {
-    //       __label__: this.form?.get('title')?.value,
-    //     }),
-    //     confirm: this.translocoService.translate('ok'),
-    //   },
-    // });
-    // dialogRef
-    //   .afterClosed()
-    //   .pipe(takeUntil(this.destroy$))
-    //   .subscribe((result) => {
-    //     if (result) {
-    //       // TODO need add delete room
-    //     }
-    //   });
-  }
-
   clearSensors(): void {
     throw new Error('clearSensors not implemented');
   }
-  removeDevice(event: Event): void {
+  removeDevice(
+    event: Event,
+    device: Omit<MainSensorDevice, 'deviceType'>,
+    loc: Location
+  ): void {
     event.stopPropagation();
-    console.log('removeDevice');
-    // throw new Error('removeDevice not implemented');
+    if (loc.main_sensors.includes(device.id))
+      this.store.dispatch(
+        new ChangeLocation({
+          ...loc,
+          main_sensors: loc.main_sensors.filter((el) => el !== device.id),
+        })
+      );
+    this.store.dispatch(new ChangeDevice({ ...device, location: 0 }));
   }
-  toggleMainSensor(id: string, available: boolean) {
-    console.log('toggleMainSensor ', id, available);
+  toggleMainSensor(loc: Location, id: string, available: boolean) {
+    if (available) {
+      let mainSensors = [...loc.main_sensors];
+      if (mainSensors.includes(id)) {
+        mainSensors = mainSensors.filter((el) => el !== id);
+      } else {
+        if (mainSensors.length < 4) mainSensors.push(id);
+      }
+      this.store.dispatch(
+        new ChangeLocation({ ...loc, main_sensors: mainSensors })
+      );
+    }
   }
-  addDevice(id: string): void {
-    console.log('add Device', id);
-    // throw new Error('addDevice not implemented');
+  addDevice(
+    device: Omit<MainSensorDevice, 'deviceType'>,
+    location: number
+  ): void {
+    this.store.dispatch(new ChangeDevice({ ...device, location }));
   }
 
   tracker(i: number) {
@@ -210,20 +213,14 @@ export class RoomConfigComponent {
   }
 
   removeRoom(loc: Location) {
-    this.store
-      .dispatch(new RemoveLocation(loc.id))
-      .pipe(
-        switchMap(() => this.router.navigate(['rooms'])),
-        switchMap(() =>
-          this.notifications.show(
-            this.translocoService.translate<string>('delete_successful'),
-            {
-              status: TuiNotification.Success,
-            }
-          )
-        )
-      )
-      .subscribe();
+    this.router.navigate(['rooms']).then(() => {
+      this.store.dispatch(new RemoveLocation(loc.id));
+      this.notifications
+        .show(this.translocoService.translate<string>('delete_successful'), {
+          status: TuiNotification.Success,
+        })
+        .subscribe();
+    });
   }
 
   uploadImg(id: number, file?: File) {
