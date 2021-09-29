@@ -1,4 +1,9 @@
-import { Component, Input, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Input,
+  OnInit,
+} from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ExcludeDevice } from '@components/mobile/mobile-element-control-module/interfaces';
 import { Device } from '@store/devices/deviceInterface';
@@ -7,6 +12,7 @@ import { Device } from '@store/devices/deviceInterface';
   selector: 'z-wave-default-element-control',
   templateUrl: './default-element-control.component.html',
   styleUrls: ['./default-element-control.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DefaultElementControlComponent implements OnInit {
   @Input()

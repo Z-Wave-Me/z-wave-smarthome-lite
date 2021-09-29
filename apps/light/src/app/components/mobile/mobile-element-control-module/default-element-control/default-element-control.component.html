@@ -54,7 +54,7 @@
       <ng-template #locateContent let-item>
         <div class="item">
           <tui-avatar
-            [avatarUrl]="item.url"
+            [avatarUrl]="item.url ?? null"
             [rounded]="true"
             class="tui-space_right-4"
           ></tui-avatar>

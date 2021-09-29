@@ -2,6 +2,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   ComponentFactoryResolver,
+  OnInit,
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs';
@@ -10,7 +11,6 @@ import { Store } from '@ngxs/store';
 import { DevicesStateModel } from '@store/devices/devices.state';
 import { LocationsStateModel } from '@store/locations/locations.state';
 import { ExcludeDevice } from '@components/mobile/mobile-element-control-module/interfaces';
-import { MainSensorComponent } from '@components/mobile/sensor/main-sensor/main-sensor.component';
 import { Device } from '@store/devices/deviceInterface';
 
 @Component({
@@ -19,13 +19,13 @@ import { Device } from '@store/devices/deviceInterface';
   styleUrls: ['./element-control.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ElementControlComponent {
-  private static readonly componentList: { [index: string]: any } = {
-    switchMultilevel: MainSensorComponent,
-    switchBinary: MainSensorComponent,
-    sensorBinary: MainSensorComponent,
-  };
-  context$: Observable<Device & ExcludeDevice>;
+export class ElementControlComponent implements OnInit {
+  // private static readonly componentList: { [index: string]: any } = {
+  //   switchMultilevel: MainSensorComponent,
+  //   switchBinary: MainSensorComponent,
+  //   sensorBinary: MainSensorComponent,
+  // };
+  context$?: Observable<Device & ExcludeDevice>;
   // @ViewChild('control', { static: true, read: ViewContainerRef })
   // control: any;
 
@@ -34,10 +34,12 @@ export class ElementControlComponent {
     private readonly componentFactoryResolver: ComponentFactoryResolver,
     private readonly store: Store,
     private readonly router: Router
-  ) {
-    this.context$ = activatedRoute.params.pipe(
+  ) {}
+
+  ngOnInit(): void {
+    this.context$ = this.activatedRoute.params.pipe(
       switchMap(({ id }) =>
-        store.select(
+        this.store.select(
           ({
             devices: { entities },
             locations: { entities: locate, ids },
@@ -63,33 +65,6 @@ export class ElementControlComponent {
         if (!entry) this.router.navigate(['/elements']);
         return !!entry;
       })
-      // tap((device) => {
-      //   const deviceType = device.deviceType;
-      //   if (deviceType in ElementControlComponent.componentList) {
-      //     // const component =
-      //     this.control = ElementControlComponent.componentList[deviceType];
-      //     // this.addSensor<typeof component>(component, device);
-      //   }
-      // })
-      // map((device) => ({
-      //   title: device.title,
-      //   roomTitle: device.location.name,
-      //   iconPath: device.iconPath,
-      // }))
     );
   }
-
-  // addSensor<T extends { context: Device & ExcludeDevice }>(
-  //   component: Type<T>,
-  //   device: Device & ExcludeDevice
-  // ): void {
-  //   const componentFactory =
-  //     this.componentFactoryResolver.resolveComponentFactory(component);
-  //   const viewContainerRef = this.control;
-  //   viewContainerRef.clear();
-  //   const createdComponent =
-  //     viewContainerRef.createComponent<T>(componentFactory);
-  //
-  //   createdComponent.instance.context = device;
-  // }
 }

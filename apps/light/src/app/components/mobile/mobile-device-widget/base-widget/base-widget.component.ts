@@ -4,6 +4,7 @@ import {
   ElementRef,
   HostListener,
   Input,
+  OnInit,
   Renderer2,
   ViewChild,
 } from '@angular/core';
@@ -34,10 +35,10 @@ interface Report {
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [DestroyService],
 })
-export class BaseWidgetComponent {
+export class BaseWidgetComponent implements OnInit {
   @Input() id!: string;
-  context$: Observable<Report>;
-  location$: Observable<string>;
+  context$?: Observable<Report>;
+  location$?: Observable<string>;
   @ViewChild('widget', { read: ElementRef })
   private readonly widgetRef!: ElementRef;
   constructor(
@@ -46,33 +47,7 @@ export class BaseWidgetComponent {
     private readonly renderer: Renderer2,
     private readonly mobileActionsService: MobileActionsService,
     private readonly router: Router
-  ) {
-    this.context$ = store.select(
-      ({
-        devices: {
-          entities: { [this.id]: device },
-        },
-      }): Report => ({
-        iconPath: device.iconPath,
-        title: device.title,
-        inProgress: device.inProgress,
-        location: device.location,
-        updateTime: device.updateTime * 1e3,
-        deviceType: device.deviceType,
-        scale: device.metrics.scaleTitle,
-        level: device.metrics.level,
-      })
-    );
-    this.location$ = this.context$.pipe(
-      filter(({ location }) => location !== 0),
-      switchMap(({ location }) =>
-        store.select(
-          ({ locations: { entities } }: { locations: LocationsStateModel }) =>
-            entities?.[location].title
-        )
-      )
-    );
-  }
+  ) {}
 
   @HostListener('swiperight')
   swipeRight() {
@@ -95,5 +70,33 @@ export class BaseWidgetComponent {
         this.renderer.removeClass(this.widgetRef.nativeElement, 'shake'),
     });
     console.log('press');
+  }
+
+  ngOnInit(): void {
+    this.context$ = this.store.select(
+      ({
+        devices: {
+          entities: { [this.id]: device },
+        },
+      }): Report => ({
+        iconPath: device.iconPath,
+        title: device.title,
+        inProgress: device.inProgress,
+        location: device.location,
+        updateTime: device.updateTime * 1e3,
+        deviceType: device.deviceType,
+        scale: device.metrics.scaleTitle,
+        level: device.metrics.level,
+      })
+    );
+    this.location$ = this.context$.pipe(
+      filter(({ location }) => location !== 0),
+      switchMap(({ location }) =>
+        this.store.select(
+          ({ locations: { entities } }: { locations: LocationsStateModel }) =>
+            entities?.[location].title
+        )
+      )
+    );
   }
 }
