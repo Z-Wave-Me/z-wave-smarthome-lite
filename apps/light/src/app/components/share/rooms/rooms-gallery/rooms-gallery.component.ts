@@ -10,12 +10,12 @@ import { LocationsStateModel } from '@store/locations/locations.state';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RoomsGalleryComponent {
-  readonly ids$: Observable<number[]>;
+  readonly ids$: Observable<number[] | undefined>;
 
   constructor(private readonly store: Store) {
     this.ids$ = store.select(
       ({ locations: { ids } }: { locations: LocationsStateModel }) =>
-        ids.filter((id) => id)
+        ids ? [...ids].reverse() : ids
     );
   }
 }

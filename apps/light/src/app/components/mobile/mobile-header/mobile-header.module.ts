@@ -7,6 +7,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SettingsMenuModule } from '@components/share/settings-menu/settings-menu.module';
 import { ServerStatusWidgetModule } from '@components/share/server-status-widget/server-status-widget.module';
 import { TranslocoModule } from '@ngneat/transloco';
+import { TuiLetModule } from '@taiga-ui/cdk';
 
 @NgModule({
   declarations: [MobileHeaderComponent],
@@ -20,6 +21,7 @@ import { TranslocoModule } from '@ngneat/transloco';
     SettingsMenuModule,
     ServerStatusWidgetModule,
     TranslocoModule,
+    TuiLetModule,
   ],
   exports: [MobileHeaderComponent],
 })

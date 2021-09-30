@@ -23,7 +23,6 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { HelpTextModule } from '@modules/help-text/help-text.module';
 import { FileNameModule } from '@features/pipes/file-name/file-name.module';
-import { AddRoomComponent } from './add-room/add-room.component';
 import {
   TuiAvatarModule,
   TuiDataListWrapperModule,
@@ -35,6 +34,7 @@ import { TuiDataListModule, TuiScrollbarModule } from '@taiga-ui/core';
 import { MainSensorWidgetComponent } from './main-sensor-widget/main-sensor-widget.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { DeviceListModule } from '@components/share/device-list/device-list.module';
+import { AddRoomWidgetComponent } from './add-room-widget/add-room-widget.component';
 
 @NgModule({
   declarations: [
@@ -46,8 +46,8 @@ import { DeviceListModule } from '@components/share/device-list/device-list.modu
     RoomWidgetSensorComponent,
     RoomSubMenuComponent,
     RoomSelectComponent,
-    AddRoomComponent,
     MainSensorWidgetComponent,
+    AddRoomWidgetComponent,
   ],
   imports: [
     CommonModule,

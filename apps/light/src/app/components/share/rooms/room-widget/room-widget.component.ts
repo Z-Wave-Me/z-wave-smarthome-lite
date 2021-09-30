@@ -34,7 +34,8 @@ export class RoomWidgetComponent {
 
   @HostListener('doubletap')
   doubleTap() {
-    this.router.navigate(['config', this.id], { relativeTo: this.route });
+    if (this.id)
+      this.router.navigate(['config', this.id], { relativeTo: this.route });
   }
 
   @HostListener('press')

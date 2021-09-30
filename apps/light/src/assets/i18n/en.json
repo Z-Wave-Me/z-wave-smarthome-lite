@@ -1,4 +1,7 @@
 {
+  "newRoom": "New Room",
+  "roomCreateSuccess": "Room has been successfully created",
+  "roomCreateError": "Error while creating a room",
   "rooms": "Rooms",
   "elements": "Devices",
   "dashboard": "Dashboard",

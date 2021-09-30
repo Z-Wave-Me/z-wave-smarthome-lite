@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
+// import { MatSnackBar } from '@angular/material/snack-bar';
 
 type AlertType = 'success' | 'error' | 'warning' | 'info';
 
@@ -7,7 +7,8 @@ type AlertType = 'success' | 'error' | 'warning' | 'info';
   providedIn: 'root',
 })
 export class AlertService {
-  constructor(private readonly matSnackBar: MatSnackBar) {}
+  constructor() // private readonly matSnackBar: MatSnackBar
+  {}
 
   success(text: string, title = '', action = ''): void {
     this.message('success', text, title, action);
@@ -26,10 +27,10 @@ export class AlertService {
   }
 
   message(alertType: AlertType, text: string, title = '', action = ''): void {
-    this.matSnackBar.open(text, action, {
-      horizontalPosition: 'end',
-      verticalPosition: 'top',
-      duration: 2 * 1000,
-    });
+    // this.matSnackBar.open(text, action, {
+    //   horizontalPosition: 'end',
+    //   verticalPosition: 'top',
+    //   duration: 2 * 1000,
+    // });
   }
 }

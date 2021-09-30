@@ -8,6 +8,10 @@ export class UpdateLocations {
   static readonly type = '[Locations] Update';
   constructor(public locations: Location[]) {}
 }
+export class UpdateLocations2 {
+  static readonly type = '[Locations] Update2';
+  constructor() {}
+}
 
 export class RemoveLocation {
   static readonly type = '[Locations] Remove Location';
@@ -27,4 +31,9 @@ export class RemoveCustomImg {
 export class UploadCustomImg {
   static readonly type = '[Locations] Upload Custom Img';
   constructor(public id: number, public file: File) {}
+}
+
+export class CreateRoom {
+  static readonly type = '[Locations] Create Room';
+  constructor(public title: string) {}
 }

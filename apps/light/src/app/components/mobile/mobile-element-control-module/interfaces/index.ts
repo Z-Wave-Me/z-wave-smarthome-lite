@@ -1,6 +1,6 @@
 export interface ExcludeDevice {
   location: Loc;
-  locations: Loc[];
+  locations?: Loc[];
 }
 export interface Loc {
   id: number;

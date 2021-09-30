@@ -1,12 +1,12 @@
 <ng-container *transloco="let _t">
   <div
     class="room-config tui-container_adaptive"
-    *ngIf="data$ | async as loc; else loading"
+    *tuiLet="data$ | async as loc"
   >
     <div class="back-wrapper shadow">
       <div class="title tui-text_body-xl">
         <tui-line-clamp
-          [content]="loc.title"
+          [content]="loc?.title ?? ''"
           [lineHeight]="26"
           [linesLimit]="1"
         ></tui-line-clamp>
@@ -19,7 +19,12 @@
         <tui-svg src="tuiIconRemoveLarge"></tui-svg>
       </tui-badge>
     </div>
-    <tui-scrollbar class="content" [hidden]="true" tuiOverscroll="scroll">
+    <tui-scrollbar
+      class="content"
+      [hidden]="true"
+      tuiOverscroll="scroll"
+      *ngIf="loc; else loading"
+    >
       <z-wave-location-carousel
         [customImg]="loc.user_img"
         [current]="loc.imgSrc"

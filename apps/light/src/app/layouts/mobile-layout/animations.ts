@@ -68,7 +68,6 @@ export const slideInAnimation = trigger('routeAnimations', [
     ]
   ),
 ]);
-
 export const jumpOutAnimation = trigger('routeAnimations', [
   transition('mobile => empty', [
     style({ position: 'relative' }),

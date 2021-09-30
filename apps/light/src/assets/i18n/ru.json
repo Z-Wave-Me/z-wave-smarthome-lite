@@ -1,4 +1,7 @@
 {
+  "newRoom": "Новая Комната",
+  "roomCreateSuccess": "Комната успешно создана",
+  "roomCreateError": "Ошибка при создании комнаты",
   "rooms": "Комнаты",
   "elements": "Устройства",
   "dashboard": "Избранное",

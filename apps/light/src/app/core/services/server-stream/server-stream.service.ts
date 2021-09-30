@@ -1,6 +1,7 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { ApiService, Payload } from '@core/services/api/api.service';
 import {
+  delay,
   exhaustMap,
   finalize,
   map,
@@ -36,7 +37,7 @@ export class ServerStreamService implements OnDestroy {
     private webSocketService: WebsocketService,
     private store: Store
   ) {
-    this.connection$ = of(false);
+    this.connection$ = of(false).pipe(delay(200));
     // this.connection$ = webSocketService.isConnect();
     // webSocketService
     //   .on<void>('connectionStatusEvent')

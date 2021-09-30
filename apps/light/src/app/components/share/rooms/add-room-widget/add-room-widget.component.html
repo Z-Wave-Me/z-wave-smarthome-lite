@@ -1,0 +1,21 @@
+<ng-container *transloco="let _t">
+  <tui-island
+    tuiTouchable="transform"
+    tuiRipple="radial-gradient(circle, #5c0067 0%, #00d4ff 100%)"
+    class="widget"
+  >
+    <div class="tui-text_h5 title">
+      <ng-container *ngIf="ready; else loading">
+        <fa-icon
+          [icon]="faPlus"
+          class="icon tui-space_right-4"
+          size="2x"
+        ></fa-icon>
+        {{ _t('lb_add_room') }}
+      </ng-container>
+    </div>
+    <ng-template #loading>
+      <z-wave-load-screen></z-wave-load-screen>
+    </ng-template>
+  </tui-island>
+</ng-container>

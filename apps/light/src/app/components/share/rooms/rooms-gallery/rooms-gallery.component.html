@@ -1,9 +1,10 @@
 <ng-template #loadingScreen>
   <z-wave-load-screen></z-wave-load-screen>
 </ng-template>
-<div
-  class="rooms tui-container_adaptive"
-  *ngIf="ids$ | async as ids; else loadingScreen"
->
-  <z-wave-room-widget *ngFor="let id of ids" [id]="id"></z-wave-room-widget>
+<div class="rooms tui-container_adaptive">
+  <ng-container *ngIf="ids$ | async as ids; else loadingScreen">
+    <z-wave-room-widget *ngFor="let id of ids" [id]="id"></z-wave-room-widget>
+  </ng-container>
+  <z-wave-add-room-widget></z-wave-add-room-widget>
+  <div class="filler"></div>
 </div>

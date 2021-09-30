@@ -21,7 +21,7 @@ import {
   TuiScrollbarModule,
   TuiSvgModule,
 } from '@taiga-ui/core';
-import { TuiOverscrollModule } from '@taiga-ui/cdk';
+import { TuiLetModule, TuiOverscrollModule } from '@taiga-ui/cdk';
 import { LocationCarouselModule } from '@components/share/location-carousel/location-carousel.module';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { LoadScreenModule } from '@modules/load-screen/load-screen.module';
@@ -50,6 +50,7 @@ import { LoadScreenModule } from '@modules/load-screen/load-screen.module';
     TuiInputModule,
     LoadScreenModule,
     TuiExpandModule,
+    TuiLetModule,
   ],
 })
 export class RoomConfigModule {}

@@ -23,4 +23,7 @@
       gap: 1rem;
     }
   }
+  .inactive {
+    filter: contrast(0.4);
+  }
 }

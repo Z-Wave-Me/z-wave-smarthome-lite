@@ -53,7 +53,7 @@ export class ElementControlComponent implements OnInit {
               name: locate?.[entities[id].location]?.title,
               url: locate?.[entities[id].location]?.imgSrc,
             },
-            locations: ids.map((id) => ({
+            locations: ids?.map((id) => ({
               id,
               name: locate[id].title,
               url: locate[id].imgSrc,

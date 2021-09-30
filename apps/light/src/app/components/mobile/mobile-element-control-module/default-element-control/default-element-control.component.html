@@ -47,7 +47,7 @@
       >
         <tui-data-list-wrapper
           *tuiDataList
-          [items]="context.locations"
+          [items]="context.locations ?? null"
           [itemContent]="locateContent"
         ></tui-data-list-wrapper>
       </tui-select>

@@ -9,7 +9,7 @@ const PROXY_CONFIG = [
     withCredentials: true,
     headers: {
       Cookie:
-        'ZBW_SESSID=013bd7e726d688a2572381bb31c841505c44422984;ZWAYSession=c1f15678-6789-be01-5505-6887658c770d',
+        'ZBW_SESSID=013bd7e726d688a2572381bb31c841505c44422984;ZWAYSession=804608f4-142b-78e2-8c32-1f26b30a99e9',
     },
     secure: false,
     logLevel: 'debug',
@@ -26,7 +26,7 @@ const PROXY_CONFIG = [
     withCredentials: true,
     headers: {
       Cookie:
-        'ZBW_SESSID=013bd7e726d688a2572381bb31c841505c44422984;ZWAYSession=c1f15678-6789-be01-5505-6887658c770d',
+        'ZBW_SESSID=013bd7e726d688a2572381bb31c841505c44422984;ZWAYSession=804608f4-142b-78e2-8c32-1f26b30a99e9',
     },
     pathRewrite: { '^/ws': '/' },
     secure: false,
