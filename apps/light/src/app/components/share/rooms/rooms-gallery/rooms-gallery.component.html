@@ -1,10 +1,17 @@
 <ng-template #loadingScreen>
   <z-wave-load-screen></z-wave-load-screen>
 </ng-template>
-<div class="rooms tui-container_adaptive">
+<cdk-virtual-scroll-viewport
+  class="rooms tui-container_adaptive tui-zero-scrollbar"
+  itemSize="200"
+  tuiScrollable
+>
   <ng-container *ngIf="ids$ | async as ids; else loadingScreen">
-    <z-wave-room-widget *ngFor="let id of ids" [id]="id"></z-wave-room-widget>
+    <z-wave-room-widget
+      *cdkVirtualFor="let id of ids"
+      [id]="id"
+    ></z-wave-room-widget>
   </ng-container>
   <z-wave-add-room-widget></z-wave-add-room-widget>
   <div class="filler"></div>
-</div>
+</cdk-virtual-scroll-viewport>

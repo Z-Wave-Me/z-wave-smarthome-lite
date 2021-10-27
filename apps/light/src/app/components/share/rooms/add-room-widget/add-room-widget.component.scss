@@ -4,6 +4,7 @@
 }
 :host {
   .widget {
+    margin: 0.3rem;
     @include shadow(1);
     height: 200px;
     @include element-border(rebeccapurple);

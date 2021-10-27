@@ -2,7 +2,7 @@
   <ng-container *ngIf="ids.length; else placeHolder">
     <cdk-virtual-scroll-viewport
       class="device-list tui-zero-scrollbar"
-      itemSize="20"
+      itemSize="64"
       tuiScrollable
     >
       <div *cdkVirtualFor="let id of ids">

@@ -35,6 +35,7 @@ import { MainSensorWidgetComponent } from './main-sensor-widget/main-sensor-widg
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { DeviceListModule } from '@components/share/device-list/device-list.module';
 import { AddRoomWidgetComponent } from './add-room-widget/add-room-widget.component';
+import { ScrollingModule } from '@angular/cdk/scrolling';
 
 @NgModule({
   declarations: [
@@ -76,6 +77,7 @@ import { AddRoomWidgetComponent } from './add-room-widget/add-room-widget.compon
     TuiDataListWrapperModule,
     FormsModule,
     TuiDataListModule,
+    ScrollingModule,
   ],
 })
 export class RoomsModule {}

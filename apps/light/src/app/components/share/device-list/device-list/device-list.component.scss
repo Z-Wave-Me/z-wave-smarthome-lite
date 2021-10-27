@@ -1,6 +1,6 @@
 :host {
   .device-list {
-    height: 100vh;
+    height: calc(100vh - 2 * var(--header-heigth));
   }
 }
 

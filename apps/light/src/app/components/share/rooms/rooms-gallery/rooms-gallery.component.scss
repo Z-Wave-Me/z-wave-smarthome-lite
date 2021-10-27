@@ -1,9 +1,10 @@
 :host {
   .rooms {
-    display: flex;
-    gap: 0.3rem;
-    flex-direction: column;
-    padding: 0 0.3rem;
+    //display: flex;
+    //gap: 0.3rem;
+    //flex-direction: column;
+    //padding: 0 0.3rem;
+    height: calc(100vh - 2 * var(--header-heigth));
   }
   .filler {
     width: 100%;
