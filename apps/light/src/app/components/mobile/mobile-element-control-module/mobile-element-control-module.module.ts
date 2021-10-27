@@ -31,7 +31,6 @@ import { TuiElementModule, TuiOverscrollModule } from '@taiga-ui/cdk';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { CloserModule } from '@features/directives/closer/closer.module';
-import { ExpandSettingsModule } from '@components/share/expand-settings/expand-settings.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TranslocoModule } from '@ngneat/transloco';
 import { DeviceCommunicationModule } from '@components/share/device-communication/device-communication.module';
@@ -55,7 +54,6 @@ import { DefaultElementControlComponent } from '@components/mobile/mobile-elemen
     FontAwesomeModule,
     CloserModule,
     TuiElementModule,
-    ExpandSettingsModule,
     TuiInputModule,
     FormsModule,
     ReactiveFormsModule,

@@ -49,6 +49,7 @@ const locationFactory = (serverStreamService: ServerStreamService) => {
       deps: [ServerStreamService],
       multi: true,
     },
+
     SubscriptionManagerService,
     MobileTitleService,
   ],

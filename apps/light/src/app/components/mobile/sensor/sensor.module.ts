@@ -6,6 +6,7 @@ import { TuiScrollbarModule } from '@taiga-ui/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { MultilevelSensorComponent } from './multilevel-sensor/multilevel-sensor.component';
 import { TuiAvatarModule } from '@taiga-ui/kit';
+import { ExpandSettingsModule } from '@components/share/expand-settings/expand-settings.module';
 
 @NgModule({
   declarations: [
@@ -19,6 +20,7 @@ import { TuiAvatarModule } from '@taiga-ui/kit';
     TuiScrollbarModule,
     FontAwesomeModule,
     TuiAvatarModule,
+    ExpandSettingsModule,
   ],
 })
 export class SensorModule {}

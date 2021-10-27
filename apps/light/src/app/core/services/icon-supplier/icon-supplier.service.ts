@@ -41,7 +41,7 @@ export class IconSupplierService {
       }
       return 'half';
     }
-    return level.toString();
+    return level?.toString();
   }
 
   // Default icon

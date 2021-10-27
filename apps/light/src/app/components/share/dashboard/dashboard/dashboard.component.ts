@@ -10,7 +10,7 @@ import { SetOrder, UpdateFilter } from '@store/filter/filter.actions';
 })
 export class DashboardComponent {
   constructor(private readonly store: Store) {
-    this.store.dispatch(new UpdateFilter({ onDashboard: true }));
     this.store.dispatch(new SetOrder('dashboard'));
+    this.store.dispatch(new UpdateFilter({ onDashboard: true }));
   }
 }

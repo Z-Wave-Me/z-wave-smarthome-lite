@@ -32,14 +32,14 @@ export class RoomWidgetComponent {
     this.locations$ = store.select((state) => state.devices.locations[this.id]);
   }
 
-  @HostListener('doubletap')
-  doubleTap() {
+  @HostListener('press')
+  press() {
     if (this.id)
       this.router.navigate(['config', this.id], { relativeTo: this.route });
   }
 
-  @HostListener('press')
-  press() {
+  @HostListener('tap')
+  tap() {
     this.locations$
       .pipe(
         map((loc) => loc?.length),

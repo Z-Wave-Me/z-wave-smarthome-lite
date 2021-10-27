@@ -24,4 +24,14 @@
     [currentValue]="metrics.level"
     mode="sensorMultilevel"
   ></z-wave-multilevel-sensor>
+  <z-wave-expand-settings
+    *ngIf="
+      [
+        'switchBinary',
+        'sensorBinary',
+        'switchMultilevel',
+        'sensorMultilevel'
+      ].includes(type)
+    "
+  ></z-wave-expand-settings>
 </ng-container>

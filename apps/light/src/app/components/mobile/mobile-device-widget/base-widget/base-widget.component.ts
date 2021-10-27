@@ -54,14 +54,14 @@ export class BaseWidgetComponent implements OnInit {
     console.log('swipeRight');
   }
 
-  @HostListener('doubletap', ['$event'])
-  doubleTap(event: TouchEvent) {
+  @HostListener('press', ['$event'])
+  press(event: TouchEvent) {
     this.router.navigate(['/element', this.id]);
-    console.log('doubleTap', event.type, event);
+    console.log('press', event.type, event);
   }
 
-  @HostListener('press')
-  press() {
+  @HostListener('tap')
+  tap() {
     this.store.dispatch(new ToggleLevel(this.id));
     this.renderer.addClass(this.widgetRef.nativeElement, 'shake');
     this.mobileActionsService.shotVibrate();
@@ -69,7 +69,7 @@ export class BaseWidgetComponent implements OnInit {
       complete: () =>
         this.renderer.removeClass(this.widgetRef.nativeElement, 'shake'),
     });
-    console.log('press');
+    console.log('tap');
   }
 
   ngOnInit(): void {
