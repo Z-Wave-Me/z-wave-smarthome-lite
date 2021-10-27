@@ -1,9 +1,6 @@
 :host {
   .device-list {
-    display: flex;
-    flex-direction: column;
-    gap: 0.3rem;
-    padding: 0.3rem;
+    height: 100vh;
   }
 }
 
@@ -56,4 +53,9 @@
   border: dotted 3px #999;
   min-height: 60px;
   transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+::ng-deep {
+  .cdk-virtual-scroll-orientation-vertical .cdk-virtual-scroll-content-wrapper {
+    width: 100%;
+  }
 }

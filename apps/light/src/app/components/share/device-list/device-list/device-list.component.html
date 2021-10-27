@@ -1,10 +1,14 @@
 <ng-container *ngIf="ids$ | async as ids; else loading">
   <ng-container *ngIf="ids.length; else placeHolder">
-    <div class="device-list">
-      <div *ngFor="let id of ids">
+    <cdk-virtual-scroll-viewport
+      class="device-list tui-zero-scrollbar"
+      itemSize="20"
+      tuiScrollable
+    >
+      <div *cdkVirtualFor="let id of ids">
         <z-wave-device-widget [id]="id"></z-wave-device-widget>
       </div>
-    </div>
+    </cdk-virtual-scroll-viewport>
   </ng-container>
 </ng-container>
 <ng-template #loading>
