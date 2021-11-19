@@ -27,12 +27,12 @@
     ]
   },
   "projects": {
-    "light": {
-      "tags": []
-    },
-    "light-e2e": {
+    "lite-e2e": {
       "tags": [],
-      "implicitDependencies": ["light"]
+      "implicitDependencies": ["lite"]
+    },
+    "lite": {
+      "tags": []
     }
   }
 }

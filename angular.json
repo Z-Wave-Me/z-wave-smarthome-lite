@@ -1,47 +1,85 @@
 {
   "version": 1,
   "projects": {
-    "light": {
+    "lite-e2e": {
+      "root": "apps/lite-e2e",
+      "sourceRoot": "apps/lite-e2e/src",
       "projectType": "application",
-      "root": "apps/light",
-      "sourceRoot": "apps/light/src",
+      "architect": {
+        "e2e": {
+          "builder": "@nrwl/cypress:cypress",
+          "options": {
+            "cypressConfig": "apps/lite-e2e/cypress.json",
+            "devServerTarget": "lite:serve:development",
+            "tsConfig": "apps/lite-e2e/tsconfig.json"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "lite:serve:production"
+            }
+          }
+        },
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["apps/lite-e2e/**/*.{js,ts}"]
+          }
+        }
+      }
+    },
+    "lite": {
+      "projectType": "application",
+      "root": "apps/lite",
+      "sourceRoot": "apps/lite/src",
       "prefix": "z-wave",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "outputs": ["{options.outputPath}"],
           "options": {
-            "outputPath": "dist/apps/light",
-            "index": "apps/light/src/index.html",
-            "main": "apps/light/src/main.ts",
-            "polyfills": "apps/light/src/polyfills.ts",
-            "tsConfig": "apps/light/tsconfig.app.json",
+            "outputPath": "dist/apps/lite",
+            "index": "apps/lite/src/index.html",
+            "main": "apps/lite/src/main.ts",
+            "polyfills": "apps/lite/src/polyfills.ts",
+            "tsConfig": "apps/lite/tsconfig.app.json",
             "inlineStyleLanguage": "scss",
-            "assets": ["apps/light/src/favicon.ico","apps/light/src/assets",{"glob":"**/*","input":"node_modules/@taiga-ui/icons/src","output":"assets/taiga-ui/icons"}],
-            "styles": ["apps/light/src/styles.scss","node_modules/@taiga-ui/core/styles/taiga-ui-global.less","node_modules/@taiga-ui/core/styles/taiga-ui-theme.less"],
+            "assets": [
+              "apps/lite/src/favicon.ico",
+              "apps/lite/src/assets",
+              {
+                "glob": "**/*",
+                "input": "node_modules/@taiga-ui/icons/src",
+                "output": "assets/taiga-ui/icons"
+              }
+            ],
+            "styles": [
+              "apps/lite/src/styles.scss",
+              "node_modules/@taiga-ui/core/styles/taiga-ui-global.less",
+              "node_modules/@taiga-ui/core/styles/taiga-ui-theme.less"
+            ],
             "scripts": [],
-              "allowedCommonJsDependencies": [
-                "angular2-text-mask"
-              ]
+            "allowedCommonJsDependencies": ["angular2-text-mask"]
           },
           "configurations": {
             "production": {
+              "baseHref": "/",
+              "deployUrl": "/smarthome/",
               "budgets": [
                 {
                   "type": "initial",
                   "maximumWarning": "500kb",
-                  "maximumError": "1mb"
+                  "maximumError": "10mb"
                 },
                 {
                   "type": "anyComponentStyle",
                   "maximumWarning": "2kb",
-                  "maximumError": "4kb"
+                  "maximumError": "400kb"
                 }
               ],
               "fileReplacements": [
                 {
-                  "replace": "apps/light/src/environments/environment.ts",
-                  "with": "apps/light/src/environments/environment.prod.ts"
+                  "replace": "apps/lite/src/environments/environment.ts",
+                  "with": "apps/lite/src/environments/environment.prod.ts"
                 }
               ],
               "outputHashing": "all"
@@ -61,10 +99,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "light:build:production"
+              "browserTarget": "lite:build:production"
             },
             "development": {
-              "browserTarget": "light:build:development"
+              "browserTarget": "lite:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -72,50 +110,24 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "light:build"
+            "browserTarget": "lite:build"
           }
         },
         "lint": {
           "builder": "@nrwl/linter:eslint",
           "options": {
             "lintFilePatterns": [
-              "apps/light/src/**/*.ts",
-              "apps/light/src/**/*.html"
+              "apps/lite/src/**/*.ts",
+              "apps/lite/src/**/*.html"
             ]
           }
         },
         "test": {
           "builder": "@nrwl/jest:jest",
-          "outputs": ["coverage/apps/light"],
+          "outputs": ["coverage/apps/lite"],
           "options": {
-            "jestConfig": "apps/light/jest.config.js",
+            "jestConfig": "apps/lite/jest.config.js",
             "passWithNoTests": true
-          }
-        }
-      }
-    },
-    "light-e2e": {
-      "root": "apps/light-e2e",
-      "sourceRoot": "apps/light-e2e/src",
-      "projectType": "application",
-      "architect": {
-        "e2e": {
-          "builder": "@nrwl/cypress:cypress",
-          "options": {
-            "cypressConfig": "apps/light-e2e/cypress.json",
-            "devServerTarget": "light:serve:development",
-            "tsConfig": "apps/light-e2e/tsconfig.json"
-          },
-          "configurations": {
-            "production": {
-              "devServerTarget": "light:serve:production"
-            }
-          }
-        },
-        "lint": {
-          "builder": "@nrwl/linter:eslint",
-          "options": {
-            "lintFilePatterns": ["apps/light-e2e/**/*.{js,ts}"]
           }
         }
       }
@@ -157,5 +169,5 @@
       "style": "scss"
     }
   },
-  "defaultProject": "light"
+  "defaultProject": "lite"
 }
