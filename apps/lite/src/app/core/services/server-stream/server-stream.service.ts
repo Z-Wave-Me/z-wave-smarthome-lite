@@ -96,7 +96,7 @@ export class ServerStreamService implements OnDestroy {
         }),
         tap((response) => {
           if (response && 'devices' in response) {
-            this.store.dispatch(new UpdateDevices(response));
+            this.store.dispatch(new UpdateDevices(response.devices));
           }
         })
       )

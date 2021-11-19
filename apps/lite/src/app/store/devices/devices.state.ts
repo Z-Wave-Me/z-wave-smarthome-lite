@@ -182,7 +182,7 @@ export class DevicesState {
     );
     let tagsList = new Set<string>();
     let serverTime = 0;
-    devices?.map((device: Device) => {
+    devices.map((device: Device) => {
       ids.push(device.id);
       if (serverTime < device.updateTime) {
         serverTime = device.updateTime;
