@@ -1,0 +1,50 @@
+<div class="sensor simple">
+  <div class="wrapper" [ngClass]="{ column: long }">
+    <span
+      class="string-value"
+      *ngIf="value === 0 && mode === 'switchMultilevel'"
+    >
+      <svg viewBox="0 0 30 14" xmlns="http://www.w3.org/2000/svg">
+        <style>
+          .off {
+            fill: #8c8c8c;
+          }
+        </style>
+        <text
+          x="50%"
+          y="60%"
+          dominant-baseline="middle"
+          text-anchor="middle"
+          class="off"
+        >
+          OFF
+        </text>
+      </svg>
+    </span>
+    <span
+      class="string-value"
+      *ngIf="value === 99 && mode === 'switchMultilevel'"
+    >
+      <svg viewBox="0 0 34 14" xmlns="http://www.w3.org/2000/svg">
+        <style>
+          .off {
+            fill: #00c70c;
+          }
+        </style>
+        <text
+          x="50%"
+          y="60%"
+          dominant-baseline="middle"
+          text-anchor="middle"
+          class="off"
+        >
+          MAX
+        </text>
+      </svg>
+    </span>
+    <span [ngClass]="{ 'tui-space_right-1': !long }" *ngIf="stringValue()">
+      {{ value }}
+    </span>
+    <span class="scale"> {{ scale }} </span>
+  </div>
+</div>

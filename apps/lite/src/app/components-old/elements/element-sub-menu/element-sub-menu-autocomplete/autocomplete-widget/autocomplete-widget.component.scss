@@ -1,0 +1,21 @@
+:host {
+  .wrapper {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    border-bottom: 1px solid silver;
+    padding: 0.5rem;
+    &:hover {
+      background: silver;
+    }
+    .widget-preview-img {
+      max-width: 32px;
+      max-height: 32px;
+    }
+    .title {
+      flex: 1 1 auto;
+      padding-right: 3rem;
+      white-space: nowrap;
+    }
+  }
+}

@@ -1,0 +1,22 @@
+@import '~@taiga-ui/core/styles/taiga-ui-local';
+@mixin element-border($color) {
+  background-image: url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' rx='10' ry='10' stroke='#{$color}' stroke-width='8' stroke-dasharray='36 27' stroke-dashoffset='37' stroke-linecap='round'/%3e%3c/svg%3e");
+}
+:host {
+  .widget {
+    margin: 0.3rem;
+    @include shadow(1);
+    height: 200px;
+    @include element-border(rebeccapurple);
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    .title {
+      display: flex;
+      align-items: center;
+    }
+    .icon {
+      color: var(--tui-success-fill);
+    }
+  }
+}

@@ -1,0 +1,14 @@
+@import '~@taiga-ui/core/styles/taiga-ui-local';
+:host {
+  .header {
+    display: flex;
+    justify-content: right;
+    align-items: center;
+    background-color: var(--tui-base-02);
+    @include shadow(6);
+    &-title {
+      flex: 1 1 auto;
+      text-align: center;
+    }
+  }
+}

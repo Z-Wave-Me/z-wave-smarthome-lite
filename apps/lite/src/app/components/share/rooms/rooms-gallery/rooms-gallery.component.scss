@@ -1,0 +1,9 @@
+:host {
+  .rooms {
+    height: calc(100vh - 2 * var(--header-heigth));
+  }
+  .filler {
+    width: 100%;
+    height: 50vh;
+  }
+}

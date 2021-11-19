@@ -1,0 +1,43 @@
+<ng-container *ngIf="totalRooms$ | async as totalRooms">
+  <tui-select
+    [ngModel]="currentRoom$ | async"
+    [valueContent]="content"
+    (ngModelChange)="selectRoom($event)"
+    [identityMatcher]="mather"
+    class="tui-space_vertical-5"
+    ><tui-data-list-wrapper
+      *tuiDataList
+      size="l"
+      [items]="totalRooms"
+      [itemContent]="content"
+    ></tui-data-list-wrapper>
+  </tui-select>
+</ng-container>
+
+<ng-template #content let-data>
+  <div class="template">
+    <tui-avatar
+      class="tui-space_right-3"
+      size="s"
+      [rounded]="true"
+      [avatarUrl]="data.imgSrc"
+    ></tui-avatar>
+    <div class="name">{{ data.title }}</div>
+  </div>
+</ng-template>
+<!--<ng-container *ngIf="totalRooms$ | async as totalRooms">-->
+<!--  <ng-container *ngIf="totalRooms.length > 1">-->
+<!--    <z-wave-drop-down>-->
+<!--      <z-wave-drop-down-head>-->
+<!--        <ng-content></ng-content>-->
+<!--      </z-wave-drop-down-head>-->
+<!--      <z-wave-drop-down-content orientation="left" class="drop-down-content">-->
+<!--        <div *ngFor="let roomLink of totalRooms$ | async" [routerLink]="['/rooms', roomLink.id]" class="room-select">-->
+<!--          <img [src]="roomLink.imgSrc | async" alt="img" class="navi-img" />-->
+<!--          <div class="title">{{ roomLink.title | async }}</div>-->
+<!--          <div class="item-cnt">({{ roomLink.devicesCount }})</div>-->
+<!--        </div>-->
+<!--      </z-wave-drop-down-content>-->
+<!--    </z-wave-drop-down>-->
+<!--  </ng-container>-->
+<!--</ng-container>-->

@@ -1,0 +1,30 @@
+@import 'apps/lite/src/app/styles/oldStyles/vendor/bootstrap/variables';
+:host {
+  .btn-element-sub-menu {
+    border-bottom-left-radius: $border-radius-base;
+    border-top-left-radius: $border-radius-base;
+  }
+}
+.device-type-selector {
+  padding: 10px;
+  border-bottom: solid 1px #ccc;
+  display: flex;
+  align-items: center;
+  font-size: 0.8rem;
+  color: grey;
+  .selector-text {
+    white-space: nowrap;
+    padding: 0 1ch;
+  }
+  :last-child {
+    padding-left: 1rem;
+    margin-left: auto;
+  }
+  &.active {
+    color: #333;
+    font-weight: 700;
+  }
+  &:hover {
+    background: silver;
+  }
+}

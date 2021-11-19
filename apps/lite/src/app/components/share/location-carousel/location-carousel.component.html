@@ -1,0 +1,67 @@
+<div class="wrapper">
+  <swiper
+    [effect]="'coverflow'"
+    [grabCursor]="true"
+    [centeredSlides]="true"
+    [slidesPerView]="'auto'"
+    [initialSlide]="initial"
+    [coverflowEffect]="{
+      rotate: 50,
+      stretch: 0,
+      depth: 100,
+      modifier: 1,
+      slideShadows: true
+    }"
+    [pagination]="true"
+  >
+    <ng-template swiperSlide *ngFor="let l of defaultImages; index as i">
+      <img
+        loading="lazy"
+        [src]="l"
+        alt="room"
+        class="preview"
+        [ngClass]="{ selected: i === selected }"
+        (tap)="onTap(i)"
+      />
+    </ng-template>
+    <ng-template swiperSlide>
+      <div class="custom" *ngIf="customImg; else newImg">
+        <img
+          loading="lazy"
+          [src]="customImg"
+          alt="room"
+          class="preview custom"
+          [ngClass]="{ selected: defaultImages.length === selected }"
+          (tap)="onTap(defaultImages.length)"
+        />
+        <fa-icon
+          [icon]="faTrash"
+          size="2x"
+          (click)="clearCustomImg()"
+          class="trash"
+        ></fa-icon>
+      </div>
+      <ng-template #newImg>
+        <div
+          class="make-photo"
+          (click)="filesField.click()"
+          *ngIf="!uploading; else loadScreen"
+        >
+          <fa-icon [icon]="faCamera" size="8x"></fa-icon>
+        </div>
+        <input
+          [hidden]="true"
+          #filesField
+          type="file"
+          accept="image/*"
+          (change)="onChange($event)"
+        />
+      </ng-template>
+      <ng-template #loadScreen>
+        <div class="preview">
+          <z-wave-load-screen></z-wave-load-screen>
+        </div>
+      </ng-template>
+    </ng-template>
+  </swiper>
+</div>

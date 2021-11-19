@@ -1,0 +1,12 @@
+<z-wave-header></z-wave-header>
+<div
+  id="main_content"
+  class="container"
+  [@mainRouteAnimation]="prepareRoute(outlet)"
+>
+  <router-outlet #outlet="outlet"></router-outlet>
+</div>
+
+<!--<pre>-->
+<!--  {{locations$ | async |json}}-->
+<!--</pre>-->

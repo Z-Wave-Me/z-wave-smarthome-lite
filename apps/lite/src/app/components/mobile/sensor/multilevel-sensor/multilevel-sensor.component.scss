@@ -1,0 +1,20 @@
+.simple {
+  display: flex;
+  align-items: center;
+  .wrapper {
+    flex: 1 1 auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    .string-value {
+      width: 4ch;
+    }
+    .scale {
+      white-space: nowrap;
+    }
+  }
+
+  .column {
+    flex-direction: column;
+  }
+}

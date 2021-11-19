@@ -1,0 +1,13 @@
+<ng-container *transloco="let _t">
+  <div class="wrapper" *ngIf="data$ | async as data">
+    <div class="widget-img">
+      <img
+        alt="img"
+        class="widget-preview-img widget-icon-update img-circle"
+        [src]="data.iconPath"
+      />
+    </div>
+    <div class="title">{{ data.title }}</div>
+    <i class="far fa-cog"></i>
+  </div>
+</ng-container>

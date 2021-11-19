@@ -1,0 +1,20 @@
+<!-- sensorMultilevel -->
+<ng-container *transloco="let _t">
+  <ng-container *ngIf="data$ | async as data">
+    <div class="widget-ctrl">
+      <div title="{{ _t('lb_update') }}" (click)="command('update')">
+        <i class="fad fa-clock"></i>
+        <span> {{ data.updateTime * 1e3 | timeAgo }}</span>
+      </div>
+    </div>
+    <div
+      class="widget-ctrl widget-data"
+      [appAutoFontSize]="
+        data.level.toString().length + data.scaleTitle.toString().length
+      "
+    >
+      <span class="widget-level">{{ data.level }}</span>
+      <span class="widget-scale">{{ data.scaleTitle }}</span>
+    </div>
+  </ng-container>
+</ng-container>

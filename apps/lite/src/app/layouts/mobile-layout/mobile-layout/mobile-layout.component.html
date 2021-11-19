@@ -1,0 +1,11 @@
+<z-wave-mobile-header></z-wave-mobile-header>
+<tui-scrollbar
+  [hidden]="true"
+  class="content"
+  tuiOverscroll="scroll"
+  zWaveSwipeNavigation
+  [@routeAnimations]="prepareRoute(outlet)"
+>
+  <router-outlet #outlet="outlet"></router-outlet>
+</tui-scrollbar>
+<z-wave-mobile-footer></z-wave-mobile-footer>
