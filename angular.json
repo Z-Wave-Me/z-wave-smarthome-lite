@@ -63,7 +63,7 @@
           "configurations": {
             "production": {
               "baseHref": "/",
-              "deployUrl": "/smarthome/",
+              "deployUrl": "/lite/",
               "budgets": [
                 {
                   "type": "initial",

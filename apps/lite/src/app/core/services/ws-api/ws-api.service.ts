@@ -22,7 +22,6 @@ export class WsApiService {
       {
         body: payload?.data,
         method: payload?.method ?? 'GET',
-        responseEvent: payload?.responseEvent,
         url:
           WsApiService.baseUrl + WsApiService.apiList[api] + command + params,
       }

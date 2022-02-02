@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 export interface Payload {
@@ -106,17 +106,12 @@ export class ApiService {
 
   constructor(private http: HttpClient) {}
 
-  get(api: string): void {
-    this.http.get(this.apiList[api]).subscribe((data) => {
-      console.log('data from apiService ', data);
-    });
-  }
-
   send<T>(event: string, payload?: Payload): Observable<T> {
     const url = this.apiList[event];
     if (!url) {
       throw new Error('Bad Api event ' + event);
     }
+    // TODO: make it normally
     const params = payload?.params
       ? '?' +
         payload.params.map(({ key, value }) => key + '=' + value).join('&')
@@ -132,9 +127,6 @@ export class ApiService {
     if (payload?.data || payload?.method === 'post') {
       return this.http.post<T>(url + command + params, payload?.data);
     }
-    // console.log(url + command + params);
-    return this.http.get<T>(url + command + params, {
-      responseType: 'json',
-    });
+    return this.http.get<T>(url + command + params);
   }
 }

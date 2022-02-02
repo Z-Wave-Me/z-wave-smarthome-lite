@@ -5,8 +5,13 @@ import {
   WebSocketSubject,
   WebSocketSubjectConfig,
 } from 'rxjs/webSocket';
-import { MonoTypeOperatorFunction, Observable, ReplaySubject } from 'rxjs';
-import { delay, map, retryWhen, share } from 'rxjs/operators';
+import {
+  EMPTY,
+  MonoTypeOperatorFunction,
+  Observable,
+  ReplaySubject,
+} from 'rxjs';
+import { delay, map, retryWhen, share, takeUntil } from 'rxjs/operators';
 import {
   WebSocketConfig,
   WsMessage,
@@ -22,6 +27,7 @@ export class WebsocketService {
   private readonly configuration: WebSocketSubjectConfig<WsMessage<unknown>>;
   private readonly connect$ = new ReplaySubject<boolean>(1);
   private RECONNECT_INTERVAL = 3_000;
+
   constructor(@Inject(config) private readonly wsConfig: WebSocketConfig) {
     this.connect$.next(false);
     this.configuration = {
@@ -34,6 +40,9 @@ export class WebsocketService {
       url: this.wsConfig.url,
     };
     this.websocket$ = webSocket<WsMessage<unknown>>(this.configuration);
+    this.on<void>('connectionStatusEvent')
+      // .pipe(takeUntil(this.destroy$))
+      .subscribe();
   }
 
   on<T>(
@@ -49,7 +58,13 @@ export class WebsocketService {
       )
       .pipe(
         share(),
-        map((value) => value?.data as T),
+        map((value) => {
+          const data = value?.data;
+          if ((data as { body: string }).body) {
+            return JSON.parse((data as { body: string }).body).data as T;
+          }
+          return data as T;
+        }),
         this.reconnect(this.RECONNECT_INTERVAL)
       );
   }
@@ -58,10 +73,11 @@ export class WebsocketService {
     this.websocket$.next({ event, data });
   }
 
-  private reconnect<T>(reconnectInterval: number): MonoTypeOperatorFunction<T> {
-    return retryWhen((errors) => errors.pipe(delay(reconnectInterval)));
-  }
   isConnect(): Observable<boolean> {
     return this.connect$.asObservable();
+  }
+
+  private reconnect<T>(reconnectInterval: number): MonoTypeOperatorFunction<T> {
+    return retryWhen((errors) => errors.pipe(delay(reconnectInterval)));
   }
 }

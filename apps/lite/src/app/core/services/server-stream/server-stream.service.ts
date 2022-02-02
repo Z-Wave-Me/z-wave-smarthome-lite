@@ -1,6 +1,7 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { ApiService, Payload } from '@core/services/api/api.service';
 import {
+  catchError,
   delay,
   exhaustMap,
   finalize,
@@ -37,12 +38,8 @@ export class ServerStreamService implements OnDestroy {
     private webSocketService: WebsocketService,
     private store: Store
   ) {
-    this.connection$ = of(true).pipe(delay(200));
-    // this.connection$ = webSocketService.isConnect();
-    // webSocketService
-    //   .on<void>('connectionStatusEvent')
-    //   .pipe(takeUntil(this.destroy$))
-    //   .subscribe();
+    // this.connection$ = of(false).pipe(delay(200));
+    this.connection$ = webSocketService.isConnect();
   }
 
   ngOnDestroy(): void {
@@ -84,25 +81,7 @@ export class ServerStreamService implements OnDestroy {
 
   private subscribeDevices() {
     this.webSocketService
-      .on<{ body: string }>('ws-reply')
-      .pipe(
-        takeUntil(this.destroy$),
-        map((data) => {
-          try {
-            return JSON.parse(data.body).data;
-          } catch (e) {
-            console.error('ws-reply Error parse', e);
-          }
-        }),
-        tap((response) => {
-          if (response && 'devices' in response) {
-            this.store.dispatch(new UpdateDevices(response.devices));
-          }
-        })
-      )
-      .subscribe();
-    this.webSocketService
-      .on<Device>(
+      .on<Device | { devices: Device[]; structureChanged: boolean }>(
         'me.z-wave.devices',
         (): WsMessage<HttpEncapsulatedRequest> => ({
           event: 'httpEncapsulatedRequest',
@@ -112,12 +91,19 @@ export class ServerStreamService implements OnDestroy {
               ServerStreamService.apiList['devices'],
             method: 'GET',
           },
+          responseEvent: 'me.z-wave.devices',
         })
       )
       .pipe(
         takeUntil(this.destroy$),
         tap((device) => {
-          this.store.dispatch(new UpdateDevices([device]));
+          if ('structureChanged' in device) {
+            this.store.dispatch(
+              new UpdateDevices(device.devices, device.structureChanged)
+            );
+          } else {
+            this.store.dispatch(new UpdateDevices([device]));
+          }
         })
       )
       .subscribe();
@@ -125,26 +111,8 @@ export class ServerStreamService implements OnDestroy {
 
   private subscribeLocations() {
     this.webSocketService
-      .on<{ body: string }>('ws-reply')
-      .pipe(
-        takeUntil(this.destroy$),
-        map((data) => {
-          try {
-            return JSON.parse(data.body).data;
-          } catch (e) {
-            console.error('ws-reply Error parse', e);
-          }
-        }),
-        tap((locations) => {
-          if (Array.isArray(locations)) {
-            this.store.dispatch(new UpdateLocations(locations));
-          }
-        })
-      )
-      .subscribe();
-    this.webSocketService
-      .on<Device>(
-        'me.z-wave.devices.level',
+      .on<Location[] | Location>(
+        'me.z-wave.locations',
         (): WsMessage<HttpEncapsulatedRequest> => ({
           event: 'httpEncapsulatedRequest',
           data: {
@@ -153,11 +121,15 @@ export class ServerStreamService implements OnDestroy {
               ServerStreamService.apiList['locations'],
             method: 'GET',
           },
+          responseEvent: 'me.z-wave.locations',
         })
       )
       .pipe(
-        takeUntil(this.destroy$)
-        // tap((device) => {})
+        takeUntil(this.destroy$),
+        tap((location) => {
+          if (Array.isArray(location))
+            this.store.dispatch(new UpdateLocations(location));
+        })
       )
       .subscribe();
   }
@@ -184,7 +156,11 @@ export class ServerStreamService implements OnDestroy {
           : { params: [{ key: 'since', value: updateTime }] };
         console.groupEnd();
       }),
-      finalize(() => console.log('Http UpdateDevices complete'))
+      finalize(() => console.log('Http UpdateDevices complete')),
+      catchError((err, caches) => {
+        console.log('updateDevices', JSON.stringify(err));
+        return caches.pipe(delay(1000));
+      })
     );
   }
 
@@ -197,7 +173,11 @@ export class ServerStreamService implements OnDestroy {
       map(({ data: locations }: { data: Location[] }) => {
         this.store.dispatch(new UpdateLocations(locations));
       }),
-      finalize(() => console.log('Http UpdateLocations complete'))
+      finalize(() => console.log('Http UpdateLocations complete')),
+      catchError((err, caches) => {
+        console.log('updateLocations', JSON.stringify(err));
+        return caches.pipe(delay(1000));
+      })
     );
   }
 }

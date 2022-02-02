@@ -89,7 +89,7 @@ export const initApp = (configurationService: ConfigService) => () =>
     // },
     // {
     //   provide: APP_BASE_HREF,
-    //   useValue: '/light',
+    //   useValue: '/lite',
     // },
     { provide: 'Window', useValue: window },
     DestroyService,

@@ -22,7 +22,7 @@ export class ApiInterceptor implements HttpInterceptor {
     request: HttpRequest<unknown>,
     next: HttpHandler
   ): Observable<HttpEvent<unknown>> {
-    let errorsCount = 0;
+    // let errorsCount = 0;
     const token = this.store.selectSnapshot(LocalStorageState.token);
     // this.store.selectSnapshot<string>(AuthState.token);
     if (token) {
@@ -35,14 +35,14 @@ export class ApiInterceptor implements HttpInterceptor {
 
     // console.log(request);
     return next.handle(request).pipe(
-      tap(
-        (event) => {
+      tap({
+        next: (event) => {
           if (event instanceof HttpResponse) {
             this.store.dispatch(new ServerStatus(true));
             // errorsCount = 0;
           }
         },
-        (err) => {
+        error: (err) => {
           if (err instanceof HttpErrorResponse) {
             console.log('Error from Inspector', err);
             if (err.status === 401) {
@@ -54,8 +54,8 @@ export class ApiInterceptor implements HttpInterceptor {
               console.warn('offline');
             }
           }
-        }
-      )
+        },
+      })
       // retryWhen((errors) => {
       //     errorsCount++;
       //     console.log({ errorsCount });
