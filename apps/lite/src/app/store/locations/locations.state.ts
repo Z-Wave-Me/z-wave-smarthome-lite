@@ -49,7 +49,7 @@ export class LocationsState {
     const entities: { [id: number]: Location } = {};
 
     locations
-      .sort((a, b) => a.title.localeCompare(b.title))
+      // .sort((a, b) => a.title.localeCompare(b.title))
       .map((location) => {
         if (location.id === 0) {
           location.title = 'Global';

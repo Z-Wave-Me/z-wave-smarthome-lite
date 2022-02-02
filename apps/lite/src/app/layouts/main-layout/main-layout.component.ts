@@ -25,15 +25,13 @@ import { routeTransitionAnimations } from './route-transition-animations';
   animations: [routeTransitionAnimations],
 })
 export class MainLayoutComponent implements OnInit, OnDestroy {
-  @Select(ProfileState) profile$?: Observable<ProfileInterface>;
-  @Select(DevicesState) devices$?: Observable<any>;
-  @Select(LocationsState) locations$?: Observable<any>;
+  // @Select(ProfileState) profile$?: Observable<ProfileInterface>;
+  // @Select(DevicesState) devices$?: Observable<any>;
+  // @Select(LocationsState) locations$?: Observable<any>;
 
-  constructor(
-    @Inject(SERVER_SYNCHRONIZATION) serverSynchronization: string[],
-    private store: Store,
-    private readonly alertService: AlertService
-  ) {}
+  constructor() // private store: Store, // @Inject(SERVER_SYNCHRONIZATION) serverSynchronization: string[],
+  // private readonly alertService: AlertService
+  {}
 
   ngOnInit(): void {
     // this.store.dispatch(new SetProfile());

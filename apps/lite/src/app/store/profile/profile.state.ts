@@ -72,29 +72,30 @@ export class ProfileState implements OnDestroy {
     private readonly apiService: ApiService,
     private readonly translocoService: TranslocoService
   ) {
+    // websocketService.on('se')
     translocoService.setFallbackLangForMissingTranslation({
       fallbackLang: 'en',
     });
   }
-  @Action(SetProfile)
-  setProfile({ setState }: StateContext<ProfileStateModel>): Observable<any> {
-    return this.apiService
-      .send<WsMessage<ProfileInterface>>('profiles', { command: '/1' })
-      .pipe(
-        tap(({ data }: { data: ProfileInterface }) => {
-          const lang: string | undefined = data.lang;
-          if (lang) {
-            this.subscription = this.translocoService
-              .load(lang)
-              .pipe(take(1))
-              .subscribe(() => {
-                this.translocoService.setActiveLang(lang);
-              });
-          }
-          setState(patch({ ...data }));
-        })
-      );
-  }
+  // @Action(SetProfile)
+  // setProfile({ setState }: StateContext<ProfileStateModel>): Observable<any> {
+  // return this.apiService
+  //   .send<WsMessage<ProfileInterface>>('profiles', { command: '/1' })
+  //   .pipe(
+  //     tap(({ data }: { data: ProfileInterface }) => {
+  //       const lang: string | undefined = data.lang;
+  //       if (lang) {
+  //         this.subscription = this.translocoService
+  //           .load(lang)
+  //           .pipe(take(1))
+  //           .subscribe(() => {
+  //             this.translocoService.setActiveLang(lang);
+  //           });
+  //       }
+  //       setState(patch({ ...data }));
+  //     })
+  //   );
+  // }
 
   ngOnDestroy(): void {
     this.subscription?.unsubscribe();

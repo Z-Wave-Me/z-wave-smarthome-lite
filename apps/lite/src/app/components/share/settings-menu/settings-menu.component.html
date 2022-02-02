@@ -9,7 +9,7 @@
 
 <ng-template #dropdown>
   <tui-data-list>
-    <button tuiOption>
+    <button tuiOption *ngIf="themeSwitcher">
       <tui-toggle
         style="align-self: center"
         class="tui-space_right-1"

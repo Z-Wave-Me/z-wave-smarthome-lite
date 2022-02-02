@@ -25,6 +25,12 @@ const locationFactory = (serverStreamService: ServerStreamService) => {
   return 'locations';
 };
 
+const profileFactory = (serverStreamService: ServerStreamService) => {
+  serverStreamService.subscribe({
+    api: 'profile',
+  });
+  return 'profile';
+};
 @NgModule({
   declarations: [MobileLayoutComponent],
   imports: [
@@ -49,15 +55,18 @@ const locationFactory = (serverStreamService: ServerStreamService) => {
       deps: [ServerStreamService],
       multi: true,
     },
-
+    {
+      provide: SERVER_SYNCHRONIZATION,
+      useFactory: profileFactory,
+      deps: [ServerStreamService],
+      multi: true,
+    },
     SubscriptionManagerService,
     MobileTitleService,
   ],
 })
 export class MobileLayoutModule {
   constructor(
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     @Inject(SERVER_SYNCHRONIZATION) serverSynchronization: string[]
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
   ) {}
 }

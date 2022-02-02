@@ -12,8 +12,8 @@ import {
   ShowOptions,
   SupportLanguages,
 } from '@modules/interfaces/pages.interfaces';
-import { Observable, of, Subscription } from 'rxjs';
-import { finalize, mapTo, tap } from 'rxjs/operators';
+import { EMPTY, Observable, of, Subscription, switchMap } from 'rxjs';
+import { finalize, map, mapTo, tap } from 'rxjs/operators';
 import { ApiService } from '@core/services/api/api.service';
 import {
   Login,
@@ -23,6 +23,14 @@ import {
 } from '@store/local-storage/local-storage.actions';
 import { TranslocoService } from '@ngneat/transloco';
 import { AlertService } from '@core/services/alert/alert.service';
+import { ChangeDevice, UpdateDevices } from '@store/devices/devices.actions';
+
+export interface ZWayResponse<T> {
+  code: number;
+  data: T;
+  error: string | null;
+  message: string;
+}
 
 export class LocalStorageStateModel {
   token?: string;
@@ -64,14 +72,17 @@ export class LocalStorageState {
     private readonly store: Store,
     private readonly alertService: AlertService
   ) {}
+
   @Selector()
   static nightMode({ nightMode }: LocalStorageStateModel): boolean {
     return nightMode;
   }
+
   @Selector()
   static lang({ lang }: LocalStorageStateModel): string {
     return lang;
   }
+
   @Selector()
   static dashboard(state: LocalStorageStateModel): string[] {
     return state.dashboard;
@@ -81,18 +92,21 @@ export class LocalStorageState {
   static token(state: LocalStorageStateModel): string | undefined {
     return state.token;
   }
+
   static showOptions(
     place: Pages
   ): (state: LocalStorageStateModel) => ShowOptions | undefined {
     return (state: LocalStorageStateModel) =>
       state.showOptions?.find((option) => place === option.place);
   }
+
   static isEventsHideById(id: string): (...args: any) => boolean {
     return createSelector(
       [LocalStorageStateModel],
       ({ hideSingleDeviceEvents }) => hideSingleDeviceEvents.includes(id)
     );
   }
+
   @Action(Login)
   login(
     { patchState }: StateContext<LocalStorageStateModel>,
@@ -100,16 +114,16 @@ export class LocalStorageState {
   ): Observable<any> {
     return this.apiService.send('login', { data: payload }).pipe(
       tap((data) => console.warn(data)),
-      tap(
-        ({ data: { sid: token, id } }) => {
+      tap({
+        next: ({ data: { sid: token, id } }) => {
           patchState({ token, id });
           // patchState({ token, lang, role });
           this.store.dispatch(new UpdateProfile());
         },
-        ({ statusText }) => {
+        error: ({ statusText }) => {
           this.alertService.error(statusText);
-        }
-      )
+        },
+      })
     );
   }
 
@@ -149,59 +163,65 @@ export class LocalStorageState {
   updateProfile({
     getState,
     patchState,
-  }: StateContext<LocalStorageStateModel>): void {
+    setState,
+  }: StateContext<LocalStorageStateModel>) {
     const id = getState().id;
-    if (id === undefined) {
-      return;
-    }
-    const subscription: Subscription = this.apiService
-      .send<any>('profiles', { command: id })
-      .pipe(
-        tap(
-          ({
-            data: {
-              beta,
-              dashboard,
-              email,
-              expert_view: expertView,
-              hide_all_device_events: hideAllDeviceEvents,
-              hide_single_device_events: hideSingleDeviceEvents,
-              hide_system_events: hideSystemEvents,
-              interval,
-              lang,
-              login,
-              name,
-              night_mode: nightMode,
-              role,
-              rooms,
-              // sid: "53d2a6cf-a94b-33c8-d462-fb5b1a249da5"
-              // uuid: "3c879de0-846b-4195-490d-ae1ad8c08790"
-            },
-          }) => {
-            patchState({
-              beta,
-              dashboard,
-              email,
-              expertView,
-              hideAllDeviceEvents,
-              hideSingleDeviceEvents,
-              hideSystemEvents,
-              interval,
-              lang,
-              login,
-              name,
-              nightMode,
-              role,
-              rooms,
+    return (
+      id
+        ? of({ data: { id } })
+        : this.apiService.send<{ data: { id: number } }>('session')
+    ).pipe(
+      switchMap(({ data: { id } }) =>
+        this.apiService.send<any>('profiles', { command: id })
+      ),
+      tap(
+        ({
+          data: {
+            beta,
+            dashboard,
+            email,
+            expert_view: expertView,
+            hide_all_device_events: hideAllDeviceEvents,
+            hide_single_device_events: hideSingleDeviceEvents,
+            hide_system_events: hideSystemEvents,
+            interval,
+            lang,
+            login,
+            name,
+            night_mode: nightMode,
+            role,
+            rooms,
+            // sid: "53d2a6cf-a94b-33c8-d462-fb5b1a249da5"
+            // uuid: "3c879de0-846b-4195-490d-ae1ad8c08790"
+          },
+        }) => {
+          const currentDashboard = getState().dashboard;
+          patchState({
+            beta,
+            dashboard,
+            email,
+            expertView,
+            hideAllDeviceEvents,
+            hideSingleDeviceEvents,
+            hideSystemEvents,
+            interval,
+            lang,
+            login,
+            name,
+            nightMode,
+            role,
+            rooms,
+          });
+          dashboard
+            .filter((el: string) => !currentDashboard.includes(el))
+            .concat(currentDashboard.filter((el) => !dashboard.includes(el)))
+            .map((id: string) => {
+              this.store.dispatch(new ChangeDevice({ id }));
             });
-          }
-        ),
-        mapTo(void 0),
-        finalize(() => subscription.unsubscribe())
+        }
       )
-      .subscribe();
+    );
   }
-
   @Action(NightMode)
   changeTheme(
     { patchState }: StateContext<LocalStorageStateModel>,

@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { Inject, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { MainLayoutRoutingModule } from './main-layout-routing.module';
@@ -44,4 +44,8 @@ const locationFactory = (serverStreamService: ServerStreamService) => {
     },
   ],
 })
-export class MainLayoutModule {}
+export class MainLayoutModule {
+  constructor(
+    @Inject(SERVER_SYNCHRONIZATION) serverSynchronization: string[]
+  ) {}
+}
