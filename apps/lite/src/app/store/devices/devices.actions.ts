@@ -1,4 +1,4 @@
-import { Device } from '@store/devices/deviceInterface';
+import { Device, Metric } from '@store/devices/deviceInterface';
 
 export class DestroyDevices {
   static readonly type = '[Devices] Destroy';
@@ -31,4 +31,10 @@ export class ChangeDevice {
   static readonly type = '[Devices] Change Device';
 
   constructor(public device: Partial<Device> & { id: string }) {}
+}
+
+export class UpdateMetrics {
+  static readonly type = '[Devices] Change Metric';
+
+  constructor(public metric: Partial<Metric>, public id: string) {}
 }

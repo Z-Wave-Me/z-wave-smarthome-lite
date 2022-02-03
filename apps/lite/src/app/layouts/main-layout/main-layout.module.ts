@@ -21,6 +21,13 @@ const locationFactory = (serverStreamService: ServerStreamService) => {
   return 'locations';
 };
 
+const profileFactory = (serverStreamService: ServerStreamService) => {
+  serverStreamService.subscribe({
+    api: 'profile',
+  });
+  return 'profile';
+};
+
 @NgModule({
   declarations: [MainLayoutComponent],
   imports: [
@@ -39,6 +46,12 @@ const locationFactory = (serverStreamService: ServerStreamService) => {
     {
       provide: SERVER_SYNCHRONIZATION,
       useFactory: locationFactory,
+      deps: [ServerStreamService],
+      multi: true,
+    },
+    {
+      provide: SERVER_SYNCHRONIZATION,
+      useFactory: profileFactory,
       deps: [ServerStreamService],
       multi: true,
     },

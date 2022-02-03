@@ -34,7 +34,7 @@ export class SensorMultilevelWidgetComponent {
       }): Report => ({
         updateTime: device.updateTime,
         level: +device.metrics.level,
-        scaleTitle: device.metrics.scaleTitle.toString(),
+        scaleTitle: device.metrics?.scaleTitle?.toString() ?? '',
       })
     );
   }

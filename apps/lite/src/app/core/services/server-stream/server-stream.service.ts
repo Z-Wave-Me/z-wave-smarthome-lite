@@ -4,14 +4,12 @@ import {
   catchError,
   delay,
   exhaustMap,
-  finalize,
-  first,
   map,
   switchMap,
   takeUntil,
   tap,
 } from 'rxjs/operators';
-import { EMPTY, Observable, of, Subject, timer } from 'rxjs';
+import { EMPTY, Observable, Subject, timer } from 'rxjs';
 import { ServerStreamConfig } from '@core/services/server-stream/server-stream-config';
 import { DeviceResponseInterface } from '@core/services/server-stream/device-response.interface';
 import { UpdateDevices } from '@store/devices/devices.actions';
@@ -71,21 +69,21 @@ export class ServerStreamService implements OnDestroy {
     return EMPTY;
   }
 
-  private wsAccess(config: ServerStreamConfig): Observable<void> {
+  private wsAccess(config: ServerStreamConfig) {
     if (config.api === 'devices') {
-      this.subscribeDevices();
+      return this.subscribeDevices();
     }
     if (config.api === 'locations') {
-      this.subscribeLocations();
+      return this.subscribeLocations();
     }
     if (config.api === 'profile') {
-      this.subscribeProfile();
+      return this.subscribeProfile();
     }
     return EMPTY;
   }
 
   private subscribeDevices() {
-    this.webSocketService
+    return this.webSocketService
       .on<Device | { devices: Device[]; structureChanged: boolean }>(
         'me.z-wave.devices',
         (): WsMessage<HttpEncapsulatedRequest> => ({
@@ -110,12 +108,11 @@ export class ServerStreamService implements OnDestroy {
             this.store.dispatch(new UpdateDevices([device]));
           }
         })
-      )
-      .subscribe();
+      );
   }
 
   private subscribeLocations() {
-    this.webSocketService
+    return this.webSocketService
       .on<Location[] | Location>(
         'me.z-wave.locations',
         (): WsMessage<HttpEncapsulatedRequest> => ({
@@ -132,11 +129,11 @@ export class ServerStreamService implements OnDestroy {
       .pipe(
         takeUntil(this.destroy$),
         tap((location) => {
+          console.log(location);
           if (Array.isArray(location))
             this.store.dispatch(new UpdateLocations(location));
         })
-      )
-      .subscribe();
+      );
   }
 
   private updateDevices({
@@ -187,14 +184,12 @@ export class ServerStreamService implements OnDestroy {
   }
 
   private subscribeProfile() {
-    this.webSocketService
-      .on<any>('me.z-wave.profile')
-      .pipe(
-        takeUntil(this.destroy$),
-        tap((profile) => {
-          this.store.dispatch(new UpdateProfile());
-        })
-      )
-      .subscribe();
+    return this.webSocketService.on<any>('me.z-wave.profile').pipe(
+      takeUntil(this.destroy$),
+      tap((profile) => {
+        // console.log(profile);
+        this.store.dispatch(new UpdateProfile());
+      })
+    );
   }
 }

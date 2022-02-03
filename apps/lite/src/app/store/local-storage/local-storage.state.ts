@@ -163,7 +163,6 @@ export class LocalStorageState {
   updateProfile({
     getState,
     patchState,
-    setState,
   }: StateContext<LocalStorageStateModel>) {
     const id = getState().id;
     return (

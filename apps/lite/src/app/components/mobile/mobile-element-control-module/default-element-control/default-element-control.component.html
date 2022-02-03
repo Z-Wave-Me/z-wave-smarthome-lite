@@ -1,8 +1,6 @@
 <div class="tui-container_adaptive sittings" *transloco="let t">
-  <form [formGroup]="form">
-    <tui-input
-      class="tui-space_right-2 tui-space_left-2"
-      formControlName="title"
+  <form [formGroup]="form" class="tui-space_right-2 tui-space_left-2">
+    <tui-input formControlName="title"
       >{{ t('device_name') }}<span class="tui-required"></span>
     </tui-input>
     <tui-field-error formControlName="title"></tui-field-error>
@@ -21,7 +19,7 @@
     <div class="tui-form__row">
       <tui-toggle
         class="tui-space_left-2"
-        formControlName="dashboard"
+        formControlName="onDashboard"
         size="l"
         [showIcons]="true"
       ></tui-toggle>
@@ -70,25 +68,25 @@
         {{ t('lb_tags') }}
       </tui-input-tag>
     </div>
-    <div class="tui-form__buttons tui-form__buttons_align_end">
-      <button
-        tuiButton
-        class="tui-form__button tui-space_right-3"
-        size="s"
-        type="button"
-        appearance="secondary"
-      >
-        Cancel
-      </button>
-      <button
-        tuiButton
-        type="submit"
-        class="tui-form__button tui-space_right-4"
-        size="s"
-      >
-        Submit
-      </button>
-    </div>
+    <!--    <div class="tui-form__buttons tui-form__buttons_align_end">-->
+    <!--      <button-->
+    <!--        tuiButton-->
+    <!--        class="tui-form__button tui-space_right-3"-->
+    <!--        size="s"-->
+    <!--        type="button"-->
+    <!--        appearance="secondary"-->
+    <!--      >-->
+    <!--        Cancel-->
+    <!--      </button>-->
+    <!--      <button-->
+    <!--        tuiButton-->
+    <!--        type="submit"-->
+    <!--        class="tui-form__button tui-space_right-4"-->
+    <!--        size="s"-->
+    <!--      >-->
+    <!--        Submit-->
+    <!--      </button>-->
+    <!--    </div>-->
   </form>
 </div>
 <pre>

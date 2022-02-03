@@ -33,7 +33,7 @@ export class SwitchMultilevelWidgetComponent {
         devices: DevicesStateModel;
       }): Report => ({
         level: +device.metrics.level,
-        scaleTitle: device.metrics?.scaleTitle?.toString(),
+        scaleTitle: device.metrics?.scaleTitle?.toString() ?? '',
         probeType: device.probeType,
       })
     );

@@ -13,6 +13,7 @@ import {
   ProgressDevice,
   ToggleLevel,
   UpdateDevices,
+  UpdateMetrics,
 } from './devices.actions';
 import { patch } from '@ngxs/store/operators';
 import { IconSupplierService } from '@core/services/icon-supplier/icon-supplier.service';
@@ -26,7 +27,11 @@ import { SetTagsList } from '@store/filter/filter.actions';
 import { of } from 'rxjs';
 import { ServerTime } from '@store/locals/locals.actions';
 import { ApiService } from '@core/services/api/api.service';
-import { Device, OrderByLocations } from '@store/devices/deviceInterface';
+import {
+  Device,
+  Metric,
+  OrderByLocations,
+} from '@store/devices/deviceInterface';
 
 const orderFactory =
   (order: Order, place: OrderByLocations, decs: boolean = false) =>
@@ -313,7 +318,27 @@ export class DevicesState {
     return this.apiService.send('devices', {
       command: device.id,
       method: 'put',
-      data: device,
+      data: {
+        id: updatedDevice.id,
+        location: device.location.id,
+        metrics: {
+          title: device.title,
+          icon: updatedDevice.metrics.icon,
+          level: updatedDevice.metrics.level,
+        },
+        permanently_hidden: false,
+        tags: device.tags,
+        visibility: device.visibility ?? !device.hidden,
+      },
     });
+  }
+  @Action(UpdateMetrics)
+  updateMetrics(
+    { getState }: StateContext<DevicesStateModel>,
+    { metric, id }: { metric: Partial<Metric>; id: string }
+  ) {
+    const device = { ...getState().entities[id] };
+    device.metrics = { ...device.metrics, ...metric };
+    this.store.dispatch(new UpdateDevices([device]));
   }
 }

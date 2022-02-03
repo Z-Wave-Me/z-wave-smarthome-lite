@@ -1,8 +1,8 @@
 export interface Metric {
   level: number | string;
   icon: string;
-
-  [index: string]: string | number;
+  title: string;
+  [index: string]: string | number | undefined;
 }
 export interface Device {
   deviceType: string;
