@@ -59,6 +59,8 @@ export class DefaultElementControlComponent implements OnInit {
         takeUntil(this.destroy$),
         tap((data) => {
           console.log('form data', data);
+          data.location = data.location.id;
+          data.visibility = !data.hidden;
           this.store.dispatch(
             new ChangeDevice({ ...data, id: this.context.id })
           );

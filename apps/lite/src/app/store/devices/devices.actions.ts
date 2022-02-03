@@ -33,6 +33,11 @@ export class ChangeDevice {
   constructor(public device: Partial<Device> & { id: string }) {}
 }
 
+export class SetDevice {
+  static readonly type = '[Devices] Set Device';
+  constructor(public device: Partial<Device> & { id: string }) {}
+}
+
 export class UpdateMetrics {
   static readonly type = '[Devices] Change Metric';
 

@@ -19,11 +19,16 @@ import {
   Login,
   Logout,
   NightMode,
+  SetProfile,
   UpdateProfile,
 } from '@store/local-storage/local-storage.actions';
 import { TranslocoService } from '@ngneat/transloco';
 import { AlertService } from '@core/services/alert/alert.service';
-import { ChangeDevice, UpdateDevices } from '@store/devices/devices.actions';
+import {
+  ChangeDevice,
+  SetDevice,
+  UpdateDevices,
+} from '@store/devices/devices.actions';
 
 export interface ZWayResponse<T> {
   code: number;
@@ -160,10 +165,7 @@ export class LocalStorageState {
   // uuid: "3c879de0-846b-4195-490d-ae1ad8c08790"
 
   @Action(UpdateProfile)
-  updateProfile({
-    getState,
-    patchState,
-  }: StateContext<LocalStorageStateModel>) {
+  updateProfile({ getState }: StateContext<LocalStorageStateModel>) {
     const id = getState().id;
     return (
       id
@@ -173,54 +175,63 @@ export class LocalStorageState {
       switchMap(({ data: { id } }) =>
         this.apiService.send<any>('profiles', { command: id })
       ),
-      tap(
-        ({
-          data: {
-            beta,
-            dashboard,
-            email,
-            expert_view: expertView,
-            hide_all_device_events: hideAllDeviceEvents,
-            hide_single_device_events: hideSingleDeviceEvents,
-            hide_system_events: hideSystemEvents,
-            interval,
-            lang,
-            login,
-            name,
-            night_mode: nightMode,
-            role,
-            rooms,
-            // sid: "53d2a6cf-a94b-33c8-d462-fb5b1a249da5"
-            // uuid: "3c879de0-846b-4195-490d-ae1ad8c08790"
-          },
-        }) => {
-          const currentDashboard = getState().dashboard;
-          patchState({
-            beta,
-            dashboard,
-            email,
-            expertView,
-            hideAllDeviceEvents,
-            hideSingleDeviceEvents,
-            hideSystemEvents,
-            interval,
-            lang,
-            login,
-            name,
-            nightMode,
-            role,
-            rooms,
-          });
-          dashboard
-            .filter((el: string) => !currentDashboard.includes(el))
-            .concat(currentDashboard.filter((el) => !dashboard.includes(el)))
-            .map((id: string) => {
-              this.store.dispatch(new ChangeDevice({ id }));
-            });
-        }
-      )
+      tap((profile) => {
+        console.warn('PROFILE', profile);
+        this.store.dispatch(new SetProfile(profile.data));
+      })
     );
   }
+
+  @Action(SetProfile)
+  setProfile(
+    { patchState, getState }: StateContext<LocalStorageStateModel>,
+    {
+      profile: {
+        beta,
+        dashboard,
+        email,
+        expert_view: expertView,
+        hide_all_device_events: hideAllDeviceEvents,
+        hide_single_device_events: hideSingleDeviceEvents,
+        hide_system_events: hideSystemEvents,
+        interval,
+        lang,
+        login,
+        name,
+        night_mode: nightMode,
+        role,
+        rooms,
+      },
+    }: // sid: "53d2a6cf-a94b-33c8-d462-fb5b1a249da5"
+    // uuid: "3c879de0-846b-4195-490d-ae1ad8c08790"
+    any
+  ) {
+    const currentDashboard = getState().dashboard;
+
+    patchState({
+      beta,
+      dashboard,
+      email,
+      expertView,
+      hideAllDeviceEvents,
+      hideSingleDeviceEvents,
+      hideSystemEvents,
+      interval,
+      lang,
+      login,
+      name,
+      nightMode,
+      role,
+      rooms,
+    });
+    dashboard
+      .filter((el: string) => !currentDashboard.includes(el))
+      .concat(currentDashboard.filter((el) => !dashboard.includes(el)))
+      .map((id: string) => {
+        this.store.dispatch(new SetDevice({ id }));
+      });
+  }
+
   @Action(NightMode)
   changeTheme(
     { patchState }: StateContext<LocalStorageStateModel>,

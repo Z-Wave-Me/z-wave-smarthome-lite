@@ -827,7 +827,7 @@
   "rgb_dimmer": "Dimmer",
   "rgb_soft": "Soft-white",
   "rgb_softcold": "Soft|Cold-white",
-  "room_main_sensors": "You can max. 3 sensors add to the room header (__cnt__/3).",
+  "room_main_sensors": "You can add max 3 sensors add to the room header ({{__cnt__}}/3)",
   "rules": "Rules",
   "s2_failed": "Authentication Failed. Device is included non-secure. You may want to repeat the process.",
   "sample_images": "Sample Images",

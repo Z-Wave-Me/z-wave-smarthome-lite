@@ -11,6 +11,7 @@ import {
   ChangeDevice,
   ChangeLevel,
   ProgressDevice,
+  SetDevice,
   ToggleLevel,
   UpdateDevices,
   UpdateMetrics,
@@ -301,6 +302,22 @@ export class DevicesState {
     return of(void 0);
   }
 
+  @Action(SetDevice)
+  setDevice(
+    { setState, getState }: StateContext<DevicesStateModel>,
+    { device }: { device: Partial<Device> & { id: string } }
+  ) {
+    const updatedDevice = { ...getState().entities[device.id], ...device };
+    setState(
+      patch({
+        entities: patch({
+          [device.id]: patch(updatedDevice),
+        }),
+      })
+    );
+    this.store.dispatch(new UpdateDevices([updatedDevice]));
+  }
+
   @Action(ChangeDevice)
   changeDevice(
     { setState, getState }: StateContext<DevicesStateModel>,
@@ -320,7 +337,7 @@ export class DevicesState {
       method: 'put',
       data: {
         id: updatedDevice.id,
-        location: device.location.id,
+        location: device.location?.id ?? 0,
         metrics: {
           title: device.title,
           icon: updatedDevice.metrics.icon,

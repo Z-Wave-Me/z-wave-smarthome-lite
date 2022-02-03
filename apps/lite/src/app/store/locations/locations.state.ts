@@ -19,12 +19,13 @@ import { ChangeDevice } from '@store/devices/devices.actions';
 import { DevicesStateModel } from '@store/devices/devices.state';
 
 export class LocationsStateModel {
-  ids?: number[];
+  ids!: number[];
   entities!: { [id: number]: Location };
 }
 
 const defaults: LocationsStateModel = {
   entities: {},
+  ids: [],
 };
 
 @State<LocationsStateModel>({
@@ -35,47 +36,47 @@ const defaults: LocationsStateModel = {
 export class LocationsState {
   constructor(
     private readonly translocoService: TranslocoService,
-    private readonly configService: ConfigService,
     private readonly apiService: ApiService,
     private readonly store: Store
   ) {}
 
   @Action(UpdateLocations)
   update(
-    { setState }: StateContext<LocationsStateModel>,
+    state: StateContext<LocationsStateModel>,
     { locations }: UpdateLocations
   ): void {
-    const ids: number[] = [];
+    const ids = new Set(state.getState().ids);
     const entities: { [id: number]: Location } = {};
-
-    locations
-      // .sort((a, b) => a.title.localeCompare(b.title))
-      .map((location) => {
-        if (location.id === 0) {
-          location.title = 'Global';
-          // this.translocoService.translate('globalRoom');
-          // console.log(location.title);
-          location.imgSrc = 'assets/img/rooms/unassigned.png';
-        } else if (location.img_type === 'default' && location.default_img) {
-          location.imgSrc = 'assets/img/rooms/' + location.default_img;
-        } else if (location.img_type === 'user' && location.user_img) {
-          location.imgSrc =
-            this.configService.get('apiUrl') +
-            'load/image/' +
-            location.user_img;
-        } else {
-          location.imgSrc = 'assets/img/placeholder-img.png';
-        }
-        ids.push(location.id);
-        entities[location.id] = location;
-      });
-
-    setState(
-      patch({
-        entities: patch(entities),
-        ids,
-      })
-    );
+    if (typeof locations === 'number') {
+      this.removeLocationFromStore(state, { locationId: locations });
+    } else {
+      if (!Array.isArray(locations)) locations = [locations];
+      locations
+        // .sort((a, b) => a.title.localeCompare(b.title))
+        .map((location) => {
+          if (location.id === 0) {
+            location.title = 'Global';
+            // this.translocoService.translate('globalRoom');
+            // console.log(location.title);
+            location.imgSrc = 'assets/img/rooms/unassigned.png';
+          } else if (location.img_type === 'default' && location.default_img) {
+            location.imgSrc = 'assets/img/rooms/' + location.default_img;
+          } else if (location.img_type === 'user' && location.user_img) {
+            location.imgSrc =
+              'ZAutomation/api/v1/load/image/' + location.user_img;
+          } else {
+            location.imgSrc = 'assets/img/placeholder-img.png';
+          }
+          ids.add(location.id);
+          entities[location.id] = location;
+        });
+      state.setState(
+        patch({
+          entities: patch(entities),
+          ids: [...ids],
+        })
+      );
+    }
   }
 
   @Action(ChangeLocation)
@@ -97,9 +98,7 @@ export class LocationsState {
       method: 'put',
     });
   }
-
-  @Action(RemoveLocation)
-  removeLocation(
+  private removeLocationFromStore(
     { getState, setState }: StateContext<LocationsStateModel>,
     { locationId }: RemoveLocation
   ) {
@@ -118,6 +117,13 @@ export class LocationsState {
         Object.entries(state.entities).filter((_, key) => key !== locationId)
       ),
     });
+  }
+  @Action(RemoveLocation)
+  removeLocation(
+    state: StateContext<LocationsStateModel>,
+    { locationId }: RemoveLocation
+  ) {
+    this.removeLocationFromStore(state, { locationId });
     return this.apiService.send('locations', {
       command: locationId,
       method: 'delete',

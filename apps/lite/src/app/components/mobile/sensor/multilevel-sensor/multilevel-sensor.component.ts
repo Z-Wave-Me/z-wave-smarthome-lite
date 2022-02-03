@@ -18,7 +18,7 @@ export class MultilevelSensorComponent {
   @Input()
   set currentValue(value: number | string) {
     this.value = +(+value).toFixed(3);
-    this.long = this.scale.length > 3 || this.value.toString().length > 5;
+    this.long = this.scale?.length > 3 || this.value.toString().length > 5;
   }
   stringValue() {
     return (

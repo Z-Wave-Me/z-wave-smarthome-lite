@@ -6,7 +6,7 @@ export class DestroyLocations {
 
 export class UpdateLocations {
   static readonly type = '[Locations] Update';
-  constructor(public locations: Location[]) {}
+  constructor(public locations: Location[] | Location | number) {}
 }
 export class UpdateLocations2 {
   static readonly type = '[Locations] Update2';

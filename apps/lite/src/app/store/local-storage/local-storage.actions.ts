@@ -11,6 +11,10 @@ export class UpdateProfile {
   static readonly type = '[LocalStorage] Update Profile';
 }
 
+export class SetProfile {
+  static readonly type = '[LocalStorage] Set Profile';
+  constructor(public profile: any) {}
+}
 export class NightMode {
   static readonly type = '[LocalStorage] Change Theme';
   constructor(public nightMode: boolean) {}

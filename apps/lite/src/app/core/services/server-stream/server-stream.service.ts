@@ -16,13 +16,19 @@ import { UpdateDevices } from '@store/devices/devices.actions';
 import { Store } from '@ngxs/store';
 import { ServerTime } from '@store/locals/locals.actions';
 import { Location } from '@store/locations/location';
-import { UpdateLocations } from '@store/locations/locations.action';
+import {
+  RemoveLocation,
+  UpdateLocations,
+} from '@store/locations/locations.action';
 import { WebsocketService } from '@core/services/websocket/websocket.service';
 import { WsMessage } from '@core/services/websocket/websocket.interfaces';
 import { HttpEncapsulatedRequest } from '@core/services/ws-api/http-encapsulated-request';
 import { apiList, baseApiUrl } from '@core/services/ws-api/api-list';
 import { Device } from '@store/devices/deviceInterface';
-import { UpdateProfile } from '@store/local-storage/local-storage.actions';
+import {
+  SetProfile,
+  UpdateProfile,
+} from '@store/local-storage/local-storage.actions';
 
 @Injectable({
   providedIn: 'any',
@@ -113,7 +119,7 @@ export class ServerStreamService implements OnDestroy {
 
   private subscribeLocations() {
     return this.webSocketService
-      .on<Location[] | Location>(
+      .on<Location[] | Location | number>(
         'me.z-wave.locations',
         (): WsMessage<HttpEncapsulatedRequest> => ({
           event: 'httpEncapsulatedRequest',
@@ -128,11 +134,7 @@ export class ServerStreamService implements OnDestroy {
       )
       .pipe(
         takeUntil(this.destroy$),
-        tap((location) => {
-          console.log(location);
-          if (Array.isArray(location))
-            this.store.dispatch(new UpdateLocations(location));
-        })
+        tap((location) => this.store.dispatch(new UpdateLocations(location)))
       );
   }
 
@@ -184,11 +186,12 @@ export class ServerStreamService implements OnDestroy {
   }
 
   private subscribeProfile() {
+    this.store.dispatch(new UpdateProfile());
     return this.webSocketService.on<any>('me.z-wave.profile').pipe(
       takeUntil(this.destroy$),
       tap((profile) => {
-        // console.log(profile);
-        this.store.dispatch(new UpdateProfile());
+        console.log(profile);
+        this.store.dispatch(new SetProfile(profile));
       })
     );
   }
