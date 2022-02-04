@@ -11,6 +11,4 @@ import { DevicesState } from '@store/devices/devices.state';
 })
 export class DeviceListComponent {
   @Select(DevicesState.showDevice) ids$!: Observable<string[]>;
-
-  constructor() {}
 }

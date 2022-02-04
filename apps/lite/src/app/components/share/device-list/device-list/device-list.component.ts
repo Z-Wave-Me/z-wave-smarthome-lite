@@ -36,7 +36,7 @@ export class DeviceListComponent implements AfterViewInit {
       .pipe(
         takeUntil(destroyService),
         filter((e) => e instanceof NavigationStart),
-        tap((_) => {
+        tap(() => {
           this.restorePositionService.set(
             this.router.url,
             this.viewport?.measureScrollOffset('top') ?? 0
@@ -48,7 +48,7 @@ export class DeviceListComponent implements AfterViewInit {
 
   ngAfterViewInit(): void {
     // TODO need refactor
-    timer(100)
+    timer(10)
       .pipe(
         tap(() =>
           this.viewport?.scrollTo({

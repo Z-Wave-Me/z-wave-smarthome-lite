@@ -4,8 +4,8 @@
       >{{ t('device_name') }}<span class="tui-required"></span>
     </tui-input>
     <tui-field-error formControlName="title"></tui-field-error>
-    <z-wave-device-commutation mode="referenced"></z-wave-device-commutation>
-    <z-wave-device-commutation mode="generated"></z-wave-device-commutation>
+    <!--    <z-wave-device-commutation mode="referenced"></z-wave-device-commutation>-->
+    <!--    <z-wave-device-commutation mode="generated"></z-wave-device-commutation>-->
     <div class="tui-form__row">
       <tui-toggle
         class="tui-space_left-2"
@@ -43,7 +43,6 @@
         [tuiTextfieldLabelOutside]="true"
       >
         <tui-data-list-wrapper
-          *tuiDataList
           [items]="context.locations ?? null"
           [itemContent]="locateContent"
         ></tui-data-list-wrapper>
@@ -89,6 +88,6 @@
     <!--    </div>-->
   </form>
 </div>
-<pre>
-  {{ context | json }}
-</pre>
+<!--<pre>-->
+<!--  {{ context | json }}-->
+<!--</pre>-->

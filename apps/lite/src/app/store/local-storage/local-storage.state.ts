@@ -12,8 +12,8 @@ import {
   ShowOptions,
   SupportLanguages,
 } from '@modules/interfaces/pages.interfaces';
-import { EMPTY, Observable, of, Subscription, switchMap } from 'rxjs';
-import { finalize, map, mapTo, tap } from 'rxjs/operators';
+import { Observable, of, switchMap } from 'rxjs';
+import { tap } from 'rxjs/operators';
 import { ApiService } from '@core/services/api/api.service';
 import {
   Login,
@@ -24,11 +24,7 @@ import {
 } from '@store/local-storage/local-storage.actions';
 import { TranslocoService } from '@ngneat/transloco';
 import { AlertService } from '@core/services/alert/alert.service';
-import {
-  ChangeDevice,
-  SetDevice,
-  UpdateDevices,
-} from '@store/devices/devices.actions';
+import { SetDevice } from '@store/devices/devices.actions';
 
 export interface ZWayResponse<T> {
   code: number;
@@ -115,10 +111,10 @@ export class LocalStorageState {
   @Action(Login)
   login(
     { patchState }: StateContext<LocalStorageStateModel>,
-    { payload, payload: { login } }: Login
+    { payload }: Login
   ): Observable<any> {
     return this.apiService.send('login', { data: payload }).pipe(
-      tap((data) => console.warn(data)),
+      // tap((data) => console.warn(data)),
       tap({
         next: ({ data: { sid: token, id } }) => {
           patchState({ token, id });
@@ -176,7 +172,7 @@ export class LocalStorageState {
         this.apiService.send<any>('profiles', { command: id })
       ),
       tap((profile) => {
-        console.warn('PROFILE', profile);
+        // console.warn('PROFILE', profile);
         this.store.dispatch(new SetProfile(profile.data));
       })
     );

@@ -38,9 +38,12 @@ const orderFactory =
   (order: Order, place: OrderByLocations, decs: boolean = false) =>
   (a: Device, b: Device): number => {
     const sign = decs ? -1 : 1;
+    let delta;
     switch (order) {
       case 'elements':
-        return sign * (a.order[place] - b.order[place]);
+        delta = sign * (a.order[place] - b.order[place]);
+        if (delta) return sign * (a.order[place] - b.order[place]);
+        else return sign * a.id.localeCompare(b.id);
       case 'creationTime':
         return sign * (a.creationTime - b.creationTime);
       case 'title':
@@ -181,7 +184,7 @@ export class DevicesState {
     { devices, structureChanged }: UpdateDevices
   ): void {
     const ids: string[] = [];
-    const entities: { [index: string]: any } = {};
+    const entities: { [index: string]: Device } = {};
     let locationChanges = false;
     const dashboard = this.store.selectSnapshot(
       (state) => state.localStorage.dashboard
@@ -212,7 +215,7 @@ export class DevicesState {
         );
       }
       // TODO need hide hidden devices
-      entities[device.id] = { ...device, ...additional };
+      entities[device.id] = { ...device, ...additional } as Device;
     });
     this.store.dispatch(new ServerTime(serverTime));
     this.store.dispatch(new SetTagsList([...tagsList]));
