@@ -10,7 +10,7 @@ export const environment = {
     location.hostname +
     ':' +
     location.port +
-    '/ws',
+    '/websocket',
 };
 
 /*

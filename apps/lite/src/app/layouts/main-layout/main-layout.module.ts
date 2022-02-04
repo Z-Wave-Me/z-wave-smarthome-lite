@@ -3,10 +3,10 @@ import { CommonModule } from '@angular/common';
 
 import { MainLayoutRoutingModule } from './main-layout-routing.module';
 import { MainLayoutComponent } from './main-layout.component';
-import { ModalWindowModule } from '../../components-old/modal-window/modal-window.module';
-import { HeaderModule } from '../../components-old/header/header.module';
 import { ServerStreamService } from '@core/services/server-stream/server-stream.service';
 import { SERVER_SYNCHRONIZATION } from './tokens/server-synchronization.token';
+import { HeaderModule } from '@components/share/header/header.module';
+import { ModalWindowModule } from '@components/share/modal-window/modal-window.module';
 
 const deviceFactory = (serverStreamService: ServerStreamService) => {
   serverStreamService.subscribe({ api: 'devices' });

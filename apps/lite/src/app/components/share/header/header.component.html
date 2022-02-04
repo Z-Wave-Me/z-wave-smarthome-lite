@@ -79,7 +79,7 @@
             [ngClass]="(online$ | async) ? 'text-success' : 'text-danger'"
             class="fad fa-globe"
           ></i>
-          <span [ngClass]="{ pause: !(online$ | async) }">
+          <span [ngClass]="{ pause: (online$ | async) !== true }">
             {{ serverTime$ | async | date: 'HH:mm:ss' }}</span
           >
         </span>

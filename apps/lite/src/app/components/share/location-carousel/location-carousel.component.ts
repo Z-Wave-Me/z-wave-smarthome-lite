@@ -7,7 +7,10 @@ import {
   Output,
   ViewEncapsulation,
 } from '@angular/core';
-import { faCamera, faTrash } from '@fortawesome/pro-regular-svg-icons';
+import {
+  faCalendar as faCamera,
+  faStar as faTrash,
+} from '@fortawesome/free-regular-svg-icons';
 import SwiperCore, { EffectCoverflow, Pagination } from 'swiper';
 
 SwiperCore.use([EffectCoverflow, Pagination]);

@@ -18,7 +18,6 @@ import {
 } from './devices.actions';
 import { patch } from '@ngxs/store/operators';
 import { IconSupplierService } from '@core/services/icon-supplier/icon-supplier.service';
-import { MenuItem } from '../../components-old/elements/element-sub-menu/element-sub-menu-filter-by-type/element-sub-menu-filter-by-type.component';
 import {
   FilterState,
   FilterStateModel,
@@ -145,7 +144,7 @@ export class DevicesState {
   static devicesTypeAndCount(
     { entities }: DevicesStateModel,
     { showHidden }: FilterStateModel
-  ): Pick<MenuItem, 'type' | 'count'>[] {
+  ): Pick<any, 'type' | 'count'>[] {
     return [
       ...Object.values(entities)
         .filter((entity) => (showHidden ? true : entity.visibility))
