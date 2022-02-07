@@ -50,7 +50,7 @@ export class LocationCarouselComponent implements OnInit {
   @Input() set customImg(img: string | undefined) {
     this.list = [...this.defaultImages];
     if (img) {
-      this._customImg = 'ZAutomation/api/v1/load/image/' + img;
+      this._customImg = '/ZAutomation/api/v1/load/image/' + img;
       this.list.push(this._customImg);
     } else {
       this._customImg = undefined;

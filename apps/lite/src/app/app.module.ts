@@ -12,7 +12,7 @@ import { NgModule } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { NgxsModule } from '@ngxs/store';
+import { getActionTypeFromInstance, NgxsModule } from '@ngxs/store';
 import { NgxsReduxDevtoolsPluginModule } from '@ngxs/devtools-plugin';
 import { NgxsLoggerPluginModule } from '@ngxs/logger-plugin';
 import { HttpClientModule } from '@angular/common/http';
@@ -34,6 +34,7 @@ import { DestroyService } from '@core/services/destroy/destroy.service';
 import { WebsocketModule } from '@core/services/websocket/websocket.module';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { LoginComponent } from '@components/share/login/login.component';
+import { APP_BASE_HREF } from '@angular/common';
 
 export const initApp = (configurationService: ConfigService) => () =>
   configurationService.load().toPromise();
@@ -56,7 +57,10 @@ export const initApp = (configurationService: ConfigService) => () =>
           NgxsReduxDevtoolsPluginModule.forRoot(),
           NgxsLoggerPluginModule.forRoot({
             filter: (action: any) => {
-              // return getActionTypeFromInstance(action)?.includes('[Devices]') ?? false;
+              return (
+                // getActionTypeFromInstance(action)?.includes('[Devices]') ??
+                false
+              );
               return false;
             },
           }),
@@ -86,10 +90,10 @@ export const initApp = (configurationService: ConfigService) => () =>
     //   multi: true,
     //   deps: [ConfigService],
     // },
-    // {
-    //   provide: APP_BASE_HREF,
-    //   useValue: '/lite',
-    // },
+    {
+      provide: APP_BASE_HREF,
+      useValue: '/lite',
+    },
     { provide: 'Window', useValue: window },
     DestroyService,
     { provide: TUI_SANITIZER, useClass: NgDompurifySanitizer },

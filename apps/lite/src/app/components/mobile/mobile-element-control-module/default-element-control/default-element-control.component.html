@@ -43,6 +43,7 @@
         [tuiTextfieldLabelOutside]="true"
       >
         <tui-data-list-wrapper
+          *tuiDataList
           [items]="context.locations ?? null"
           [itemContent]="locateContent"
         ></tui-data-list-wrapper>
