@@ -28,6 +28,12 @@ const profileFactory = (serverStreamService: ServerStreamService) => {
   return 'profile';
 };
 
+const eventsFactory = (serverStreamService: ServerStreamService) => {
+  serverStreamService.subscribe({
+    api: 'events',
+  });
+  return 'events';
+};
 @NgModule({
   declarations: [MainLayoutComponent],
   imports: [
@@ -55,6 +61,12 @@ const profileFactory = (serverStreamService: ServerStreamService) => {
       deps: [ServerStreamService],
       multi: true,
     },
+    // {
+    //   provide: SERVER_SYNCHRONIZATION,
+    //   useFactory: eventsFactory,
+    //   deps: [ServerStreamService],
+    //   multi: true,
+    // },
   ],
 })
 export class MainLayoutModule {

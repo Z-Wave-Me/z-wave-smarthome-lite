@@ -2,6 +2,7 @@ import { Device } from '@store/devices/deviceInterface';
 
 export class DestroyDevices {
   static readonly type = '[Devices] Destroy';
+  constructor(public deviceId: string) {}
 }
 
 export class UpdateDevices {

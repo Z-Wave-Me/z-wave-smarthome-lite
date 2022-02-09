@@ -70,7 +70,6 @@ export const initApp = (configurationService: ConfigService) => () =>
     HttpClientModule,
     TranslocoRootModule,
     ApiModule,
-    MainLayoutModule,
     EmptyLayoutModule,
     DropDownModule,
     FontAwesomeModule,
@@ -84,16 +83,6 @@ export const initApp = (configurationService: ConfigService) => () =>
     TuiDialogModule,
   ],
   providers: [
-    // {
-    //   provide: APP_INITIALIZER,
-    //   useFactory: initApp,
-    //   multi: true,
-    //   deps: [ConfigService],
-    // },
-    {
-      provide: APP_BASE_HREF,
-      useValue: '/lite',
-    },
     { provide: 'Window', useValue: window },
     DestroyService,
     { provide: TUI_SANITIZER, useClass: NgDompurifySanitizer },

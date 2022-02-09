@@ -10,6 +10,7 @@ import {
 import {
   ChangeDevice,
   ChangeLevel,
+  DestroyDevices,
   ProgressDevice,
   SetDevice,
   ToggleLevel,
@@ -266,8 +267,22 @@ export class DevicesState {
   ) {
     const device = getState().entities[id];
     this.store.dispatch(
-      new ChangeDevice({ ...device, metrics: { ...device.metrics, level } })
+      new SetDevice({ ...device, metrics: { ...device.metrics, level } })
     );
+    if (typeof level === 'number') {
+      return this.apiService.send('devices', {
+        command: id + '/command/exact',
+        params: [
+          {
+            key: 'level',
+            value: level,
+          },
+        ],
+      });
+    }
+    return this.apiService.send('devices', {
+      command: id + '/command/' + level,
+    });
   }
 
   @Action(ToggleLevel)
@@ -298,7 +313,7 @@ export class DevicesState {
         }),
       })
     );
-    this.store.dispatch(new UpdateDevices([updatedDevice]));
+    // this.store.dispatch(new UpdateDevices([updatedDevice]));
   }
 
   @Action(ChangeDevice)
@@ -331,5 +346,12 @@ export class DevicesState {
         visibility: device.visibility ?? !device.hidden,
       },
     });
+  }
+  @Action(DestroyDevices)
+  destroyDevices(
+    {}: StateContext<DevicesStateModel>,
+    { deviceId }: { deviceId: string }
+  ) {
+    console.log(deviceId);
   }
 }

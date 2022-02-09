@@ -10,7 +10,9 @@
     "proxy:remote:host": "ng serve --proxy-config=./apps/lite/proxy/proxy.remote.conf.js -o --host 0.0.0.0",
     "start": "nx serve",
     "build": "nx build",
-    "test": "nx test"
+    "test": "nx test",
+    "doc": "npx compodoc -p tsconfig.doc.json",
+    "serveDocs": "compodoc -s"
   },
   "private": true,
   "dependencies": {

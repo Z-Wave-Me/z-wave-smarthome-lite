@@ -10,16 +10,16 @@ import {
   tap,
 } from 'rxjs/operators';
 import { EMPTY, Observable, Subject, timer } from 'rxjs';
-import { ServerStreamConfig } from '@core/services/server-stream/server-stream-config';
+import {
+  availableApi,
+  ServerStreamConfig,
+} from '@core/services/server-stream/server-stream-config';
 import { DeviceResponseInterface } from '@core/services/server-stream/device-response.interface';
-import { UpdateDevices } from '@store/devices/devices.actions';
+import { DestroyDevices, UpdateDevices } from '@store/devices/devices.actions';
 import { Store } from '@ngxs/store';
 import { ServerTime } from '@store/locals/locals.actions';
 import { Location } from '@store/locations/location';
-import {
-  RemoveLocation,
-  UpdateLocations,
-} from '@store/locations/locations.action';
+import { UpdateLocations } from '@store/locations/locations.action';
 import { WebsocketService } from '@core/services/websocket/websocket.service';
 import { WsMessage } from '@core/services/websocket/websocket.interfaces';
 import { HttpEncapsulatedRequest } from '@core/services/ws-api/http-encapsulated-request';
@@ -29,6 +29,7 @@ import {
   SetProfile,
   UpdateProfile,
 } from '@store/local-storage/local-storage.actions';
+import { Notifications } from '@store/notifications/notifications.state';
 
 @Injectable({
   providedIn: 'any',
@@ -36,6 +37,15 @@ import {
 export class ServerStreamService implements OnDestroy {
   private static readonly apiList = apiList;
   private static readonly baseApiUrl = baseApiUrl;
+  private static readonly wsAccessMap: ReadonlyMap<
+    availableApi,
+    (obj: ServerStreamService) => Observable<unknown>
+  > = new Map<availableApi, (obj: ServerStreamService) => Observable<unknown>>([
+    ['profile', (obj: ServerStreamService) => obj.subscribeProfile()],
+    ['locations', (obj: ServerStreamService) => obj.subscribeLocations()],
+    ['devices', (obj: ServerStreamService) => obj.subscribeDevices()],
+    ['events', (obj: ServerStreamService) => obj.subscribeNotifications()],
+  ]);
   private readonly connection$: Observable<boolean>;
   private readonly destroy$ = new Subject<void>();
 
@@ -76,16 +86,7 @@ export class ServerStreamService implements OnDestroy {
   }
 
   private wsAccess(config: ServerStreamConfig) {
-    if (config.api === 'devices') {
-      return this.subscribeDevices();
-    }
-    if (config.api === 'locations') {
-      return this.subscribeLocations();
-    }
-    if (config.api === 'profile') {
-      return this.subscribeProfile();
-    }
-    return EMPTY;
+    return ServerStreamService.wsAccessMap.get(config.api)?.(this) ?? EMPTY;
   }
 
   private subscribeDevices() {
@@ -106,12 +107,16 @@ export class ServerStreamService implements OnDestroy {
       .pipe(
         takeUntil(this.destroy$),
         tap((device) => {
-          if ('structureChanged' in device) {
-            this.store.dispatch(
-              new UpdateDevices(device.devices, device.structureChanged)
-            );
+          if (device instanceof Object) {
+            if ('structureChanged' in device) {
+              this.store.dispatch(
+                new UpdateDevices(device.devices, device.structureChanged)
+              );
+            } else {
+              this.store.dispatch(new UpdateDevices([device]));
+            }
           } else {
-            this.store.dispatch(new UpdateDevices([device]));
+            this.store.dispatch(new DestroyDevices(device));
           }
         })
       );
@@ -194,5 +199,26 @@ export class ServerStreamService implements OnDestroy {
         this.store.dispatch(new SetProfile(profile));
       })
     );
+  }
+
+  private subscribeNotifications() {
+    return this.webSocketService
+      .on<Notifications>(
+        'me.z-wave.notifications',
+        (): WsMessage<HttpEncapsulatedRequest> => ({
+          event: 'httpEncapsulatedRequest',
+          data: {
+            url:
+              ServerStreamService.baseApiUrl +
+              ServerStreamService.apiList['notifications'],
+            method: 'GET',
+          },
+          responseEvent: 'me.z-wave.notifications',
+        })
+      )
+      .pipe(
+        takeUntil(this.destroy$),
+        tap((notifications) => console.warn(notifications))
+      );
   }
 }

@@ -1,4 +1,5 @@
+export type availableApi = 'devices' | 'locations' | 'profile' | 'events';
 export interface ServerStreamConfig {
-  api: 'devices' | 'locations' | 'profile';
+  api: availableApi;
   timeBetweenRequests?: number;
 }

@@ -5,6 +5,7 @@ import { LocationsState } from './/locations/locations.state';
 import { LocalsState } from '@store/locals/locals.state';
 import { LocalStorageState } from '@store/local-storage/local-storage.state';
 import { FilterState } from '@store/filter/filter.state';
+import { NotificationsState } from '@store/notifications/notifications.state';
 
 export const states = [
   UserState,
@@ -14,4 +15,5 @@ export const states = [
   LocalStorageState,
   LocalsState,
   FilterState,
+  NotificationsState,
 ];

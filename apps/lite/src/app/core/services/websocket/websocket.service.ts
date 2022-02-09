@@ -10,6 +10,7 @@ import {
   MonoTypeOperatorFunction,
   Observable,
   ReplaySubject,
+  startWith,
 } from 'rxjs';
 import { delay, map, retryWhen, share, takeUntil } from 'rxjs/operators';
 import {
@@ -29,7 +30,6 @@ export class WebsocketService {
   private RECONNECT_INTERVAL = 3_000;
 
   constructor(@Inject(config) private readonly wsConfig: WebSocketConfig) {
-    this.connect$.next(false);
     this.configuration = {
       openObserver: {
         next: () => this.connect$.next(true),
@@ -63,6 +63,11 @@ export class WebsocketService {
           if ((data as { body: string }).body) {
             return JSON.parse((data as { body: string }).body).data as T;
           }
+          // console.log(
+          //   '--------------------------------->' +
+          //     JSON.stringify(data) +
+          //     '<------------------------------------'
+          // );
           return data as T;
         }),
         this.reconnect(this.RECONNECT_INTERVAL)
@@ -74,7 +79,7 @@ export class WebsocketService {
   }
 
   isConnect(): Observable<boolean> {
-    return this.connect$.asObservable();
+    return this.connect$.asObservable().pipe(startWith(false));
   }
 
   private reconnect<T>(reconnectInterval: number): MonoTypeOperatorFunction<T> {
