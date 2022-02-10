@@ -13,6 +13,7 @@ import { LocalStorageState } from '@store/local-storage/local-storage.state';
 import { DestroyService } from '@core/services/destroy/destroy.service';
 import { takeUntil, tap } from 'rxjs/operators';
 import { jumpOutAnimation } from './layouts/mobile-layout/animations';
+import { ServerSynchronizationService } from '@core/services/server-synchronization/server-synchronization.service';
 
 @Component({
   selector: 'z-wave-root',
@@ -31,7 +32,8 @@ export class AppComponent implements OnInit, OnDestroy {
     private readonly router: Router,
     private readonly store: Store,
     private readonly translocoService: TranslocoService,
-    private readonly destroyService$: DestroyService
+    private readonly destroyService$: DestroyService,
+    private readonly serverSynchronizationService: ServerSynchronizationService
   ) {
     this.lang$
       .pipe(

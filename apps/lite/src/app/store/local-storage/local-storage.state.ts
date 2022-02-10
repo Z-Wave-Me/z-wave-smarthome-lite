@@ -13,7 +13,7 @@ import {
   SupportLanguages,
 } from '@modules/interfaces/pages.interfaces';
 import { Observable, of, switchMap } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 import { ApiService } from '@core/services/api/api.service';
 import {
   Login,
@@ -33,7 +33,26 @@ export interface ZWayResponse<T> {
   message: string;
 }
 
-export class LocalStorageStateModel {
+export interface IProfile {
+  id?: number;
+  beta?: boolean;
+  dashboard: string[];
+  email?: string;
+  expertView?: boolean;
+  hideAllDeviceEvents?: boolean;
+  hideSingleDeviceEvents: string[];
+  hideSystemEvents?: boolean;
+  interval?: number;
+  login?: string;
+  name?: string;
+  nightMode: boolean;
+  rooms?: number[];
+  synchronized: boolean;
+  lang: SupportLanguages;
+  role?: number;
+}
+
+export class LocalStorageStateModel implements IProfile {
   token?: string;
   showOptions?: ShowOptions[];
   lang!: SupportLanguages;
@@ -45,12 +64,13 @@ export class LocalStorageStateModel {
   hideAllDeviceEvents?: boolean;
   hideSingleDeviceEvents!: string[];
   hideSystemEvents?: boolean;
-  id?: string | number;
+  id?: number;
   interval?: number;
   login?: string;
   name?: string;
   nightMode!: boolean;
   rooms?: number[];
+  synchronized!: boolean;
   // uuid: "3c879de0-846b-4195-490d-ae1ad8c08790"
 }
 
@@ -59,6 +79,7 @@ const defaults: LocalStorageStateModel = {
   dashboard: [],
   hideSingleDeviceEvents: [],
   nightMode: false,
+  synchronized: true,
 };
 
 @State<LocalStorageStateModel>({
@@ -73,6 +94,45 @@ export class LocalStorageState {
     private readonly store: Store,
     private readonly alertService: AlertService
   ) {}
+
+  @Selector()
+  static profile({
+    id,
+    beta,
+    dashboard,
+    email,
+    expertView,
+    hideAllDeviceEvents,
+    hideSingleDeviceEvents,
+    hideSystemEvents,
+    interval,
+    lang,
+    login,
+    name,
+    nightMode,
+    role,
+    rooms,
+    synchronized,
+  }: LocalStorageStateModel) {
+    return {
+      id,
+      beta,
+      dashboard,
+      email,
+      expertView,
+      hideAllDeviceEvents,
+      hideSingleDeviceEvents,
+      hideSystemEvents,
+      interval,
+      lang,
+      login,
+      name,
+      nightMode,
+      role,
+      rooms,
+      synchronized,
+    };
+  }
 
   @Selector()
   static nightMode({ nightMode }: LocalStorageStateModel): boolean {
@@ -108,6 +168,43 @@ export class LocalStorageState {
     );
   }
 
+  static profileAdapter({
+    id,
+    beta,
+    dashboard,
+    email,
+    expert_view: expertView,
+    hide_all_device_events: hideAllDeviceEvents,
+    hide_single_device_events: hideSingleDeviceEvents,
+    hide_system_events: hideSystemEvents,
+    interval,
+    lang,
+    login,
+    name,
+    night_mode: nightMode,
+    role,
+    rooms,
+  }: never) {
+    return {
+      id,
+      beta,
+      dashboard,
+      email,
+      expertView,
+      hideAllDeviceEvents,
+      hideSingleDeviceEvents,
+      hideSystemEvents,
+      interval,
+      lang,
+      login,
+      name,
+      nightMode,
+      role,
+      rooms,
+      synchronized: true,
+    };
+  }
+
   @Action(Login)
   login(
     { patchState }: StateContext<LocalStorageStateModel>,
@@ -128,20 +225,6 @@ export class LocalStorageState {
     );
   }
 
-  @Action(Logout)
-  logout({
-    setState,
-  }: StateContext<LocalStorageStateModel>): Observable<boolean> {
-    setState(defaults);
-    // TODO temporary
-    return of(true);
-    // return this.apiService.send('logout').pipe(
-    //   tap(() => {
-    //     setState(defaults);
-    //   }),
-    // );
-  }
-
   // beta: true
   // dashboard: (3) ["ZWayVDev_zway_2-0-51-0", "ZWayVDev_zway_2-0-51-1", "PhilioHW_8_zway_Tamper"]
   // email: ""
@@ -160,6 +243,20 @@ export class LocalStorageState {
   // sid: "53d2a6cf-a94b-33c8-d462-fb5b1a249da5"
   // uuid: "3c879de0-846b-4195-490d-ae1ad8c08790"
 
+  @Action(Logout)
+  logout({
+    setState,
+  }: StateContext<LocalStorageStateModel>): Observable<boolean> {
+    setState(defaults);
+    // TODO temporary
+    return of(true);
+    // return this.apiService.send('logout').pipe(
+    //   tap(() => {
+    //     setState(defaults);
+    //   }),
+    // );
+  }
+
   @Action(UpdateProfile)
   updateProfile({ getState }: StateContext<LocalStorageStateModel>) {
     const id = getState().id;
@@ -169,11 +266,15 @@ export class LocalStorageState {
         : this.apiService.send<{ data: { id: number } }>('session')
     ).pipe(
       switchMap(({ data: { id } }) =>
-        this.apiService.send<any>('profiles', { command: id })
+        this.apiService
+          .send<any>('profiles', { command: id })
+          .pipe(map((profile) => ({ ...profile.data, id })))
       ),
       tap((profile) => {
-        // console.warn('PROFILE', profile);
-        this.store.dispatch(new SetProfile(profile.data));
+        console.warn('PROFILE', profile);
+        this.store.dispatch(
+          new SetProfile(LocalStorageState.profileAdapter(profile as never))
+        );
       })
     );
   }
@@ -181,51 +282,18 @@ export class LocalStorageState {
   @Action(SetProfile)
   setProfile(
     { patchState, getState }: StateContext<LocalStorageStateModel>,
-    {
-      profile: {
-        beta,
-        dashboard,
-        email,
-        expert_view: expertView,
-        hide_all_device_events: hideAllDeviceEvents,
-        hide_single_device_events: hideSingleDeviceEvents,
-        hide_system_events: hideSystemEvents,
-        interval,
-        lang,
-        login,
-        name,
-        night_mode: nightMode,
-        role,
-        rooms,
-      },
-    }: // sid: "53d2a6cf-a94b-33c8-d462-fb5b1a249da5"
-    // uuid: "3c879de0-846b-4195-490d-ae1ad8c08790"
-    any
+    { profile }: SetProfile // sid: "53d2a6cf-a94b-33c8-d462-fb5b1a249da5" // uuid: "3c879de0-846b-4195-490d-ae1ad8c08790"
   ) {
     const currentDashboard = getState().dashboard;
-
-    patchState({
-      beta,
-      dashboard,
-      email,
-      expertView,
-      hideAllDeviceEvents,
-      hideSingleDeviceEvents,
-      hideSystemEvents,
-      interval,
-      lang,
-      login,
-      name,
-      nightMode,
-      role,
-      rooms,
-    });
-    dashboard
-      .filter((el: string) => !currentDashboard.includes(el))
-      .concat(currentDashboard.filter((el) => !dashboard.includes(el)))
-      .map((id: string) => {
-        this.store.dispatch(new ChangeDevice({ id }));
-      });
+    patchState(profile);
+    const { dashboard } = profile;
+    if (dashboard)
+      dashboard
+        .filter((el: string) => !currentDashboard.includes(el))
+        .concat(currentDashboard.filter((el) => !dashboard.includes(el)))
+        .map((id: string) => {
+          this.store.dispatch(new ChangeDevice({ id }));
+        });
   }
 
   @Action(NightMode)
@@ -233,6 +301,6 @@ export class LocalStorageState {
     { patchState }: StateContext<LocalStorageStateModel>,
     { nightMode }: { nightMode: boolean }
   ) {
-    patchState({ nightMode });
+    patchState({ nightMode, synchronized: false });
   }
 }

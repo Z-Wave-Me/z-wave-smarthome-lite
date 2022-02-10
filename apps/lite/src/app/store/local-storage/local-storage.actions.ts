@@ -1,3 +1,5 @@
+import { IProfile } from '@store/local-storage/local-storage.state';
+
 export class Login {
   static readonly type = '[LocalStorage] Login';
   constructor(public payload: { login: string; password: string }) {}
@@ -13,7 +15,7 @@ export class UpdateProfile {
 
 export class SetProfile {
   static readonly type = '[LocalStorage] Set Profile';
-  constructor(public profile: any) {}
+  constructor(public profile: Partial<IProfile>) {}
 }
 export class NightMode {
   static readonly type = '[LocalStorage] Change Theme';

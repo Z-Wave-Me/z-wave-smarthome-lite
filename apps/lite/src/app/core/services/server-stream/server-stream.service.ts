@@ -30,6 +30,7 @@ import {
   UpdateProfile,
 } from '@store/local-storage/local-storage.actions';
 import { Notifications } from '@store/notifications/notifications.state';
+import { LocalStorageState } from '@store/local-storage/local-storage.state';
 
 @Injectable({
   providedIn: 'any',
@@ -192,11 +193,13 @@ export class ServerStreamService implements OnDestroy {
 
   private subscribeProfile() {
     this.store.dispatch(new UpdateProfile());
-    return this.webSocketService.on<any>('me.z-wave.profile').pipe(
+    return this.webSocketService.on<never>('me.z-wave.profile').pipe(
       takeUntil(this.destroy$),
       tap((profile) => {
         console.log(profile);
-        this.store.dispatch(new SetProfile(profile));
+        this.store.dispatch(
+          new SetProfile(LocalStorageState.profileAdapter(profile))
+        );
       })
     );
   }
