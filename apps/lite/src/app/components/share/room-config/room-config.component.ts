@@ -132,7 +132,7 @@ export class RoomConfigComponent {
           main_sensors: loc.main_sensors.filter((el) => el !== device.id),
         })
       );
-    this.store.dispatch(new ChangeDevice({ ...device, location: 0 }));
+    this.store.dispatch(new ChangeDevice({ ...device, location: 0 }, true));
   }
 
   toggleMainSensor(loc: Location, id: string, available: boolean) {
@@ -153,7 +153,7 @@ export class RoomConfigComponent {
     device: Omit<MainSensorDevice, 'deviceType'>,
     location: number
   ): void {
-    this.store.dispatch(new ChangeDevice({ ...device, location }));
+    this.store.dispatch(new ChangeDevice({ ...device, location }, true));
   }
 
   tracker(i: number) {

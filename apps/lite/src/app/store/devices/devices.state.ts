@@ -12,7 +12,6 @@ import {
   ChangeLevel,
   DestroyDevices,
   ProgressDevice,
-  SetDevice,
   ToggleLevel,
   UpdateDevices,
 } from './devices.actions';
@@ -24,7 +23,7 @@ import {
   Order,
 } from '@store/filter/filter.state';
 import { SetTagsList } from '@store/filter/filter.actions';
-import { of } from 'rxjs';
+import { concat, EMPTY, of } from 'rxjs';
 import { ServerTime } from '@store/locals/locals.actions';
 import { ApiService } from '@core/services/api/api.service';
 import { Device, OrderByLocations } from '@store/devices/deviceInterface';
@@ -173,9 +172,122 @@ export class DevicesState {
     ];
   }
 
+  @Action(ProgressDevice)
+  progress(
+    { setState }: StateContext<DevicesStateModel>,
+    { payload: { id, inProgress } }: ProgressDevice
+  ): void {
+    setState(
+      patch({
+        entities: patch({
+          [id]: patch({
+            inProgress,
+          }),
+        }),
+      })
+    );
+  }
+
+  @Action(ChangeLevel)
+  changeLevel(
+    { getState }: StateContext<DevicesStateModel>,
+    {
+      payload: { id, level },
+    }: { payload: { id: string; level: number | string } }
+  ) {
+    const device = getState().entities[id];
+    this.store.dispatch(
+      new ChangeDevice({ ...device, metrics: { ...device.metrics, level } })
+    );
+    if (typeof level === 'number') {
+      return this.apiService.send('devices', {
+        command: id + '/command/exact',
+        params: [
+          {
+            key: 'level',
+            value: level,
+          },
+        ],
+      });
+    }
+    return this.apiService.send('devices', {
+      command: id + '/command/' + level,
+    });
+  }
+
+  @Action(ToggleLevel)
+  toggleLevel(ctx: StateContext<DevicesStateModel>, { id }: { id: string }) {
+    const device = ctx.getState().entities[id];
+    let level;
+    if (device.deviceType === 'switchMultilevel') {
+      level = device.metrics.level > 0 ? 0 : 99;
+    }
+    if (device.deviceType === 'switchBinary') {
+      level = device.metrics.level === 'on' ? 'off' : 'on';
+    }
+    if (level !== undefined)
+      return this.store.dispatch(new ChangeLevel({ id, level }));
+    return of(void 0);
+  }
+
+  @Action(DestroyDevices)
+  destroyDevices(
+    { getState }: StateContext<DevicesStateModel>,
+    { deviceId }: { deviceId: string }
+  ) {
+    console.log(deviceId);
+  }
+
+  @Action(ChangeDevice)
+  changeDevice(
+    { getState }: StateContext<DevicesStateModel>,
+    { device, serverUpdate }: ChangeDevice
+  ) {
+    if (typeof device === 'string') {
+      this.store.dispatch(new DestroyDevices(device));
+      if (serverUpdate) {
+        return this.updateServer(device);
+      }
+    } else {
+      const old = getState().entities[device.id];
+      const updated = [
+        { ...old, ...device, metrics: { ...old.metrics, ...device?.metrics } },
+      ];
+      this.store.dispatch(new UpdateDevices(updated));
+      if (serverUpdate) {
+        return this.updateServer(updated);
+      }
+    }
+    return EMPTY;
+  }
+  updateServer(devices: Device[] | string) {
+    if (Array.isArray(devices)) {
+      console.log('updateServer', devices);
+      return concat(
+        ...devices.map((device) =>
+          this.apiService.send('devices', {
+            command: device.id,
+            method: 'put',
+            data: {
+              location: device.location ?? 0,
+              metrics: {
+                title: device.title,
+                icon: device.metrics.icon,
+                level: device.metrics.level,
+              },
+              permanently_hidden: false,
+              tags: device.tags,
+              visibility: device.visibility ?? !device.hidden,
+            },
+          })
+        )
+      );
+    }
+    return EMPTY;
+  }
   @Action(UpdateDevices)
-  update(
-    { setState, getState }: StateContext<DevicesStateModel>,
+  updateDevice(
+    { getState, setState }: StateContext<DevicesStateModel>,
     { devices, structureChanged }: UpdateDevices
   ): void {
     const ids: string[] = [];
@@ -226,132 +338,23 @@ export class DevicesState {
     }
     if (structureChanged) {
       setState(patch({ ids, entities, locations }));
-    } else if (locationChanges) {
-      setState(
-        patch({
-          entities: patch({ ...entities }),
-          locations,
-        })
-      );
     } else {
-      setState(
-        patch({
-          entities: patch({ ...entities }),
-        })
+      if (locationChanges) {
+        setState(
+          patch({
+            locations,
+          })
+        );
+      }
+      Object.entries(entities).map(([id, el]) =>
+        setState(
+          patch({
+            entities: patch({
+              [id]: el,
+            }),
+          })
+        )
       );
     }
-  }
-
-  @Action(ProgressDevice)
-  progress(
-    { setState }: StateContext<DevicesStateModel>,
-    { payload: { id, inProgress } }: ProgressDevice
-  ): void {
-    setState(
-      patch({
-        entities: patch({
-          [id]: patch({
-            inProgress,
-          }),
-        }),
-      })
-    );
-  }
-
-  @Action(ChangeLevel)
-  changeLevel(
-    { getState }: StateContext<DevicesStateModel>,
-    {
-      payload: { id, level },
-    }: { payload: { id: string; level: number | string } }
-  ) {
-    const device = getState().entities[id];
-    this.store.dispatch(
-      new SetDevice({ ...device, metrics: { ...device.metrics, level } })
-    );
-    if (typeof level === 'number') {
-      return this.apiService.send('devices', {
-        command: id + '/command/exact',
-        params: [
-          {
-            key: 'level',
-            value: level,
-          },
-        ],
-      });
-    }
-    return this.apiService.send('devices', {
-      command: id + '/command/' + level,
-    });
-  }
-
-  @Action(ToggleLevel)
-  toggleLevel(ctx: StateContext<DevicesStateModel>, { id }: { id: string }) {
-    const device = ctx.getState().entities[id];
-    let level;
-    if (device.deviceType === 'switchMultilevel') {
-      level = device.metrics.level > 0 ? 0 : 99;
-    }
-    if (device.deviceType === 'switchBinary') {
-      level = device.metrics.level === 'on' ? 'off' : 'on';
-    }
-    if (level !== undefined)
-      return this.store.dispatch(new ChangeLevel({ id, level }));
-    return of(void 0);
-  }
-
-  @Action(SetDevice)
-  setDevice(
-    { setState, getState }: StateContext<DevicesStateModel>,
-    { device }: { device: Partial<Device> & { id: string } }
-  ) {
-    const updatedDevice = { ...getState().entities[device.id], ...device };
-    setState(
-      patch({
-        entities: patch({
-          [device.id]: patch(updatedDevice),
-        }),
-      })
-    );
-    // this.store.dispatch(new UpdateDevices([updatedDevice]));
-  }
-
-  @Action(ChangeDevice)
-  changeDevice(
-    { setState, getState }: StateContext<DevicesStateModel>,
-    { device }: { device: Partial<Device> & { id: string } }
-  ) {
-    const updatedDevice = { ...getState().entities[device.id], ...device };
-    setState(
-      patch({
-        entities: patch({
-          [device.id]: patch(updatedDevice),
-        }),
-      })
-    );
-    this.store.dispatch(new UpdateDevices([updatedDevice]));
-    return this.apiService.send('devices', {
-      command: device.id,
-      method: 'put',
-      data: {
-        id: updatedDevice.id,
-        location: updatedDevice.location ?? 0,
-        metrics: {
-          title: updatedDevice.title,
-          icon: updatedDevice.metrics.icon,
-          level: updatedDevice.metrics.level,
-        },
-        permanently_hidden: false,
-        tags: device.tags,
-        visibility: device.visibility ?? !device.hidden,
-      },
-    });
-  }
-  @Action(DestroyDevices)
-  destroyDevices(
-    {}: StateContext<DevicesStateModel>,
-    { deviceId }: { deviceId: string }
-  ) {
-    console.log(deviceId);
   }
 }

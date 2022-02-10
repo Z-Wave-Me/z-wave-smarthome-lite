@@ -58,7 +58,7 @@ export class DefaultElementControlComponent implements OnInit {
           data.location = data.location.id;
           data.visibility = !data.hidden;
           this.store.dispatch(
-            new ChangeDevice({ ...data, id: this.context.id })
+            new ChangeDevice({ ...data, id: this.context.id }, true)
           );
         })
       )

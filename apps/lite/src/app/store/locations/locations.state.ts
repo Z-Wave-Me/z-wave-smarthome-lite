@@ -12,11 +12,10 @@ import {
 import { patch } from '@ngxs/store/operators';
 import { Location } from '@store/locations/location';
 import { TranslocoService } from '@ngneat/transloco';
-import { ConfigService } from '@core/services/config/config.service';
 import { ApiService } from '@core/services/api/api.service';
 import { map, tap } from 'rxjs/operators';
-import { ChangeDevice } from '@store/devices/devices.actions';
 import { DevicesStateModel } from '@store/devices/devices.state';
+import { ChangeDevice } from '@store/devices/devices.actions';
 
 export class LocationsStateModel {
   ids!: number[];
@@ -109,7 +108,7 @@ export class LocationsState {
       )
       .filter((el) => el.location === locationId)
       .map((el) =>
-        this.store.dispatch(new ChangeDevice({ ...el, location: 0 }))
+        this.store.dispatch(new ChangeDevice({ ...el, location: 0 }, true))
       );
     setState({
       ids: state.ids?.filter((id) => id !== locationId),

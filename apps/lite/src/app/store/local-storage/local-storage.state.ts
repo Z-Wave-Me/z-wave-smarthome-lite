@@ -24,7 +24,7 @@ import {
 } from '@store/local-storage/local-storage.actions';
 import { TranslocoService } from '@ngneat/transloco';
 import { AlertService } from '@core/services/alert/alert.service';
-import { SetDevice } from '@store/devices/devices.actions';
+import { ChangeDevice } from '@store/devices/devices.actions';
 
 export interface ZWayResponse<T> {
   code: number;
@@ -224,7 +224,7 @@ export class LocalStorageState {
       .filter((el: string) => !currentDashboard.includes(el))
       .concat(currentDashboard.filter((el) => !dashboard.includes(el)))
       .map((id: string) => {
-        this.store.dispatch(new SetDevice({ id }));
+        this.store.dispatch(new ChangeDevice({ id }));
       });
   }
 
