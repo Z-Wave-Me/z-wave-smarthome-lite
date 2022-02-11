@@ -1,24 +1,80 @@
-<tui-hosted-dropdown
-  tuiDropdownAlign="right"
-  [content]="dropdown"
-  [(open)]="open"
-  class="icon"
->
-  <fa-icon [icon]="faCogs" size="lg"></fa-icon>
-</tui-hosted-dropdown>
+<ng-container *transloco="let _t">
+  <div
+    class="icon"
+    (tuiActiveZoneChange)="toggle($event)"
+    (click)="toggle(true)"
+  >
+    <fa-icon [icon]="faCogs" size="lg"></fa-icon>
+    <!-- Nest the directive so it is considered the same active zone -->
+    <div *tuiSidebar="open; direction: 'left'">
+      <tui-data-list>
+        <button tuiOption *ngIf="themeSwitcher">
+          <span>{{ _t('night_mode') }}</span>
+          <tui-toggle
+            style="align-self: center"
+            class="tui-space_right-1"
+            size="m"
+            [formControl]="themeSwitcher"
+          ></tui-toggle>
+        </button>
+        <button *ngFor="let item of items" tuiOption (click)="onClick()">
+          {{ item }}
+        </button>
+      </tui-data-list>
+      <tui-accordion [rounded]="false">
+        <tui-accordion-item borders="top-bottom">
+          Web APIs for Angular
+          <ng-template tuiAccordionItemContent>
+            <a
+              *ngFor="let link of webApis"
+              tuiLink
+              target="_blank"
+              href="https://github.com/ng-web-apis/{{ link }}"
+              class="link"
+            >
+              {{ link }}
+            </a>
+          </ng-template>
+        </tui-accordion-item>
+        <tui-accordion-item borders="top-bottom">
+          Other libraries
+          <ng-template tuiAccordionItemContent>
+            <a
+              *ngFor="let link of tinkoff"
+              tuiLink
+              target="_blank"
+              href="https://github.com/tinkoff/{{ link }}"
+              class="link"
+            >
+              {{ link }}
+            </a>
+          </ng-template>
+        </tui-accordion-item>
+      </tui-accordion>
+    </div>
+  </div>
+</ng-container>
+<!--<tui-hosted-dropdown-->
+<!--  tuiDropdownAlign="right"-->
+<!--  [content]="dropdown"-->
+<!--  [(open)]="open"-->
+<!--  class="icon"-->
+<!--&gt;-->
+<!--  <fa-icon [icon]="faCogs" size="lg"></fa-icon>-->
+<!--</tui-hosted-dropdown>-->
 
-<ng-template #dropdown>
-  <tui-data-list>
-    <button tuiOption *ngIf="themeSwitcher">
-      <tui-toggle
-        style="align-self: center"
-        class="tui-space_right-1"
-        size="m"
-        [formControl]="themeSwitcher"
-      ></tui-toggle>
-    </button>
-    <button *ngFor="let item of items" tuiOption (click)="onClick()">
-      {{ item }}
-    </button>
-  </tui-data-list>
-</ng-template>
+<!--<ng-template #dropdown>-->
+<!--  <tui-data-list>-->
+<!--    <button tuiOption *ngIf="themeSwitcher">-->
+<!--      <tui-toggle-->
+<!--        style="align-self: center"-->
+<!--        class="tui-space_right-1"-->
+<!--        size="m"-->
+<!--        [formControl]="themeSwitcher"-->
+<!--      ></tui-toggle>-->
+<!--    </button>-->
+<!--    <button *ngFor="let item of items" tuiOption (click)="onClick()">-->
+<!--      {{ item }}-->
+<!--    </button>-->
+<!--  </tui-data-list>-->
+<!--</ng-template>-->

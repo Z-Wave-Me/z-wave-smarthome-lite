@@ -19,6 +19,25 @@ import { Observable } from 'rxjs';
 export class SettingsMenuComponent {
   themeSwitcher?: FormControl;
   @Select(LocalStorageState.nightMode) nightMode$!: Observable<boolean>;
+
+  open = false;
+
+  readonly webApis = [
+    'Common',
+    'Audio',
+    'Canvas',
+    'Geolocation',
+    'MIDI',
+    'Workers',
+  ];
+
+  readonly tinkoff = [
+    'Taiga-UI',
+    'ng-event-plugins',
+    'ng-polymorpheus',
+    'ng-dompurify',
+  ];
+
   constructor(
     private readonly store: Store,
     private readonly formBuilder: FormBuilder,
@@ -49,7 +68,6 @@ export class SettingsMenuComponent {
   faCogs = faUserCog;
   // readonly items = ['Edit', 'Download', 'Rename', 'Delete'];
   readonly items = [];
-  open = false;
   @ViewChild(TuiHostedDropdownComponent)
   component?: TuiHostedDropdownComponent;
   onClick() {
@@ -57,5 +75,8 @@ export class SettingsMenuComponent {
     if (this.component && this.component.nativeFocusableElement) {
       this.component.nativeFocusableElement.focus();
     }
+  }
+  toggle(open: boolean) {
+    this.open = open;
   }
 }

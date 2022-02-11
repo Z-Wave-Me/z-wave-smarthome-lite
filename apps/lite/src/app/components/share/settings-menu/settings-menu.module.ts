@@ -6,11 +6,15 @@ import {
   TuiDataListModule,
   TuiDropdownControllerModule,
   TuiHostedDropdownModule,
+  TuiLinkModule,
   TuiSvgModule,
 } from '@taiga-ui/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { TuiToggleModule } from '@taiga-ui/kit';
+import { TuiAccordionModule, TuiToggleModule } from '@taiga-ui/kit';
 import { ReactiveFormsModule } from '@angular/forms';
+import { TuiSidebarModule } from '@taiga-ui/addon-mobile';
+import { TuiActiveZoneModule } from '@taiga-ui/cdk';
+import { TranslocoModule } from '@ngneat/transloco';
 
 @NgModule({
   declarations: [SettingsMenuComponent],
@@ -24,6 +28,12 @@ import { ReactiveFormsModule } from '@angular/forms';
     FontAwesomeModule,
     TuiToggleModule,
     ReactiveFormsModule,
+    TuiAccordionModule,
+    TuiLinkModule,
+    TuiSidebarModule,
+    TuiActiveZoneModule,
+    TuiAccordionModule,
+    TranslocoModule,
   ],
   exports: [SettingsMenuComponent],
 })
