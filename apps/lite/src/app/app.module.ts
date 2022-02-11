@@ -90,4 +90,8 @@ export const initApp = (configurationService: ConfigService) => () =>
   ],
   bootstrap: [AppComponent],
 })
-export class AppModule {}
+export class AppModule {
+  constructor() {
+    console.log(environment.version);
+  }
+}

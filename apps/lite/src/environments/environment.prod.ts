@@ -1,3 +1,5 @@
+import packageJson from '../../../../package.json';
+
 export const environment = {
   production: true,
   ws:
@@ -6,4 +8,5 @@ export const environment = {
     location.hostname +
     ':' +
     location.port,
+  version: packageJson.version,
 };

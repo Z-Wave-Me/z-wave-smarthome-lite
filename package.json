@@ -9,11 +9,13 @@
     "proxy:remote": "ng serve --proxy-config=./apps/lite/proxy/proxy.remote.conf.js -o",
     "proxy:remote:host": "ng serve --proxy-config=./apps/lite/proxy/proxy.remote.conf.js -o --host 0.0.0.0",
     "start": "nx serve",
+    "prebuild": "npm --no-git-tag-version version patch",
     "build": "nx build",
     "test": "nx test",
     "doc": "npx compodoc -p tsconfig.doc.json",
     "serveDocs": "compodoc -s"
   },
+  "browserslist": ["defaults"],
   "private": true,
   "dependencies": {
     "@angular/animations": "13.2.1",
