@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { SetOrder, UpdateFilter } from '@store/filter/filter.actions';
+import { SetOrder, SetTag, UpdateFilter } from '@store/filter/filter.actions';
 import { Store } from '@ngxs/store';
 
 @Component({
@@ -11,6 +11,7 @@ import { Store } from '@ngxs/store';
 export class ElementsComponent {
   constructor(private readonly store: Store) {
     this.store.dispatch(new UpdateFilter());
+    this.store.dispatch(new SetTag());
     this.store.dispatch(new SetOrder('elements'));
   }
 }

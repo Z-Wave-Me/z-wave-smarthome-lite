@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { Store } from '@ngxs/store';
-import { SetOrder, UpdateFilter } from '@store/filter/filter.actions';
+import { SetOrder, SetTag, UpdateFilter } from '@store/filter/filter.actions';
 
 @Component({
   selector: 'z-wave-dashboard',
@@ -12,5 +12,6 @@ export class DashboardComponent {
   constructor(private readonly store: Store) {
     this.store.dispatch(new SetOrder('dashboard'));
     this.store.dispatch(new UpdateFilter({ onDashboard: true }));
+    this.store.dispatch(new SetTag());
   }
 }
