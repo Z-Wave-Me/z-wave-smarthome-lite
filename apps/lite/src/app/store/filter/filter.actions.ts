@@ -37,7 +37,7 @@ export class SetTag {
 export class SetOrder {
   static readonly type = '[Filter] Set Order';
   constructor(
-    public place: OrderByLocations,
+    public place?: OrderByLocations,
     public orderBy?: Order,
     public desc?: boolean,
     public name?: string

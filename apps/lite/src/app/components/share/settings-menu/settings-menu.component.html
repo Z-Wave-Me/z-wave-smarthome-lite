@@ -1,18 +1,18 @@
 <ng-container *transloco="let _t">
   <div
-    class="icon"
-    (tuiActiveZoneChange)="toggle($event)"
     (click)="toggle(true)"
+    (tuiActiveZoneChange)="toggle($event)"
+    class="icon"
   >
     <fa-icon [icon]="faCogs" size="lg"></fa-icon>
     <div *tuiSidebar="open; direction: 'left'">
-      <tui-island size="m" *ngIf="themeSwitcher">
+      <tui-island *ngIf="themeSwitcher" size="m">
         <div class="tui-island__content">
           <div class="tui-island__figure">
             <tui-toggle
-              style="align-self: center"
-              size="m"
               [formControl]="themeSwitcher"
+              size="m"
+              style="align-self: center"
             ></tui-toggle>
           </div>
           <div class="nav-item">
@@ -21,33 +21,92 @@
         </div>
       </tui-island>
       <tui-accordion [rounded]="false">
-        <tui-accordion-item borders="top-bottom">
-          Web APIs for Angular
+        <tui-accordion-item
+          borders="top-bottom"
+          *ngIf="{ tag: tag$ | async } as data"
+        >
+          <div [ngClass]="{ active: data.tag }">
+            <!--      <i class="fa-tags" [ngClass]="!!data.tag ? 'fas' : 'fal'"></i>      -->
+            <fa-icon [icon]="faTags"></fa-icon>
+            <span> {{ _t('lb_tags') }}</span>
+            <span *ngIf="!!data.tag">: {{ data.tag }}</span>
+          </div>
           <ng-template tuiAccordionItemContent>
-            <a
-              *ngFor="let link of webApis"
-              tuiLink
-              target="_blank"
-              href="https://github.com/ng-web-apis/{{ link }}"
-              class="link"
+            <div>
+              <div
+                (click)="addTagFilter()"
+                class="colorize"
+                [ngClass]="{ active: !data.tag }"
+              >
+                {{ _t('all_elements') }}
+              </div>
+              <div
+                class="colorize"
+                *ngFor="let tag of tagsList$ | async"
+                (click)="addTagFilter(tag)"
+                [ngClass]="{ active: tag === data.tag }"
+              >
+                {{ tag }}
+              </div>
+            </div>
+          </ng-template>
+        </tui-accordion-item>
+        <tui-accordion-item
+          *ngIf="{ active: activeFilters$ | async } as filter"
+          borders="top-bottom"
+          [noPadding]="true"
+        >
+          <div [ngClass]="{ active: filter.active }" class="header">
+            <fa-layers [fixedWidth]="true">
+              <!--          TODO [filter.active ? 'fas' : 'fal', 'filter']-->
+              <fa-icon
+                [icon]="[filter.active ? 'fas' : 'fas', 'filter']"
+              ></fa-icon>
+              <fa-icon
+                *ngIf="showHiddenActive()"
+                [icon]="faLowVision"
+                transform="shrink-3 down-6 left-10"
+              ></fa-icon>
+            </fa-layers>
+            <span *ngIf="filter.active"> {{ _t('filtered') }}</span>
+            <span *ngIf="!filter.active"> {{ _t('all_elements') }}</span>
+            <span class="btn-name item-cnt">
+              ({{ (total$ | async)?.length }})</span
             >
-              {{ link }}
-            </a>
+          </div>
+          <ng-template tuiAccordionItemContent>
+            <div
+              (click)="addFilter(device.type)"
+              *ngFor="let device of typesAndCount$ | async; trackBy: trackByFn"
+              [ngClass]="{ active: active(device.type) }"
+              class="type-selector colorize"
+            >
+              <!--              {{ device.icon }}-->
+              <i [ngClass]="device.icon" class="fas fa-fw"></i>
+              <div class="selector-text">{{ _t(device.type) }}</div>
+              <div class="device-type-count">({{ device.count }})</div>
+              <!--        <z-wave-slider-->
+              <!--          [checked]="active(device.type)"-->
+              <!--          mode="freeze"-->
+              <!--        ></z-wave-slider>-->
+            </div>
+            <div
+              (click)="showHidden()"
+              [ngClass]="{ active: showHiddenActive() }"
+              class="type-selector colorize"
+            >
+              <fa-icon [icon]="faLowVision"></fa-icon>
+              <div class="selector-text">{{ _t('show_hidden') }}</div>
+              <!--        <z-wave-slider-->
+              <!--          [checked]="showHiddenActive()"-->
+              <!--          mode="freeze"-->
+              <!--        ></z-wave-slider>-->
+            </div>
           </ng-template>
         </tui-accordion-item>
         <tui-accordion-item borders="top-bottom">
-          Other libraries
-          <ng-template tuiAccordionItemContent>
-            <a
-              *ngFor="let link of tinkoff"
-              tuiLink
-              target="_blank"
-              href="https://github.com/tinkoff/{{ link }}"
-              class="link"
-            >
-              {{ link }}
-            </a>
-          </ng-template>
+          Order
+          <ng-template tuiAccordionItemContent></ng-template>
         </tui-accordion-item>
       </tui-accordion>
     </div>

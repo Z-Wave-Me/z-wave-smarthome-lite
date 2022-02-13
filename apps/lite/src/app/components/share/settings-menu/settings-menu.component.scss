@@ -12,3 +12,23 @@
   font-size: 1.1rem;
   padding-left: 0.25rem;
 }
+.colorize {
+  color: var(--tui-text-03);
+  padding: 0.3rem 0;
+  text-transform: capitalize;
+  &.active {
+    color: var(--tui-text-01);
+  }
+}
+.type-selector {
+  display: grid;
+  grid-template-columns: 1rem auto 3rem;
+  cursor: pointer;
+  gap: 0 0.5rem;
+  .device-type-count {
+    text-align: end;
+  }
+}
+.header {
+  padding: 0 1rem;
+}
