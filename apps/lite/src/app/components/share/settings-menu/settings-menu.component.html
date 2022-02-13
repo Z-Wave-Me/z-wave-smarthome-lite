@@ -20,7 +20,7 @@
           </div>
         </div>
       </tui-island>
-      <tui-accordion [rounded]="false">
+      <tui-accordion [rounded]="false" *ngIf="showFilters$ | async">
         <tui-accordion-item
           borders="top-bottom"
           *ngIf="{ tag: tag$ | async } as data"
@@ -54,19 +54,18 @@
         <tui-accordion-item
           *ngIf="{ active: activeFilters$ | async } as filter"
           borders="top-bottom"
-          [noPadding]="true"
         >
-          <div [ngClass]="{ active: filter.active }" class="header">
+          <div [ngClass]="{ active: filter.active }">
             <fa-layers [fixedWidth]="true">
               <!--          TODO [filter.active ? 'fas' : 'fal', 'filter']-->
               <fa-icon
                 [icon]="[filter.active ? 'fas' : 'fas', 'filter']"
               ></fa-icon>
-              <fa-icon
-                *ngIf="showHiddenActive()"
-                [icon]="faLowVision"
-                transform="shrink-3 down-6 left-10"
-              ></fa-icon>
+              <!--              <fa-icon-->
+              <!--                *ngIf="showHiddenActive()"-->
+              <!--                [icon]="faLowVision"-->
+              <!--                transform="shrink-3 down-6 left-10"-->
+              <!--              ></fa-icon>-->
             </fa-layers>
             <span *ngIf="filter.active"> {{ _t('filtered') }}</span>
             <span *ngIf="!filter.active"> {{ _t('all_elements') }}</span>

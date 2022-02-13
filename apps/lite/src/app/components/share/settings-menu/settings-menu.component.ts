@@ -5,9 +5,9 @@ import { FormBuilder, FormControl } from '@angular/forms';
 import { Select, Store } from '@ngxs/store';
 import { DestroyService } from '@core/services/destroy/destroy.service';
 import { LocalStorageState } from '@store/local-storage/local-storage.state';
-import { map, switchMap, takeUntil, tap } from 'rxjs/operators';
+import { filter, map, switchMap, takeUntil, tap } from 'rxjs/operators';
 import { NightMode } from '@store/local-storage/local-storage.actions';
-import { Observable } from 'rxjs';
+import { Observable, of, startWith } from 'rxjs';
 import { DevicesState } from '@store/devices/devices.state';
 // import { FilterState } from '@store/filter/filter.state';
 import { IconSupplierService } from '@core/services/icon-supplier/icon-supplier.service';
@@ -26,6 +26,7 @@ import { faFilter as falFilter } from '@fortawesome/free-solid-svg-icons';
 import { faFilter as fasFilter } from '@fortawesome/free-solid-svg-icons';
 import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import { faLowVision } from '@fortawesome/free-solid-svg-icons';
+import { NavigationEnd, Router } from '@angular/router';
 
 export interface MenuItem {
   type: string;
@@ -51,14 +52,18 @@ export class SettingsMenuComponent {
   open = false;
   tag$: Observable<string | undefined>;
   @Select(DevicesState.tagsList) tagsList$!: Observable<string[]>;
-
+  showFilters$: Observable<boolean>;
   constructor(
     private readonly iconSupplierService: IconSupplierService,
     private readonly faIconLibrary: FaIconLibrary,
     private readonly store: Store,
     private readonly formBuilder: FormBuilder,
-    private readonly destroyService$: DestroyService
+    private readonly destroyService$: DestroyService,
+    private readonly router: Router
   ) {
+    this.showFilters$ = of(void 0).pipe(
+      map(() => this.router.url === '/elements')
+    );
     this.nightMode$
       .pipe(
         takeUntil(this.destroyService$),
@@ -71,6 +76,7 @@ export class SettingsMenuComponent {
         })
       )
       .subscribe();
+
     this.typesAndCount$ = store.select(DevicesState.devicesTypeAndCount).pipe(
       map((devices) =>
         devices.map((device) => ({
