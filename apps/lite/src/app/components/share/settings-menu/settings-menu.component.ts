@@ -1,32 +1,40 @@
-import { ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
-import { TuiHostedDropdownComponent } from '@taiga-ui/core';
-import { faUserCog } from '@fortawesome/pro-regular-svg-icons';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+// import { faUserCog } from '@fortawesome/pro-regular-svg-icons';
+import { faUserCircle as faUserCog } from '@fortawesome/free-regular-svg-icons';
 import { FormBuilder, FormControl } from '@angular/forms';
 import { Select, Store } from '@ngxs/store';
 import { DestroyService } from '@core/services/destroy/destroy.service';
 import { LocalStorageState } from '@store/local-storage/local-storage.state';
-import { filter, map, switchMap, takeUntil, tap } from 'rxjs/operators';
+import { map, switchMap, takeUntil, tap } from 'rxjs/operators';
 import { NightMode } from '@store/local-storage/local-storage.actions';
-import { Observable, of, startWith } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { DevicesState } from '@store/devices/devices.state';
 // import { FilterState } from '@store/filter/filter.state';
 import { IconSupplierService } from '@core/services/icon-supplier/icon-supplier.service';
 // import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
 // import { faFilter as fasFilter, faFilter as falFilter } from '@fortawesome/free-solid-svg-icons';
-import { faTags } from '@fortawesome/free-solid-svg-icons';
+// import { faFilter as falFilter } from '@fortawesome/pro-light-svg-icons';
+import {
+  faFilter as falFilter,
+  faFilter as fasFilter,
+  faLowVision,
+  faSortAlphaDown,
+  faTags,
+} from '@fortawesome/free-solid-svg-icons';
 import {
   AddFilter,
   RemoveFilter,
+  SetOrder,
   SetTag,
   ToggleHidden,
 } from '@store/filter/filter.actions';
-import { FilterState, FilterStateModel } from '@store/filter/filter.state';
-// import { faFilter as falFilter } from '@fortawesome/pro-light-svg-icons';
-import { faFilter as falFilter } from '@fortawesome/free-solid-svg-icons';
-import { faFilter as fasFilter } from '@fortawesome/free-solid-svg-icons';
+import {
+  FilterState,
+  FilterStateModel,
+  Order,
+} from '@store/filter/filter.state';
 import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
-import { faLowVision } from '@fortawesome/free-solid-svg-icons';
-import { NavigationEnd, Router } from '@angular/router';
+import { Router } from '@angular/router';
 
 export interface MenuItem {
   type: string;
@@ -42,17 +50,34 @@ export interface MenuItem {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SettingsMenuComponent {
-  themeSwitcher?: FormControl;
+  readonly orderList: ReadonlyMap<string, [order: Order, desc: boolean]> =
+    new Map([
+      ['updateTimeDESC', ['updateTime', true]],
+      ['creationTimeDESC', ['creationTime', true]],
+      ['creationTimeASC', ['creationTime', false]],
+      ['titleASC', ['title', false]],
+      ['titleDESC', ['title', true]],
+      ['orderElements', ['elements', false]],
+    ]);
+
   @Select(LocalStorageState.nightMode) nightMode$!: Observable<boolean>;
-  readonly typesAndCount$: Observable<MenuItem[]>;
   @Select(DevicesState.showDevice) total$!: Observable<string[]>;
   @Select(FilterState.activeFilters) activeFilters$!: Observable<boolean>;
-  faLowVision = faLowVision;
-  faTags = faTags;
-  open = false;
-  tag$: Observable<string | undefined>;
   @Select(DevicesState.tagsList) tagsList$!: Observable<string[]>;
-  showFilters$: Observable<boolean>;
+
+  readonly faCogs = faUserCog;
+  readonly faLowVision = faLowVision;
+  readonly faTags = faTags;
+  readonly faSortAlphaDown = faSortAlphaDown;
+
+  readonly typesAndCount$: Observable<MenuItem[]>;
+  readonly tag$: Observable<string | undefined>;
+  readonly showFilters$: Observable<boolean>;
+  readonly order$: Observable<string>;
+
+  themeSwitcher?: FormControl;
+  open = false;
+
   constructor(
     private readonly iconSupplierService: IconSupplierService,
     private readonly faIconLibrary: FaIconLibrary,
@@ -61,6 +86,9 @@ export class SettingsMenuComponent {
     private readonly destroyService$: DestroyService,
     private readonly router: Router
   ) {
+    this.order$ = store.select(
+      ({ filter }: FilterStateModel) => filter.orderBy.name
+    );
     this.showFilters$ = of(void 0).pipe(
       map(() => this.router.url === '/elements')
     );
@@ -88,7 +116,7 @@ export class SettingsMenuComponent {
     faIconLibrary.addIcons(falFilter, fasFilter);
     this.tag$ = store.select(({ filter }: FilterStateModel) => filter.tag);
   }
-  faCogs = faUserCog;
+
   // readonly items = ['Edit', 'Download', 'Rename', 'Delete'];
   toggle(open: boolean) {
     this.open = open;
@@ -122,5 +150,9 @@ export class SettingsMenuComponent {
 
   addTagFilter(tag?: string): void {
     this.store.dispatch(new SetTag(tag));
+  }
+
+  setOrder(order: [Order, boolean], name: string): void {
+    this.store.dispatch(new SetOrder('elements', ...order, name));
   }
 }

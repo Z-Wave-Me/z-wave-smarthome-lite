@@ -20,13 +20,12 @@
           </div>
         </div>
       </tui-island>
-      <tui-accordion [rounded]="false" *ngIf="showFilters$ | async">
+      <tui-accordion *ngIf="showFilters$ | async" [rounded]="false">
         <tui-accordion-item
-          borders="top-bottom"
           *ngIf="{ tag: tag$ | async } as data"
+          borders="top-bottom"
         >
           <div [ngClass]="{ active: data.tag }">
-            <!--      <i class="fa-tags" [ngClass]="!!data.tag ? 'fas' : 'fal'"></i>      -->
             <fa-icon [icon]="faTags"></fa-icon>
             <span> {{ _t('lb_tags') }}</span>
             <span *ngIf="!!data.tag">: {{ data.tag }}</span>
@@ -35,16 +34,16 @@
             <div>
               <div
                 (click)="addTagFilter()"
-                class="colorize"
                 [ngClass]="{ active: !data.tag }"
+                class="colorize"
               >
                 {{ _t('all_elements') }}
               </div>
               <div
-                class="colorize"
-                *ngFor="let tag of tagsList$ | async"
                 (click)="addTagFilter(tag)"
+                *ngFor="let tag of tagsList$ | async"
                 [ngClass]="{ active: tag === data.tag }"
+                class="colorize"
               >
                 {{ tag }}
               </div>
@@ -61,11 +60,6 @@
               <fa-icon
                 [icon]="[filter.active ? 'fas' : 'fas', 'filter']"
               ></fa-icon>
-              <!--              <fa-icon-->
-              <!--                *ngIf="showHiddenActive()"-->
-              <!--                [icon]="faLowVision"-->
-              <!--                transform="shrink-3 down-6 left-10"-->
-              <!--              ></fa-icon>-->
             </fa-layers>
             <span *ngIf="filter.active"> {{ _t('filtered') }}</span>
             <span *ngIf="!filter.active"> {{ _t('all_elements') }}</span>
@@ -84,10 +78,6 @@
               <i [ngClass]="device.icon" class="fas fa-fw"></i>
               <div class="selector-text">{{ _t(device.type) }}</div>
               <div class="device-type-count">({{ device.count }})</div>
-              <!--        <z-wave-slider-->
-              <!--          [checked]="active(device.type)"-->
-              <!--          mode="freeze"-->
-              <!--        ></z-wave-slider>-->
             </div>
             <div
               (click)="showHidden()"
@@ -96,16 +86,25 @@
             >
               <fa-icon [icon]="faLowVision"></fa-icon>
               <div class="selector-text">{{ _t('show_hidden') }}</div>
-              <!--        <z-wave-slider-->
-              <!--          [checked]="showHiddenActive()"-->
-              <!--          mode="freeze"-->
-              <!--        ></z-wave-slider>-->
             </div>
           </ng-template>
         </tui-accordion-item>
-        <tui-accordion-item borders="top-bottom">
-          Order
-          <ng-template tuiAccordionItemContent></ng-template>
+        <tui-accordion-item
+          *ngIf="order$ | async as currentOrder"
+          borders="top-bottom"
+        >
+          <fa-icon [icon]="faSortAlphaDown"></fa-icon>
+          {{ _t(currentOrder) }}
+          <ng-template tuiAccordionItemContent>
+            <div
+              (click)="setOrder(order.value, order.key)"
+              *ngFor="let order of orderList | keyvalue"
+              [ngClass]="{ active: currentOrder === order.key }"
+              class="colorize"
+            >
+              {{ _t(order.key) }}
+            </div>
+          </ng-template>
         </tui-accordion-item>
       </tui-accordion>
     </div>
