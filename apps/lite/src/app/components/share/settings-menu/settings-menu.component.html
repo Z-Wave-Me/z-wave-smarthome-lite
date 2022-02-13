@@ -5,22 +5,21 @@
     (click)="toggle(true)"
   >
     <fa-icon [icon]="faCogs" size="lg"></fa-icon>
-    <!-- Nest the directive so it is considered the same active zone -->
     <div *tuiSidebar="open; direction: 'left'">
-      <tui-data-list>
-        <button tuiOption *ngIf="themeSwitcher">
-          <span>{{ _t('night_mode') }}</span>
-          <tui-toggle
-            style="align-self: center"
-            class="tui-space_right-1"
-            size="m"
-            [formControl]="themeSwitcher"
-          ></tui-toggle>
-        </button>
-        <button *ngFor="let item of items" tuiOption (click)="onClick()">
-          {{ item }}
-        </button>
-      </tui-data-list>
+      <tui-island size="m" *ngIf="themeSwitcher">
+        <div class="tui-island__content">
+          <div class="tui-island__figure">
+            <tui-toggle
+              style="align-self: center"
+              size="m"
+              [formControl]="themeSwitcher"
+            ></tui-toggle>
+          </div>
+          <div class="nav-item">
+            {{ _t('night_mode') }}
+          </div>
+        </div>
+      </tui-island>
       <tui-accordion [rounded]="false">
         <tui-accordion-item borders="top-bottom">
           Web APIs for Angular
@@ -54,27 +53,3 @@
     </div>
   </div>
 </ng-container>
-<!--<tui-hosted-dropdown-->
-<!--  tuiDropdownAlign="right"-->
-<!--  [content]="dropdown"-->
-<!--  [(open)]="open"-->
-<!--  class="icon"-->
-<!--&gt;-->
-<!--  <fa-icon [icon]="faCogs" size="lg"></fa-icon>-->
-<!--</tui-hosted-dropdown>-->
-
-<!--<ng-template #dropdown>-->
-<!--  <tui-data-list>-->
-<!--    <button tuiOption *ngIf="themeSwitcher">-->
-<!--      <tui-toggle-->
-<!--        style="align-self: center"-->
-<!--        class="tui-space_right-1"-->
-<!--        size="m"-->
-<!--        [formControl]="themeSwitcher"-->
-<!--      ></tui-toggle>-->
-<!--    </button>-->
-<!--    <button *ngFor="let item of items" tuiOption (click)="onClick()">-->
-<!--      {{ item }}-->
-<!--    </button>-->
-<!--  </tui-data-list>-->
-<!--</ng-template>-->

@@ -5,7 +5,7 @@ import { Store } from '@ngxs/store';
 @Component({
   selector: 'z-wave-elements',
   templateUrl: './elements.component.html',
-  styleUrls: ['./elements.component.css'],
+  styleUrls: ['./elements.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ElementsComponent {

@@ -1,1 +1,7 @@
-<p>elements sub menu</p>
+<ng-container *transloco="let _t">
+  <form class="autocomplete-form" [formGroup]="autocompleteForm">
+    <tui-input formControlName="deviceName" [tuiTextfieldCleaner]="true">
+      {{ _t('lb_search') }}&nbsp;
+    </tui-input>
+  </form>
+</ng-container>

@@ -2,4 +2,13 @@
   .icon {
     margin: 1rem;
   }
+  .input-wrapper {
+  }
+}
+.tui-island:not(.tui-island_hoverable):before {
+  border: unset;
+}
+.nav-item {
+  font-size: 1.1rem;
+  padding-left: 0.25rem;
 }

@@ -7,10 +7,16 @@ import {
   TuiDropdownControllerModule,
   TuiHostedDropdownModule,
   TuiLinkModule,
+  TuiPrimitiveTextfieldModule,
   TuiSvgModule,
+  TuiTextfieldControllerModule,
 } from '@taiga-ui/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { TuiAccordionModule, TuiToggleModule } from '@taiga-ui/kit';
+import {
+  TuiAccordionModule,
+  TuiIslandModule,
+  TuiToggleModule,
+} from '@taiga-ui/kit';
 import { ReactiveFormsModule } from '@angular/forms';
 import { TuiSidebarModule } from '@taiga-ui/addon-mobile';
 import { TuiActiveZoneModule } from '@taiga-ui/cdk';
@@ -34,6 +40,9 @@ import { TranslocoModule } from '@ngneat/transloco';
     TuiActiveZoneModule,
     TuiAccordionModule,
     TranslocoModule,
+    TuiPrimitiveTextfieldModule,
+    TuiTextfieldControllerModule,
+    TuiIslandModule,
   ],
   exports: [SettingsMenuComponent],
 })

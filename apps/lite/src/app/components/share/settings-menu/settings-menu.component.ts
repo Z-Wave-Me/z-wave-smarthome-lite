@@ -43,39 +43,21 @@ export class SettingsMenuComponent {
     private readonly formBuilder: FormBuilder,
     private readonly destroyService$: DestroyService
   ) {
-    // const mode = store.selectSnapshot<boolean>(LocalStorageState.nightMode);
     this.nightMode$
       .pipe(
+        takeUntil(this.destroyService$),
         switchMap((mode) => {
           this.themeSwitcher = formBuilder.control(mode);
           return this.themeSwitcher.valueChanges;
         }),
-        takeUntil(this.destroyService$),
         tap((enabled) => {
           this.store.dispatch(new NightMode(enabled));
         })
       )
       .subscribe();
-    // this.themeSwitcher.valueChanges
-    //   .pipe(
-    //     takeUntil(this.destroyService$),
-    //     tap((enabled) => {
-    //       this.store.dispatch(new NightMode(enabled));
-    //     })
-    //   )
-    //   .subscribe();
   }
   faCogs = faUserCog;
   // readonly items = ['Edit', 'Download', 'Rename', 'Delete'];
-  readonly items = [];
-  @ViewChild(TuiHostedDropdownComponent)
-  component?: TuiHostedDropdownComponent;
-  onClick() {
-    this.open = false;
-    if (this.component && this.component.nativeFocusableElement) {
-      this.component.nativeFocusableElement.focus();
-    }
-  }
   toggle(open: boolean) {
     this.open = open;
   }

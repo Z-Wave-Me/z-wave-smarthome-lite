@@ -1,0 +1,8 @@
+@import '~@taiga-ui/core/styles/taiga-ui-local';
+
+:host {
+  .autocomplete-form {
+    margin: 0.3rem;
+    @include shadow(1);
+  }
+}
