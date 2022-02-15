@@ -9,8 +9,10 @@ import {
   TuiDataListWrapperModule,
   TuiFieldErrorModule,
   TuiInputModule,
+  TuiIslandModule,
   TuiLineClampModule,
   TuiSelectModule,
+  TuiToggleModule,
 } from '@taiga-ui/kit';
 import {
   TuiHintControllerModule,
@@ -41,6 +43,8 @@ import { ReactiveFormsModule } from '@angular/forms';
     TuiFieldErrorModule,
     TuiSelectModule,
     TuiDataListWrapperModule,
+    TuiIslandModule,
+    TuiToggleModule,
   ],
 })
 export class PersonalSettingsModule {}

@@ -28,12 +28,12 @@
         <tui-field-error formControlName="name"></tui-field-error>
         <tui-input
           [tuiTextfieldExampleText]="profile.email ?? ''"
-          formControlName="mail"
+          formControlName="email"
         >
           {{ _t('lb_email') }}
           <span class="tui-required"></span>
         </tui-input>
-        <tui-field-error formControlName="mail"></tui-field-error>
+        <tui-field-error formControlName="email"></tui-field-error>
         <tui-select formControlName="lang" [valueContent]="langContent">
           {{ _t('lb_language') }}
           <tui-data-list-wrapper
@@ -42,10 +42,37 @@
             [itemContent]="langContent"
           ></tui-data-list-wrapper>
         </tui-select>
+
+        <tui-island size="m">
+          <div class="tui-island__content">
+            <div class="tui-island__figure">
+              <tui-toggle
+                formControlName="hideAllDeviceEvents"
+                size="m"
+                style="align-self: center"
+              ></tui-toggle>
+            </div>
+            {{ _t('lb_hide_device_events') }}
+          </div>
+        </tui-island>
+        <tui-island size="m">
+          <div class="tui-island__content">
+            <div class="tui-island__figure">
+              <tui-toggle
+                formControlName="hideAllSystemEvents"
+                size="m"
+                style="align-self: center"
+              ></tui-toggle>
+            </div>
+            {{ _t('lb_hide_system_events') }}
+          </div>
+        </tui-island>
       </form>
     </tui-scrollbar>
+    <span class="version">{{ _t('version') }}: {{ version }}</span>
   </div>
 </ng-container>
+
 <ng-template #langContent let-item>
   <div class="lang-item">
     <span class="lang-name">{{ item.title }}</span>

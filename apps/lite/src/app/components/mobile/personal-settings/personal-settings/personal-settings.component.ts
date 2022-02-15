@@ -17,6 +17,7 @@ import {
   SetProfile,
   UpdateProfile,
 } from '@store/local-storage/local-storage.actions';
+import { environment } from '../../../../../environments/environment';
 
 class Lang {
   private static readonly apiUrl = 'assets/img/flags/';
@@ -42,6 +43,7 @@ export class PersonalSettingsComponent implements AfterViewInit {
   settings: FormGroup;
   profile: IProfile;
   languages: Lang[];
+  version = environment.version;
   constructor(
     private readonly formBuilder: FormBuilder,
     private readonly store: Store,
@@ -54,12 +56,14 @@ export class PersonalSettingsComponent implements AfterViewInit {
     this.profile = this.store.selectSnapshot(LocalStorageState.profile);
     this.settings = this.formBuilder.group({
       name: [this.profile.name, [Validators.required]],
-      mail: [this.profile.email, [Validators.email]],
+      email: [this.profile.email, [Validators.email]],
       lang: [
         this.languages.find(
           (lang) => lang.id === this.translocoService.getActiveLang()
         ),
       ],
+      hideAllSystemEvents: [this.profile.hideSystemEvents],
+      hideAllDeviceEvents: [this.profile.hideAllDeviceEvents],
     });
   }
 
@@ -69,14 +73,10 @@ export class PersonalSettingsComponent implements AfterViewInit {
         takeUntil(this.destroy$),
         map((values) => {
           if (this.settings.valid) {
-            this.store.dispatch(
-              new SetProfile({
-                name: values.name,
-                email: values.mail,
-                lang: values.lang.id,
-                synchronized: false,
-              })
-            );
+            const { lang, ...updated } = values;
+            updated.lang = lang.id;
+            updated.synchronized = false;
+            this.store.dispatch(new SetProfile(updated));
             return 'success';
           }
           return 'error';
