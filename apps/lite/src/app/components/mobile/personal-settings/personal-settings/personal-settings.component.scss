@@ -1,0 +1,50 @@
+@import '~@taiga-ui/core/styles/taiga-ui-local';
+
+:host {
+  .space {
+    padding: 0 0.5rem;
+  }
+  //TODO merge with room-config
+  .room-config {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+
+    .back-wrapper {
+      display: flex;
+      padding: 1rem 0;
+      align-items: center;
+      border-radius: var(--tui-radius-l) var(--tui-radius-l) 0 0;
+
+      .title {
+        text-align: center;
+        flex: 1 1 auto;
+      }
+
+      .back-button {
+        background-color: var(--tui-base-05);
+      }
+    }
+
+    .shadow {
+      @include shadow(6);
+    }
+  }
+
+  .content {
+    overflow: auto;
+    height: calc(100% - var(--header-heigth));
+    padding: 0 0.5em;
+  }
+  .personal-settings {
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+  }
+}
+.lang-item {
+  display: grid;
+  width: 100%;
+  align-items: center;
+  grid-template-columns: repeat(3, 1fr);
+}

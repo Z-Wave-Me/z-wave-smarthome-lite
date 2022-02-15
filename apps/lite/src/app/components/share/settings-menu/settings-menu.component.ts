@@ -20,6 +20,7 @@ import {
   faLowVision,
   faSortAlphaDown,
   faTags,
+  faCogs,
 } from '@fortawesome/free-solid-svg-icons';
 import {
   AddFilter,
@@ -69,6 +70,7 @@ export class SettingsMenuComponent {
   readonly faLowVision = faLowVision;
   readonly faTags = faTags;
   readonly faSortAlphaDown = faSortAlphaDown;
+  readonly faSettingCogs = faCogs;
 
   readonly typesAndCount$: Observable<MenuItem[]>;
   readonly tag$: Observable<string | undefined>;

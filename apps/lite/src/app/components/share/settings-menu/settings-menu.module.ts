@@ -21,6 +21,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { TuiSidebarModule } from '@taiga-ui/addon-mobile';
 import { TuiActiveZoneModule } from '@taiga-ui/cdk';
 import { TranslocoModule } from '@ngneat/transloco';
+import { RouterModule } from '@angular/router';
 
 @NgModule({
   declarations: [SettingsMenuComponent],
@@ -43,6 +44,7 @@ import { TranslocoModule } from '@ngneat/transloco';
     TuiPrimitiveTextfieldModule,
     TuiTextfieldControllerModule,
     TuiIslandModule,
+    RouterModule,
   ],
   exports: [SettingsMenuComponent],
 })

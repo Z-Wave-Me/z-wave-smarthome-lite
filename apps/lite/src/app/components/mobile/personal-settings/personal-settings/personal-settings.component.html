@@ -1,0 +1,54 @@
+<ng-container *transloco="let _t">
+  <div class="room-config tui-container_adaptive">
+    <div class="back-wrapper shadow">
+      <div class="title tui-text_body-xl">
+        <tui-line-clamp
+          [content]="_t('settings')"
+          [lineHeight]="26"
+          [linesLimit]="1"
+        ></tui-line-clamp>
+      </div>
+      <tui-badge
+        class="tui-space_right-3 back-button"
+        status="custom"
+        zWaveBackButton
+      >
+        <tui-svg src="tuiIconRemoveLarge"></tui-svg>
+      </tui-badge>
+    </div>
+    <tui-scrollbar [hidden]="true" class="content" tuiOverscroll="scroll">
+      <form [formGroup]="settings" class="personal-settings">
+        <tui-input
+          [tuiTextfieldExampleText]="profile.name ?? ''"
+          formControlName="name"
+        >
+          {{ _t('lb_login') }}
+          <span class="tui-required"></span>
+        </tui-input>
+        <tui-field-error formControlName="name"></tui-field-error>
+        <tui-input
+          [tuiTextfieldExampleText]="profile.email ?? ''"
+          formControlName="mail"
+        >
+          {{ _t('lb_email') }}
+          <span class="tui-required"></span>
+        </tui-input>
+        <tui-field-error formControlName="mail"></tui-field-error>
+        <tui-select formControlName="lang" [valueContent]="langContent">
+          {{ _t('lb_language') }}
+          <tui-data-list-wrapper
+            *tuiDataList
+            [items]="languages"
+            [itemContent]="langContent"
+          ></tui-data-list-wrapper>
+        </tui-select>
+      </form>
+    </tui-scrollbar>
+  </div>
+</ng-container>
+<ng-template #langContent let-item>
+  <div class="lang-item">
+    <span class="lang-name">{{ item.title }}</span>
+    <img [src]="item.img" [alt]="item.name" />
+  </div>
+</ng-template>

@@ -107,6 +107,19 @@
           </ng-template>
         </tui-accordion-item>
       </tui-accordion>
+      <tui-island
+        *ngIf="themeSwitcher"
+        size="m"
+        routerLinkActive
+        routerLink="settings"
+      >
+        <div class="tui-island__content">
+          <div class="tui-island__figure">
+            <fa-icon [icon]="faSettingCogs"></fa-icon>
+          </div>
+          {{ _t('settings') }}
+        </div>
+      </tui-island>
     </div>
   </div>
 </ng-container>

@@ -22,13 +22,6 @@ const routes: Routes = [
         data: { animation: '/elements' },
       },
       {
-        path: 'personal-settings',
-        loadChildren: () =>
-          import(
-            '@components/share/personal-settings/personal-settings.module'
-          ).then(({ PersonalSettingsModule }) => PersonalSettingsModule),
-      },
-      {
         path: 'rooms',
         loadChildren: () =>
           import('@components/share/rooms/rooms.module').then(
@@ -89,6 +82,14 @@ const routes: Routes = [
               ),
           },
         ],
+      },
+      {
+        path: 'settings',
+        component: EmptyLayoutComponent,
+        loadChildren: () =>
+          import(
+            '@components/mobile/personal-settings/personal-settings.module'
+          ).then(({ PersonalSettingsModule }) => PersonalSettingsModule),
       },
     ],
     data: { animation: 'empty' },

@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { PersonalSettingsComponent } from '@components/share/personal-settings/personal-settings/personal-settings.component';
+import { PersonalSettingsComponent } from '@components/mobile/personal-settings/personal-settings/personal-settings.component';
 
 const routes: Routes = [
   {
