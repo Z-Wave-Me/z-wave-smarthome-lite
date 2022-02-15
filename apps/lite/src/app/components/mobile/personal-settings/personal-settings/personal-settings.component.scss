@@ -9,13 +9,6 @@
     display: flex;
     flex-direction: column;
     height: 100%;
-    position: relative;
-    .version {
-      color: var(--tui-text-03);
-      position: absolute;
-      right: 0.7em;
-      bottom: 0.3em;
-    }
     .back-wrapper {
       display: flex;
       padding: 1rem 0;
@@ -45,7 +38,17 @@
   .personal-settings {
     display: flex;
     flex-direction: column;
-    gap: 1em;
+    .settings-item {
+      margin-bottom: 1rem;
+    }
+  }
+  .hidden-device {
+    margin: 0.25rem;
+    background-color: var(--tui-support-15);
+  }
+  .tag-block {
+    flex-wrap: wrap;
+    justify-content: left;
   }
 }
 .lang-item {

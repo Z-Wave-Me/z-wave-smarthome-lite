@@ -12,12 +12,15 @@ import {
 } from '@store/local-storage/local-storage.state';
 import { TranslocoService } from '@ngneat/transloco';
 import { TuiDestroyService } from '@taiga-ui/cdk';
-import { map, takeUntil, tap } from 'rxjs/operators';
+import { map, pluck, switchMap, takeUntil, tap } from 'rxjs/operators';
 import {
   SetProfile,
   UpdateProfile,
 } from '@store/local-storage/local-storage.actions';
 import { environment } from '../../../../../environments/environment';
+import { faMobileAlt } from '@fortawesome/free-solid-svg-icons';
+import { Observable } from 'rxjs';
+import { DevicesState, DevicesStateModel } from '@store/devices/devices.state';
 
 class Lang {
   private static readonly apiUrl = 'assets/img/flags/';
@@ -43,7 +46,9 @@ export class PersonalSettingsComponent implements AfterViewInit {
   settings: FormGroup;
   profile: IProfile;
   languages: Lang[];
+  hiddenDevices$: Observable<{ id: string; title: string }[]>;
   version = environment.version;
+  faMobileAlt = faMobileAlt;
   constructor(
     private readonly formBuilder: FormBuilder,
     private readonly store: Store,
@@ -62,9 +67,21 @@ export class PersonalSettingsComponent implements AfterViewInit {
           (lang) => lang.id === this.translocoService.getActiveLang()
         ),
       ],
-      hideAllSystemEvents: [this.profile.hideSystemEvents],
+      hideSystemEvents: [this.profile.hideSystemEvents],
       hideAllDeviceEvents: [this.profile.hideAllDeviceEvents],
     });
+    this.hiddenDevices$ = this.store.select(LocalStorageState.profile).pipe(
+      pluck('hideSingleDeviceEvents'),
+      map((hideSingleDeviceEvents) =>
+        hideSingleDeviceEvents.map((id) => ({
+          id,
+          title: this.store.selectSnapshot(
+            ({ devices }: { devices: DevicesStateModel }) =>
+              devices.entities[id]?.title
+          ),
+        }))
+      )
+    );
   }
 
   ngAfterViewInit(): void {
@@ -83,5 +100,16 @@ export class PersonalSettingsComponent implements AfterViewInit {
         })
       )
       .subscribe();
+  }
+
+  excludeFromHidden(removeId: string) {
+    this.store.dispatch(
+      new SetProfile({
+        hideSingleDeviceEvents: this.store
+          .selectSnapshot(LocalStorageState.profile)
+          .hideSingleDeviceEvents.filter((id) => id !== removeId),
+        synchronized: false,
+      })
+    );
   }
 }

@@ -12,6 +12,7 @@ import {
   TuiIslandModule,
   TuiLineClampModule,
   TuiSelectModule,
+  TuiTagModule,
   TuiToggleModule,
 } from '@taiga-ui/kit';
 import {
@@ -21,8 +22,9 @@ import {
   TuiTextfieldControllerModule,
 } from '@taiga-ui/core';
 import { BackButtonModule } from '@features/directives/back-button/back-button.module';
-import { TuiOverscrollModule } from '@taiga-ui/cdk';
+import { TuiForModule, TuiOverscrollModule } from '@taiga-ui/cdk';
 import { ReactiveFormsModule } from '@angular/forms';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 @NgModule({
   declarations: [PersonalSettingsComponent],
@@ -45,6 +47,8 @@ import { ReactiveFormsModule } from '@angular/forms';
     TuiDataListWrapperModule,
     TuiIslandModule,
     TuiToggleModule,
+    FontAwesomeModule,
+    TuiTagModule,
   ],
 })
 export class PersonalSettingsModule {}

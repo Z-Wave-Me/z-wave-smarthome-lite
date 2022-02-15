@@ -19,6 +19,7 @@
     <tui-scrollbar [hidden]="true" class="content" tuiOverscroll="scroll">
       <form [formGroup]="settings" class="personal-settings">
         <tui-input
+          class="settings-item"
           [tuiTextfieldExampleText]="profile.name ?? ''"
           formControlName="name"
         >
@@ -29,12 +30,17 @@
         <tui-input
           [tuiTextfieldExampleText]="profile.email ?? ''"
           formControlName="email"
+          class="settings-item"
         >
           {{ _t('lb_email') }}
           <span class="tui-required"></span>
         </tui-input>
         <tui-field-error formControlName="email"></tui-field-error>
-        <tui-select formControlName="lang" [valueContent]="langContent">
+        <tui-select
+          formControlName="lang"
+          [valueContent]="langContent"
+          class="settings-item"
+        >
           {{ _t('lb_language') }}
           <tui-data-list-wrapper
             *tuiDataList
@@ -43,7 +49,7 @@
           ></tui-data-list-wrapper>
         </tui-select>
 
-        <tui-island size="m">
+        <tui-island size="m" class="settings-item">
           <div class="tui-island__content">
             <div class="tui-island__figure">
               <tui-toggle
@@ -55,11 +61,11 @@
             {{ _t('lb_hide_device_events') }}
           </div>
         </tui-island>
-        <tui-island size="m">
+        <tui-island size="m" class="settings-item">
           <div class="tui-island__content">
             <div class="tui-island__figure">
               <tui-toggle
-                formControlName="hideAllSystemEvents"
+                formControlName="hideSystemEvents"
                 size="m"
                 style="align-self: center"
               ></tui-toggle>
@@ -67,9 +73,39 @@
             {{ _t('lb_hide_system_events') }}
           </div>
         </tui-island>
+        <ng-container *ngIf="hiddenDevices$ | async as hiddenDevices">
+          <tui-island
+            size="m"
+            class="settings-item"
+            *ngIf="hiddenDevices.length"
+          >
+            <div class="tui-island__header">
+              {{ _t('lb_hidden_events_device') }}
+            </div>
+            <div class="tui-island__content tag-block">
+              <tui-tag
+                *ngFor="let device of hiddenDevices"
+                size="l"
+                status="custom"
+                class="tag hidden-device"
+                [hoverable]="true"
+                [value]="device.title || ''"
+                [removable]="true"
+                (edited)="excludeFromHidden(device.id)"
+              ></tui-tag>
+            </div>
+          </tui-island>
+        </ng-container>
+        <tui-island size="m" class="settings-item">
+          <div class="tui-island__content">
+            <span>
+              <fa-icon [icon]="faMobileAlt" class="tui-space_right-2"></fa-icon>
+              {{ _t('version') }}: {{ version }}
+            </span>
+          </div>
+        </tui-island>
       </form>
     </tui-scrollbar>
-    <span class="version">{{ _t('version') }}: {{ version }}</span>
   </div>
 </ng-container>
 
