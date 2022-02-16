@@ -21,3 +21,8 @@ export class NightMode {
   static readonly type = '[LocalStorage] Change Theme';
   constructor(public nightMode: boolean) {}
 }
+
+export class SetUser {
+  static readonly type = '[LocalStorage] Set User';
+  constructor(public profile: IProfile) {}
+}

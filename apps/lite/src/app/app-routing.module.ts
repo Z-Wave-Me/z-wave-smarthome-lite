@@ -1,8 +1,10 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { EmptyLayoutComponent } from './layouts/empty-layout/empty-layout.component';
-import { AuthGuard } from '@core/services/auth/auth.guard';
+import { AuthGuard } from '@core/guards/auth/auth.guard';
 import { LoginComponent } from '@components/share/login/login.component';
+import { FirstAccessModule } from '@components/share/first-access/first-access.module';
+import { FirstAccessGuard } from '@core/guards/first-access/first-access.guard';
 
 const isMobile = true;
 const routes: Routes = [
@@ -15,6 +17,14 @@ const routes: Routes = [
         component: LoginComponent,
       },
     ],
+    canActivate: [FirstAccessGuard],
+  },
+  {
+    path: 'firstAccess',
+    loadChildren: () =>
+      import('./components/share/first-access/first-access.module').then(
+        ({ FirstAccessModule }) => FirstAccessModule
+      ),
   },
   {
     path: '',
@@ -30,7 +40,6 @@ const routes: Routes = [
     },
     canActivate: [AuthGuard],
   },
-
   { path: '**', redirectTo: '' },
 ];
 

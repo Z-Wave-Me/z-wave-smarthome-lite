@@ -23,15 +23,15 @@ export class ApiInterceptor implements HttpInterceptor {
     next: HttpHandler
   ): Observable<HttpEvent<unknown>> {
     // let errorsCount = 0;
-    const token = this.store.selectSnapshot(LocalStorageState.token);
-    // this.store.selectSnapshot<string>(AuthState.token);
-    if (token) {
-      request = request.clone({
-        setHeaders: {
-          ZWAYSession: token,
-        },
-      });
-    }
+    // const token = this.store.selectSnapshot(LocalStorageState.token);
+    // // this.store.selectSnapshot<string>(AuthState.token);
+    // if (token) {
+    //   request = request.clone({
+    //     setHeaders: {
+    //       ZWAYSession: token,
+    //     },
+    //   });
+    // }
 
     // console.log(request);
     return next.handle(request).pipe(

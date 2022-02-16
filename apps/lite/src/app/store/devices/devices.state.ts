@@ -27,6 +27,7 @@ import { concat, EMPTY, of } from 'rxjs';
 import { ServerTime } from '@store/locals/locals.actions';
 import { ApiService } from '@core/services/api/api.service';
 import { Device, OrderByLocations } from '@store/devices/deviceInterface';
+import { LocalStorageState } from '@store/local-storage/local-storage.state';
 
 const orderFactory =
   (order: Order, place: OrderByLocations, decs: boolean = false) =>
@@ -294,8 +295,8 @@ export class DevicesState {
     const entities: { [index: string]: Device } = {};
     let locationChanges = false;
     const dashboard = this.store.selectSnapshot(
-      (state) => state.localStorage.dashboard
-    );
+      LocalStorageState.profile
+    ).dashboard;
     let tagsList = new Set<string>();
     let serverTime = 0;
     devices.map((device: Device) => {

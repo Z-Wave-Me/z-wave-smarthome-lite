@@ -27,7 +27,7 @@ export class ApiService {
     enable_smart_start: 'JS/Run/zway.SmartStartEnable()', // enable SmartStart
     factory_default: '/ZAutomation/api/v1/resetToFactoryDefault',
     firmwareupdate: '/ZAutomation/api/v1/system/webif-access',
-    firstaccess: '/ZAutomation/api/v1/system/first-access',
+    firstAccess: '/ZAutomation/api/v1/system/first-access',
     get_dsk: '/ZWaveAPI/GetDSKCollection', // Get DSK collection
     get_dsk_provisioning_list: '/ZWaveAPI/GetDSKProvisioningList', // Show ProvisioningList (includes only DSKs)
     get_pulse_trains: 'RF433API/GetPulseTrains',
