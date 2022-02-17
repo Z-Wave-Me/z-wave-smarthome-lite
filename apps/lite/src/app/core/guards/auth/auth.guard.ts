@@ -28,15 +28,15 @@ export class AuthGuard implements CanActivate {
     private readonly apiService: ApiService
   ) {}
 
-  canActivate(): Observable<boolean> {
-    console.log('call AuthGuard');
+  canActivate(): Observable<boolean | UrlTree> {
     return this.apiService.send<ZWayResponse<IProfile> | null>('session').pipe(
       map((response) => {
         if (response?.data.id) {
           this.store.dispatch(new SetUser(response.data));
+          return true;
         }
-      }),
-      mapTo(true)
+        return this.router.createUrlTree(['/firstAccess']);
+      })
     );
     // return this.store.select(LocalStorageState.token).pipe(
     //   mapTo(true)

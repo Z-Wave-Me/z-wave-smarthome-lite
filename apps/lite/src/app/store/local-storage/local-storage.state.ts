@@ -20,6 +20,7 @@ import {
   Logout,
   NightMode,
   SetProfile,
+  SetServerInfo,
   SetUser,
   UpdateProfile,
 } from '@store/local-storage/local-storage.actions';
@@ -58,8 +59,8 @@ export interface IProfile {
 export class LocalStorageStateModel {
   profiles!: { [id: number]: IProfile };
   id!: number;
-  remoteId?: number;
-  ipAddress?: string;
+  remoteId!: number;
+  ipAddress!: string;
   token?: string;
   // uuid: "3c879de0-846b-4195-490d-ae1ad8c08790"
 }
@@ -67,6 +68,8 @@ export class LocalStorageStateModel {
 const defaults: LocalStorageStateModel = {
   profiles: {},
   id: 0,
+  remoteId: -1,
+  ipAddress: '',
 };
 
 @State<LocalStorageStateModel>({
@@ -321,5 +324,12 @@ export class LocalStorageState {
         new SetProfile(LocalStorageState.profileAdapter(profile))
       );
     }
+  }
+  @Action(SetServerInfo)
+  setServerInfo(
+    { patchState }: StateContext<LocalStorageStateModel>,
+    { remoteId, ipAddress }: SetServerInfo
+  ) {
+    patchState({ remoteId, ipAddress });
   }
 }

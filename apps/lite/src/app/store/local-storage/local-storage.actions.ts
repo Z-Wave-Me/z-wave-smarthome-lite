@@ -26,3 +26,8 @@ export class SetUser {
   static readonly type = '[LocalStorage] Set User';
   constructor(public profile: IProfile) {}
 }
+
+export class SetServerInfo {
+  static readonly type = '[LocalStorage] Set Server Info';
+  constructor(public remoteId: number, public ipAddress: string) {}
+}
