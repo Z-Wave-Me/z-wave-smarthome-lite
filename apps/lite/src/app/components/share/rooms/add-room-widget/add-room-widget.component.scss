@@ -6,8 +6,8 @@
   .widget {
     margin: 0.3rem;
     @include shadow(1);
-    height: 166px;
-    @include element-border(rebeccapurple);
+    @include element-border(lightseagreen);
+    aspect-ratio: 1.85;
     align-items: center;
     display: flex;
     justify-content: center;
@@ -16,7 +16,7 @@
       align-items: center;
     }
     .icon {
-      color: var(--tui-success-fill);
+      color: var(--tui-primary);
     }
   }
 }

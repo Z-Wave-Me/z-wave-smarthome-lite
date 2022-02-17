@@ -8,7 +8,7 @@
     class="tui-space_right-2"
     *ngIf="locationType() === 'local'"
     [ngStyle]="{
-      color: data.online ? 'var(--tui-success-fill)' : 'var(--tui-error-fill)'
+      color: data.online ? 'var(--tui-primary)' : 'var(--tui-error-fill)'
     }"
   >
   </fa-icon>
@@ -16,7 +16,7 @@
     [icon]="faGlobeEurope"
     *ngIf="locationType() === 'remote'"
     [ngStyle]="{
-      color: data.online ? 'var(--tui-success-fill)' : 'var(--tui-error-fill)'
+      color: data.online ? 'var(--tui-primary)' : 'var(--tui-error-fill)'
     }"
   ></fa-icon>
   <span [ngClass]="{ pause: !data.online }">
