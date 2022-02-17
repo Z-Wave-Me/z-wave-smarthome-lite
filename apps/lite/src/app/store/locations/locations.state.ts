@@ -57,7 +57,7 @@ export class LocationsState {
             location.title = 'Global';
             // this.translocoService.translate('globalRoom');
             // console.log(location.title);
-            location.imgSrc = './assets/img/rooms/unassigned.png';
+            location.imgSrc = './assets/img/rooms/unassigned.jpg';
           } else if (location.img_type === 'default' && location.default_img) {
             location.imgSrc = './assets/img/rooms/' + location.default_img;
           } else if (location.img_type === 'user' && location.user_img) {
