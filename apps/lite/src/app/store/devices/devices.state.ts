@@ -252,7 +252,7 @@ export class DevicesState {
     } else {
       const old = getState().entities[device.id];
       const updated = [
-        { ...old, ...device, metrics: { ...old.metrics, ...device?.metrics } },
+        { ...old, ...device, metrics: { ...old?.metrics, ...device?.metrics } },
       ];
       this.store.dispatch(new UpdateDevices(updated));
       if (serverUpdate) {
@@ -294,9 +294,8 @@ export class DevicesState {
     const ids: string[] = [];
     const entities: { [index: string]: Device } = {};
     let locationChanges = false;
-    const dashboard = this.store.selectSnapshot(
-      LocalStorageState.profile
-    ).dashboard;
+    const dashboard =
+      this.store.selectSnapshot(LocalStorageState.profile)?.dashboard ?? [];
     let tagsList = new Set<string>();
     let serverTime = 0;
     devices.map((device: Device) => {
@@ -314,7 +313,7 @@ export class DevicesState {
         showNotification: !device.hasHistory, // TODO something wrong here
         hideEvents: device.hide_events,
       };
-      if (device.tags.length) {
+      if (device.tags?.length) {
         tagsList = new Set<string>([...tagsList, ...device.tags]);
       }
       if (!locationChanges) {

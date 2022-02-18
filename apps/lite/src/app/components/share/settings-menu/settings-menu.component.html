@@ -6,7 +6,12 @@
   >
     <fa-icon [icon]="faCogs" size="lg"></fa-icon>
     <div *tuiSidebar="open; direction: 'left'">
-      <tui-island *ngIf="themeSwitcher" size="m">
+      <tui-island
+        *ngIf="themeSwitcher"
+        size="m"
+        class="settings-item"
+        (click)="themeSwitcher.setValue(!themeSwitcher.value)"
+      >
         <div class="tui-island__content">
           <div class="tui-island__figure">
             <tui-toggle
@@ -15,7 +20,7 @@
               style="align-self: center"
             ></tui-toggle>
           </div>
-          <div class="nav-item">
+          <div>
             {{ _t('night_mode') }}
           </div>
         </div>
@@ -55,12 +60,10 @@
           borders="top-bottom"
         >
           <div [ngClass]="{ active: filter.active }">
-            <fa-layers [fixedWidth]="true">
-              <!--          TODO [filter.active ? 'fas' : 'fal', 'filter']-->
-              <fa-icon
-                [icon]="[filter.active ? 'fas' : 'fas', 'filter']"
-              ></fa-icon>
-            </fa-layers>
+            <!--          TODO [filter.active ? 'fas' : 'fal', 'filter']-->
+            <fa-icon
+              [icon]="[filter.active ? 'fas' : 'fas', 'filter']"
+            ></fa-icon>
             <span *ngIf="filter.active"> {{ _t('filtered') }}</span>
             <span *ngIf="!filter.active"> {{ _t('all_elements') }}</span>
             <span class="btn-name item-cnt">
@@ -94,7 +97,7 @@
           borders="top-bottom"
         >
           <fa-icon [icon]="faSortAlphaDown"></fa-icon>
-          {{ _t(currentOrder) }}
+          <span> {{ _t(currentOrder) }}</span>
           <ng-template tuiAccordionItemContent>
             <div
               (click)="setOrder(order.value, order.key)"
@@ -112,12 +115,12 @@
         size="m"
         routerLinkActive
         routerLink="settings"
+        class="settings-item"
       >
         <div class="tui-island__content">
-          <div class="tui-island__figure">
-            <fa-icon [icon]="faSettingCogs"></fa-icon>
-          </div>
-          {{ _t('settings') }}
+          <span>
+            <fa-icon [icon]="faSettingCogs"></fa-icon> {{ _t('settings') }}
+          </span>
         </div>
       </tui-island>
     </div>

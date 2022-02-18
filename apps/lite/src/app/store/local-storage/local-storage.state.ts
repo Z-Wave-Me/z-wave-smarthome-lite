@@ -59,7 +59,7 @@ export interface IProfile {
 export class LocalStorageStateModel {
   profiles!: { [id: number]: IProfile };
   id!: number;
-  remoteId!: number;
+  remoteId?: number;
   ipAddress!: string;
   token?: string;
   // uuid: "3c879de0-846b-4195-490d-ae1ad8c08790"
@@ -68,7 +68,6 @@ export class LocalStorageStateModel {
 const defaults: LocalStorageStateModel = {
   profiles: {},
   id: 0,
-  remoteId: -1,
   ipAddress: '',
 };
 
@@ -82,7 +81,10 @@ export class LocalStorageState {
   static profiles({ profiles }: LocalStorageStateModel) {
     return Object.values(profiles);
   }
-
+  @Selector()
+  static serverInfo({ remoteId, ipAddress }: LocalStorageStateModel) {
+    return { remoteId, ipAddress };
+  }
   @Selector()
   static profile(state: LocalStorageStateModel): IProfile {
     const {

@@ -1,10 +1,17 @@
 import { NgDompurifySanitizer } from '@tinkoff/ng-dompurify';
 import {
   TUI_SANITIZER,
+  TuiButtonModule,
   TuiDialogModule,
+  TuiErrorModule,
+  TuiExpandModule,
+  TuiHintControllerModule,
   TuiModeModule,
+  TuiNotificationModule,
   TuiNotificationsModule,
   TuiRootModule,
+  TuiScrollbarModule,
+  TuiTextfieldControllerModule,
   TuiThemeNightModule,
 } from '@taiga-ui/core';
 import { BrowserModule, HammerModule } from '@angular/platform-browser';
@@ -35,7 +42,18 @@ import { WebsocketModule } from '@core/services/websocket/websocket.module';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { LoginComponent } from '@components/share/login/login.component';
 import { APP_BASE_HREF } from '@angular/common';
-
+import { ReactiveFormsModule } from '@angular/forms';
+import {
+  TuiFieldErrorModule,
+  TuiInputModule,
+  TuiInputPasswordModule,
+} from '@taiga-ui/kit';
+import {
+  TuiLetModule,
+  TuiOverscrollModule,
+  TuiValidatorModule,
+} from '@taiga-ui/cdk';
+import { TuiFilterByInputPipeModule } from '@taiga-ui/kit';
 export const initApp = (configurationService: ConfigService) => () =>
   configurationService.load().toPromise();
 
@@ -48,9 +66,9 @@ export const initApp = (configurationService: ConfigService) => () =>
     NgxsModule.forRoot(states, {
       developmentMode: !environment.production,
     }),
-    NgxsStoragePluginModule.forRoot({
-      key: [LocalStorageState],
-    }),
+    // NgxsStoragePluginModule.forRoot({
+    //   key: [LocalStorageState],
+    // }),
     environment.production
       ? []
       : [
@@ -81,6 +99,21 @@ export const initApp = (configurationService: ConfigService) => () =>
     TuiThemeNightModule,
     TuiModeModule,
     TuiDialogModule,
+    ReactiveFormsModule,
+    TuiInputModule,
+    TuiTextfieldControllerModule,
+    TuiHintControllerModule,
+    TuiFieldErrorModule,
+    TuiInputPasswordModule,
+    TuiLetModule,
+    TuiNotificationModule,
+    TuiScrollbarModule,
+    TuiOverscrollModule,
+    TuiExpandModule,
+    TuiValidatorModule,
+    TuiButtonModule,
+    TuiErrorModule,
+    TuiFilterByInputPipeModule,
   ],
   providers: [
     { provide: 'Window', useValue: window },

@@ -26,6 +26,7 @@ export class AlreadyAuthorizedGuard implements CanActivate {
     private readonly router: Router
   ) {}
   canActivate() {
+    return true;
     return this.apiService.send<ZWayResponse<IProfile> | null>('session').pipe(
       map((response) => {
         if (response?.data.id) {

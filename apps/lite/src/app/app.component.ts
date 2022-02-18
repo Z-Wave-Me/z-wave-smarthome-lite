@@ -38,7 +38,7 @@ export class AppComponent implements OnInit, OnDestroy {
     this.lang$
       .pipe(
         takeUntil(destroyService$),
-        tap((lang) => translocoService.setActiveLang(lang))
+        tap((lang) => translocoService.setActiveLang(lang ?? 'en'))
       )
       .subscribe();
   }

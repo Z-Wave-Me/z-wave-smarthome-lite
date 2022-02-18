@@ -1,10 +1,87 @@
-<label>
-  Login
-  <input type="text" #login />
-</label>
-<label>
-  Pass
-  <input type="text" #pass />
-</label>
-<button (click)="getData(login.value, pass.value)">Login</button>
-<p>login works!</p>
+<!--<label>-->
+<!--  Login-->
+<!--  <input type="text" #login />-->
+<!--</label>-->
+<!--<label>-->
+<!--  Pass-->
+<!--  <input type="text" #pass />-->
+<!--</label>-->
+<!--<button (click)="getData(login.value, pass.value)">Login</button>-->
+<!--<p>login works!</p>-->
+<ng-container *transloco="let _t">
+  <tui-scrollbar [hidden]="true" tuiOverscroll="scroll">
+    <form [formGroup]="loginForm" *tuiLet="serverInfo$ | async as serverInfo">
+      <div class="login-form">
+        <div class="tui-col_12">
+          <h3 class="tui-form__header">
+            <img src="assets/img/logo/logo-removebg.png" alt="" class="logo" />
+          </h3>
+          <h3 class="tui-form__header">
+            {{ _t('welcome_1') }} {{ serverInfo?.remoteId }}
+          </h3>
+          <div class="tui-form__row">
+            <tui-input formControlName="login">
+              {{ _t('lb_login') }}
+              <span class="tui-required"></span>
+            </tui-input>
+            <tui-field-error formControlName="login"></tui-field-error>
+          </div>
+          <div class="tui-form__row">
+            <tui-input-password formControlName="password">
+              {{ _t('lb_password') }}
+              <span class="tui-required"></span>
+            </tui-input-password>
+            <tui-field-error formControlName="password"></tui-field-error>
+          </div>
+          <div class="tui-form__row">
+            <tui-notification>
+              {{ _t('local_ip_address') }}
+              {{ serverInfo?.ipAddress }}
+            </tui-notification>
+          </div>
+          <div class="tui-form__row">
+            <div (click)="expanded = !expanded">
+              <tui-notification>
+                {{ _t('password_forgot') }}
+              </tui-notification>
+            </div>
+            <tui-expand [expanded]="expanded">
+              <ng-template tuiExpandContent>
+                <p>{{ _t('password_forgot_info') }}</p>
+                <tui-input formControlName="mail">
+                  {{ _t('lb_email') }}
+                  <span class="tui-required"></span>
+                </tui-input>
+                <tui-error
+                  formControlName="mail"
+                  [error]="[] | tuiFieldError | async"
+                ></tui-error>
+                <div class="tui-form__buttons tui-form__buttons_align_end">
+                  <button
+                    tuiButton
+                    appearance="flat"
+                    size="l"
+                    (click)="expanded = !expanded"
+                  >
+                    {{ _t('lb_cancel') }}
+                  </button>
+                  <button tuiButton size="l">
+                    {{ _t('lb_submit') }}
+                  </button>
+                </div>
+              </ng-template>
+            </tui-expand>
+          </div>
+          <div
+            class="tui-form__buttons tui-form__buttons_align_end"
+            *ngIf="!expanded"
+          >
+            <button tuiButton size="l">
+              {{ _t('lb_login') }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </tui-scrollbar>
+</ng-container>
