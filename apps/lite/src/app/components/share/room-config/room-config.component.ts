@@ -9,12 +9,12 @@ import { Location } from '@store/locations/location';
 import { FormGroup } from '@angular/forms';
 import { TranslocoService } from '@ngneat/transloco';
 import { DevicesStateModel } from '@store/devices/devices.state';
-import { faTrash } from '@fortawesome/pro-light-svg-icons';
+import { faTrashAlt as faTrash } from '@fortawesome/free-regular-svg-icons';
 import {
   faCheckCircle,
   faCircle,
-  faLayerPlus,
-} from '@fortawesome/pro-regular-svg-icons';
+  faPlusSquare as faLayerPlus,
+} from '@fortawesome/free-regular-svg-icons';
 import { TuiInputComponent } from '@taiga-ui/kit';
 import {
   ChangeLocation,

@@ -2,9 +2,13 @@ import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
 import { Select, Store } from '@ngxs/store';
 import { LocalsState } from '@store/locals/locals.state';
 import { Observable } from 'rxjs';
-import { remoteHosts } from '../../../../components-old/header/config';
 import { DOCUMENT } from '@angular/common';
-import { faHome, faGlobeEurope } from '@fortawesome/pro-duotone-svg-icons';
+// import { faHome, faGlobeEurope } from '@fortawesome/pro-duotone-svg-icons';
+import {
+  faBell as faHome,
+  faAngry as faGlobeEurope,
+} from '@fortawesome/free-regular-svg-icons';
+import { remoteHosts } from '@components/share/server-status-widget/sever-status-widget/config';
 
 @Component({
   selector: 'z-wave-sever-status-widget',

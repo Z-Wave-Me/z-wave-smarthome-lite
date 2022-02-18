@@ -4,7 +4,7 @@ import {
   HostListener,
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { faPlus } from '@fortawesome/pro-regular-svg-icons';
+import { faStar as faPlus } from '@fortawesome/free-regular-svg-icons';
 import { Store } from '@ngxs/store';
 import {
   distinctUntilChanged,

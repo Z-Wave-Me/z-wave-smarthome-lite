@@ -7,7 +7,8 @@ import {
 import { Observable, switchMap } from 'rxjs';
 import { Store } from '@ngxs/store';
 import { Location } from '@store/locations/location';
-import { faSort } from '@fortawesome/pro-light-svg-icons';
+// import { faSort } from '@fortawesome/pro-light-svg-icons';
+import { faStar as faSort } from '@fortawesome/free-regular-svg-icons';
 import { ActivatedRoute, Router } from '@angular/router';
 import { first, map } from 'rxjs/operators';
 

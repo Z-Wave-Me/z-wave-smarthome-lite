@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { faMicrochip } from '@fortawesome/pro-light-svg-icons';
+import { faAccusoft as faMicrochip } from '@fortawesome/free-brands-svg-icons';
 
 @Component({
   selector: 'z-wave-expand-settings',
