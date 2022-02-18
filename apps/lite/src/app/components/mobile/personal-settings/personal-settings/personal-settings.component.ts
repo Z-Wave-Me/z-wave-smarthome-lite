@@ -20,7 +20,7 @@ import {
 import { environment } from '../../../../../environments/environment';
 import { faMobileAlt } from '@fortawesome/free-solid-svg-icons';
 import { Observable } from 'rxjs';
-import { DevicesState, DevicesStateModel } from '@store/devices/devices.state';
+import { DevicesStateModel } from '@store/devices/devices.state';
 
 class Lang {
   private static readonly apiUrl = 'assets/img/flags/';

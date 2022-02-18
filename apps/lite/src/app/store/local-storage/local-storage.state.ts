@@ -259,7 +259,6 @@ export class LocalStorageState {
     return this.apiService.send<any>('profiles', { command: id }).pipe(
       map((profile) => ({ ...profile.data })),
       tap((profile) => {
-        console.warn('PROFILE', profile);
         this.store.dispatch(
           new SetProfile(LocalStorageState.profileAdapter(profile))
         );
@@ -272,15 +271,14 @@ export class LocalStorageState {
     { setState, getState }: StateContext<LocalStorageStateModel>,
     { profile }: SetProfile // sid: "53d2a6cf-a94b-33c8-d462-fb5b1a249da5" // uuid: "3c879de0-846b-4195-490d-ae1ad8c08790"
   ) {
-    console.log('HERE', profile.id);
     const id = profile.id ?? getState().id;
     if (!id) return;
-    const currentDashboard = getState().profiles[id]?.dashboard ?? [];
+    const profiles = { ...getState().profiles } ?? {};
+    const currentDashboard = profiles?.[id]?.dashboard ?? [];
+    profiles[id] = { ...(profiles[id] ?? {}), ...profile };
     setState(
       patch({
-        profiles: patch({
-          [id]: patch({ ...getState().profiles[id], ...profile }),
-        }),
+        profiles: profiles,
         lang: id === getState().id ? profile.lang ?? getState().lang : 'en',
       })
     );

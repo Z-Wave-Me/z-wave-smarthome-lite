@@ -78,7 +78,7 @@ const eventsFactory = (serverStreamService: ServerStreamService) => {
   ],
 })
 export class MobileLayoutModule {
-  constructor(
-    @Inject(SERVER_SYNCHRONIZATION) serverSynchronization: string[]
-  ) {}
+  constructor(@Inject(SERVER_SYNCHRONIZATION) serverSynchronization: string[]) {
+    console.warn('MobileLayoutModule loaded');
+  }
 }

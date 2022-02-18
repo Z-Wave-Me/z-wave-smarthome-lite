@@ -187,7 +187,10 @@ export class LocationsState {
   }
 
   @Action(CreateRoom)
-  createRoom({ title }: CreateRoom) {
+  createRoom(
+    context: StateContext<LocationsStateModel>,
+    { title }: CreateRoom
+  ) {
     const room = {
       id: 0,
       title,
@@ -201,7 +204,7 @@ export class LocationsState {
         method: 'post',
         data: room,
       })
-      .pipe(map((e) => this.store.dispatch(new UpdateLocations2())));
+      .pipe(map(() => this.store.dispatch(new UpdateLocations2())));
   }
   @Action(UpdateLocations2)
   updateLocations2() {

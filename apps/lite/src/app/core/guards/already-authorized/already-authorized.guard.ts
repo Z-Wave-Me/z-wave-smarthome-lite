@@ -4,10 +4,11 @@ import {
   IProfile,
   ZWayResponse,
 } from '@store/local-storage/local-storage.state';
-import { map } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
 import { SetUser } from '@store/local-storage/local-storage.actions';
 import { ApiService } from '@core/services/api/api.service';
 import { Store } from '@ngxs/store';
+import { of } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -22,12 +23,10 @@ export class AlreadyAuthorizedGuard implements CanActivate {
   canActivate() {
     return this.apiService.send<ZWayResponse<IProfile> | null>('session').pipe(
       map((response) => {
-        if (response?.data.id) {
-          this.store.dispatch(new SetUser(response.data));
-          return this.router.createUrlTree(['/dashboard']);
-        }
-        return true;
-      })
+        if (response) this.store.dispatch(new SetUser(response.data));
+        return this.router.createUrlTree(['/dashboard']);
+      }),
+      catchError(() => of(true))
     );
   }
 }

@@ -6,7 +6,6 @@ import { map } from 'rxjs/operators';
 import { ZWayResponse } from '@store/local-storage/local-storage.state';
 import { Store } from '@ngxs/store';
 import { SetServerInfo } from '@store/local-storage/local-storage.actions';
-import { AuthGuard } from '@core/guards/auth/auth.guard';
 
 interface IFirstAccess {
   firstaccess: boolean;
@@ -21,14 +20,13 @@ export class FirstAccessGuard implements CanActivate {
   constructor(
     private readonly apiService: ApiService,
     private readonly store: Store,
-    private readonly router: Router,
-    private readonly authGuard: AuthGuard
+    private readonly router: Router
   ) {}
 
   canActivate(): Observable<boolean | UrlTree> {
     return this.apiService.send<ZWayResponse<IFirstAccess>>('firstAccess').pipe(
       map(({ data }) => {
-        data.firstaccess = true;
+        // data.firstaccess = true;
         this.store.dispatch(new SetServerInfo(data.remote_id, data.ip_address));
         return data.firstaccess ? true : this.router.createUrlTree(['/login']);
       })

@@ -79,9 +79,8 @@ export class AddRoomWidgetComponent {
         .subscribe({
           complete: () => (this.ready = true),
         });
-      this.store.dispatch(
-        new CreateRoom(this.translocoService.translate<string>('newRoom'))
-      );
+      const name = this.translocoService.translate<string>('newRoom');
+      this.store.dispatch(new CreateRoom(name));
     }
   }
 }

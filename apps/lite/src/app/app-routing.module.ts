@@ -40,7 +40,7 @@ const routes: Routes = [
         ({ MainLayoutModule }) => MainLayoutModule
       );
     },
-    canActivate: [AuthGuard],
+    canLoad: [AuthGuard],
   },
   { path: '**', redirectTo: '' },
 ];
