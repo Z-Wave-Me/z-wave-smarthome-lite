@@ -25,8 +25,9 @@ export class ServerSynchronizationService implements OnDestroy {
           (profiles ?? []).filter(({ synchronized }) => !synchronized)
         ),
         filter((profiles) => !!profiles.length),
-        switchMap((profiles: IProfile[]) =>
-          merge(
+        switchMap((profiles: IProfile[]) => {
+          console.warn(profiles);
+          return merge(
             ...profiles.map(({ id, ...profile }) =>
               this.apiService.send('profiles', {
                 command: id,
@@ -49,8 +50,8 @@ export class ServerSynchronizationService implements OnDestroy {
                 },
               })
             )
-          )
-        )
+          );
+        })
       )
       .subscribe();
   }

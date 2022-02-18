@@ -7,13 +7,8 @@ import {
   StateContext,
   Store,
 } from '@ngxs/store';
-import {
-  Pages,
-  ShowOptions,
-  SupportLanguages,
-} from '@modules/interfaces/pages.interfaces';
-import { Observable, of, switchMap } from 'rxjs';
-import { map, mapTo, tap } from 'rxjs/operators';
+import { Pages, ShowOptions } from '@modules/interfaces/pages.interfaces';
+import { map, tap } from 'rxjs/operators';
 import { ApiService } from '@core/services/api/api.service';
 import {
   Login,
@@ -46,13 +41,13 @@ export interface IProfile {
   hideSingleDeviceEvents: string[];
   hideSystemEvents?: boolean;
   interval?: number;
-  login?: string;
+  login: string;
+  role: number;
   name?: string;
   nightMode: boolean;
   rooms?: number[];
   synchronized: boolean;
-  lang: SupportLanguages;
-  role?: number;
+  lang: string;
   showOptions: ShowOptions[];
 }
 
@@ -60,15 +55,16 @@ export class LocalStorageStateModel {
   profiles!: { [id: number]: IProfile };
   id!: number;
   remoteId?: number;
-  ipAddress!: string;
+  ipAddress?: string;
   token?: string;
+  lang!: string;
   // uuid: "3c879de0-846b-4195-490d-ae1ad8c08790"
 }
 
 const defaults: LocalStorageStateModel = {
   profiles: {},
   id: 0,
-  ipAddress: '',
+  lang: 'en',
 };
 
 @State<LocalStorageStateModel>({
@@ -98,10 +94,10 @@ export class LocalStorageState {
       hideSystemEvents,
       interval,
       lang,
-      login,
       name,
-      nightMode,
+      login,
       role,
+      nightMode,
       rooms,
       synchronized,
       showOptions,
@@ -118,9 +114,9 @@ export class LocalStorageState {
       interval,
       lang,
       login,
+      role,
       name,
       nightMode,
-      role,
       rooms,
       synchronized,
       showOptions,
@@ -134,7 +130,7 @@ export class LocalStorageState {
 
   @Selector()
   static lang(state: LocalStorageStateModel): string {
-    return state.profiles[state.id].lang;
+    return state.lang ?? 'en';
   }
 
   @Selector()
@@ -210,23 +206,22 @@ export class LocalStorageState {
   ) {}
 
   @Action(Login)
-  login(
-    { patchState }: StateContext<LocalStorageStateModel>,
-    { payload }: Login
-  ): Observable<any> {
-    return this.apiService.send('login', { data: payload }).pipe(
-      // tap((data) => console.warn(data)),
-      tap({
-        next: ({ data: { sid: token, id } }) => {
-          patchState({ token, id });
-          // patchState({ token, lang, role });
-          this.store.dispatch(new UpdateProfile());
-        },
-        error: ({ statusText }) => {
-          this.alertService.error(statusText);
-        },
-      })
-    );
+  login({ patchState }: StateContext<LocalStorageStateModel>, { id }: Login) {
+    patchState({ id });
+    this.store.dispatch(new UpdateProfile());
+    // return this.apiService.send('login', { data: payload }).pipe(
+    //   // tap((data) => console.warn(data)),
+    //   tap({
+    //     next: ({ data: { sid: token, id } }) => {
+    //       patchState({ token, id });
+    //       // patchState({ token, lang, role });
+    //       this.store.dispatch(new UpdateProfile());
+    //     },
+    //     error: ({ statusText }) => {
+    //       this.alertService.error(statusText);
+    //     },
+    //   })
+    // );
   }
 
   // beta: true
@@ -248,16 +243,14 @@ export class LocalStorageState {
   // uuid: "3c879de0-846b-4195-490d-ae1ad8c08790"
 
   @Action(Logout)
-  logout({
-    setState,
-  }: StateContext<LocalStorageStateModel>): Observable<boolean> {
+  logout({ setState }: StateContext<LocalStorageStateModel>) {
     setState(defaults);
-    return this.apiService.send('logout').pipe(
-      tap(() => {
-        setState(defaults);
-      }),
-      mapTo(true)
-    );
+    // return this.apiService.send('logout').pipe(
+    //   tap(() => {
+    //     setState(defaults);
+    //   }),
+    //   mapTo(true)
+    // );
   }
 
   @Action(UpdateProfile)
@@ -279,12 +272,16 @@ export class LocalStorageState {
     { setState, getState }: StateContext<LocalStorageStateModel>,
     { profile }: SetProfile // sid: "53d2a6cf-a94b-33c8-d462-fb5b1a249da5" // uuid: "3c879de0-846b-4195-490d-ae1ad8c08790"
   ) {
-    const id = profile.id;
+    console.log('HERE', profile.id);
+    const id = profile.id ?? getState().id;
     if (!id) return;
     const currentDashboard = getState().profiles[id]?.dashboard ?? [];
     setState(
       patch({
-        profiles: { ...getState().profiles, [id]: profile },
+        profiles: patch({
+          [id]: patch({ ...getState().profiles[id], ...profile }),
+        }),
+        lang: id === getState().id ? profile.lang ?? getState().lang : 'en',
       })
     );
     const { dashboard } = profile;

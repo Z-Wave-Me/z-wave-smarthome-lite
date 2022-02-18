@@ -1,6 +1,6 @@
 export type Pages = 'dashboard' | 'rooms' | 'notifications' | 'elements';
 export type SupportFilters = 'location' | 'deviceType' | 'dashboard';
-export type SupportLanguages = 'en' | 'ru';
+// export type SupportLanguages = 'en' | 'ru';
 export type OrderDirection = 'asc' | 'desc' | 'custom';
 export type OrderFields = 'title' | 'timeCreation' | 'updateTime';
 

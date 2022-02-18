@@ -45,6 +45,7 @@ import { APP_BASE_HREF } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import {
   TuiFieldErrorModule,
+  TuiFieldErrorPipeModule,
   TuiInputModule,
   TuiInputPasswordModule,
 } from '@taiga-ui/kit';
@@ -66,9 +67,9 @@ export const initApp = (configurationService: ConfigService) => () =>
     NgxsModule.forRoot(states, {
       developmentMode: !environment.production,
     }),
-    // NgxsStoragePluginModule.forRoot({
-    //   key: [LocalStorageState],
-    // }),
+    NgxsStoragePluginModule.forRoot({
+      key: [LocalStorageState],
+    }),
     environment.production
       ? []
       : [
@@ -114,6 +115,7 @@ export const initApp = (configurationService: ConfigService) => () =>
     TuiButtonModule,
     TuiErrorModule,
     TuiFilterByInputPipeModule,
+    TuiFieldErrorPipeModule,
   ],
   providers: [
     { provide: 'Window', useValue: window },

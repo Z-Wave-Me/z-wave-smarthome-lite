@@ -1,12 +1,5 @@
 import { Injectable } from '@angular/core';
-import {
-  ActivatedRouteSnapshot,
-  CanActivate,
-  Router,
-  RouterStateSnapshot,
-  UrlTree,
-} from '@angular/router';
-import { Observable } from 'rxjs';
+import { CanActivate, Router } from '@angular/router';
 import {
   IProfile,
   ZWayResponse,
@@ -25,8 +18,8 @@ export class AlreadyAuthorizedGuard implements CanActivate {
     private readonly store: Store,
     private readonly router: Router
   ) {}
+
   canActivate() {
-    return true;
     return this.apiService.send<ZWayResponse<IProfile> | null>('session').pipe(
       map((response) => {
         if (response?.data.id) {

@@ -2,7 +2,7 @@ import { IProfile } from '@store/local-storage/local-storage.state';
 
 export class Login {
   static readonly type = '[LocalStorage] Login';
-  constructor(public payload: { login: string; password: string }) {}
+  constructor(public id: number) {}
 }
 
 export class Logout {

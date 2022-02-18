@@ -12,7 +12,7 @@ import {
 } from '@store/local-storage/local-storage.state';
 import { TranslocoService } from '@ngneat/transloco';
 import { TuiDestroyService } from '@taiga-ui/cdk';
-import { map, pluck, switchMap, takeUntil, tap } from 'rxjs/operators';
+import { filter, map, pluck, switchMap, takeUntil, tap } from 'rxjs/operators';
 import {
   SetProfile,
   UpdateProfile,
@@ -72,6 +72,7 @@ export class PersonalSettingsComponent implements AfterViewInit {
     });
     this.hiddenDevices$ = this.store.select(LocalStorageState.profile).pipe(
       pluck('hideSingleDeviceEvents'),
+      filter((hideSingleDeviceEvents) => Array.isArray(hideSingleDeviceEvents)),
       map((hideSingleDeviceEvents) =>
         hideSingleDeviceEvents.map((id) => ({
           id,
