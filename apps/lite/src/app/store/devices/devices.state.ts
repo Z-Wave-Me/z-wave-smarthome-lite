@@ -202,13 +202,8 @@ export class DevicesState {
     );
     if (typeof level === 'number') {
       return this.apiService.send('devices', {
-        command: id + '/command/exact',
-        params: [
-          {
-            key: 'level',
-            value: level,
-          },
-        ],
+        command: id + '/command/exact/',
+        params: { level },
       });
     }
     return this.apiService.send('devices', {

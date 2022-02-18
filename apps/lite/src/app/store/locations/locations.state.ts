@@ -138,12 +138,9 @@ export class LocationsState {
     return this.apiService
       .send('locations_image', {
         command: id,
-        params: [
-          {
-            key: 'user_img',
-            value: toDelete,
-          },
-        ],
+        params: {
+          user_img: toDelete,
+        },
         method: 'delete',
       })
       .pipe(
@@ -209,7 +206,7 @@ export class LocationsState {
   @Action(UpdateLocations2)
   updateLocations2() {
     return this.apiService.send<{ data: Location[] }>('locations').pipe(
-      map(({ data: locations }: { data: Location[] }) => {
+      map(({ data: locations }) => {
         this.store.dispatch(new UpdateLocations(locations));
       })
     );

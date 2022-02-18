@@ -1,10 +1,21 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import {
+  HttpClient,
+  HttpParams,
+  HttpParamsOptions,
+} from '@angular/common/http';
 import { Observable } from 'rxjs';
+import * as Buffer from 'buffer';
 
 export interface Payload {
   data?: any;
-  params?: { key: string; value: string | number }[];
+  params?: {
+    [param: string]:
+      | string
+      | number
+      | boolean
+      | ReadonlyArray<string | number | boolean>;
+  };
   command?: string | number;
   method?: 'get' | 'put' | 'post' | 'delete';
 }
@@ -106,27 +117,29 @@ export class ApiService {
 
   constructor(private http: HttpClient) {}
 
-  send<T>(event: string, payload?: Payload): Observable<T> {
+  send<T>(event: string, payload?: Payload) {
     const url = this.apiList[event];
     if (!url) {
       throw new Error('Bad Api event ' + event);
     }
-    // TODO: make it normally
-    const params = payload?.params
-      ? '?' +
-        payload.params.map(({ key, value }) => key + '=' + value).join('&')
-      : '';
+    const params = new HttpParams(payload?.params);
     const command = payload?.command ? '/' + payload.command : '';
     // console.warn(url + command + params, payload?.data, command, params);
     if (payload?.method === 'put') {
-      return this.http.put<T>(url + command + params, payload?.data);
+      return this.http.put<T>(url + command, payload.data, {
+        params,
+      });
     }
     if (payload?.method === 'delete') {
-      return this.http.delete<T>(url + command + params);
+      return this.http.delete<T>(url + command, { params });
     }
     if (payload?.data || payload?.method === 'post') {
-      return this.http.post<T>(url + command + params, payload?.data);
+      return this.http.post<T>(url + command, payload.data, {
+        params,
+      });
     }
-    return this.http.get<T>(url + command + params);
+    return this.http.get<T>(url + command, {
+      params,
+    });
   }
 }

@@ -163,7 +163,7 @@ export class ServerStreamService implements OnDestroy {
         this.store.dispatch(new ServerTime(updateTime));
         params = structureChanged
           ? undefined
-          : { params: [{ key: 'since', value: updateTime }] };
+          : { params: { since: updateTime } };
         console.groupEnd();
       }),
       // finalize(() => console.log('Http UpdateDevices complete')),
