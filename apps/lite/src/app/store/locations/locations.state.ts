@@ -94,7 +94,7 @@ export class LocationsState {
     return this.apiService.send('locations', {
       command: location.id,
       data: location,
-      method: 'put',
+      method: 'PUT',
     });
   }
   private removeLocationFromStore(
@@ -125,7 +125,7 @@ export class LocationsState {
     this.removeLocationFromStore(state, { locationId });
     return this.apiService.send('locations', {
       command: locationId,
-      method: 'delete',
+      method: 'DELETE',
     });
   }
 
@@ -135,26 +135,21 @@ export class LocationsState {
     { id }: { id: number }
   ) {
     const toDelete = getState().entities[id].user_img;
-    return this.apiService
-      .send('locations_image', {
-        command: id,
-        params: {
-          user_img: toDelete,
-        },
-        method: 'delete',
+    this.store.dispatch(
+      new ChangeLocation({
+        ...getState().entities[id],
+        user_img: '',
+        img_type: '',
+        default_img: '',
       })
-      .pipe(
-        tap(() => {
-          this.store.dispatch(
-            new ChangeLocation({
-              ...getState().entities[id],
-              user_img: '',
-              img_type: '',
-              default_img: '',
-            })
-          );
-        })
-      );
+    );
+    return this.apiService.send('locations_image', {
+      command: id,
+      params: {
+        user_img: toDelete,
+      },
+      method: 'DELETE',
+    });
   }
 
   @Action(UploadCustomImg)
@@ -164,23 +159,18 @@ export class LocationsState {
   ) {
     const toUpload = new FormData();
     toUpload.append('files_files', file);
-    return this.apiService
-      .send('upload', {
-        method: 'post',
-        data: toUpload,
+    this.store.dispatch(
+      new ChangeLocation({
+        ...getState().entities[id],
+        user_img: file.name,
+        default_img: '',
+        img_type: 'user',
       })
-      .pipe(
-        tap(() => {
-          this.store.dispatch(
-            new ChangeLocation({
-              ...getState().entities[id],
-              user_img: file.name,
-              default_img: '',
-              img_type: 'user',
-            })
-          );
-        })
-      );
+    );
+    return this.apiService.send('upload', {
+      method: 'POST',
+      data: toUpload,
+    });
   }
 
   @Action(CreateRoom)
@@ -196,12 +186,11 @@ export class LocationsState {
       img_type: 'default',
       main_sensors: [],
     };
-    return this.apiService
-      .send('locations', {
-        method: 'post',
-        data: room,
-      })
-      .pipe(map(() => this.store.dispatch(new UpdateLocations2())));
+    return this.apiService.send('locations', {
+      method: 'POST',
+      data: room,
+    });
+    // .pipe(map(() => this.store.dispatch(new UpdateLocations2())));
   }
   @Action(UpdateLocations2)
   updateLocations2() {

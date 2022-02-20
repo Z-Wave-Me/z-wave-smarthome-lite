@@ -256,7 +256,8 @@ export class LocalStorageState {
   @Action(UpdateProfile)
   updateProfile({ getState }: StateContext<LocalStorageStateModel>) {
     const id = getState().id;
-    return this.apiService.send<any>('profiles', { command: id }).pipe(
+    console.error('  @Action(UpdateProfile)', id);
+    return this.apiService.send<any>('profiles', { command: id }, true).pipe(
       map((profile) => ({ ...profile.data })),
       tap((profile) => {
         this.store.dispatch(

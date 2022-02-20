@@ -1,11 +1,9 @@
 import { Injectable } from '@angular/core';
-import {
-  HttpClient,
-  HttpParams,
-  HttpParamsOptions,
-} from '@angular/common/http';
-import { Observable } from 'rxjs';
-import * as Buffer from 'buffer';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { defer, EMPTY, iif } from 'rxjs';
+import { WebsocketService } from '@core/services/websocket/websocket.service';
+import { HttpEncapsulatedRequest } from '@core/services/ws-api/http-encapsulated-request';
+import { WsMessage } from '@core/services/websocket/websocket.interfaces';
 
 export interface Payload {
   data?: any;
@@ -17,7 +15,7 @@ export interface Payload {
       | ReadonlyArray<string | number | boolean>;
   };
   command?: string | number;
-  method?: 'get' | 'put' | 'post' | 'delete';
+  method?: 'GET' | 'PUT' | 'POST' | 'DELETE';
 }
 
 @Injectable({
@@ -115,31 +113,100 @@ export class ApiService {
     rss_feed: 'https://service.z-wave.me/rssFeed/index.php',
   };
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private readonly websocketService: WebsocketService
+  ) {}
 
-  send<T>(event: string, payload?: Payload) {
+  send<T>(event: string, payload?: Payload, withResponse = false) {
     const url = this.apiList[event];
     if (!url) {
       throw new Error('Bad Api event ' + event);
     }
-    const params = new HttpParams(payload?.params);
+    const params = new HttpParams().appendAll(payload?.params ?? {});
     const command = payload?.command ? '/' + payload.command : '';
+    return iif(
+      () => this.websocketService.isConnectSnapshot(),
+      defer(() =>
+        iif(
+          () => withResponse,
+          defer(() =>
+            this.wsSendWithResponse<T>(
+              url + command + (payload?.params ? '?' + params.toString() : ''),
+              payload?.method,
+              payload?.data
+            )
+          ),
+          defer(() =>
+            this.wsSend(
+              url + command + (payload?.params ? '?' + params.toString() : ''),
+              payload?.method,
+              payload?.data
+            )
+          )
+        )
+      ),
+      defer(() =>
+        this.httpSend<T>(url + command, payload?.method, params, payload?.data)
+      )
+    );
+  }
+
+  private httpSend<T>(
+    url: string,
+    method: 'GET' | 'PUT' | 'POST' | 'DELETE' = 'GET',
+    params: HttpParams,
+    data: any
+  ) {
     // console.warn(url + command + params, payload?.data, command, params);
-    if (payload?.method === 'put') {
-      return this.http.put<T>(url + command, payload.data, {
+    if (method === 'PUT') {
+      return this.http.put<T>(url, data, {
         params,
       });
     }
-    if (payload?.method === 'delete') {
-      return this.http.delete<T>(url + command, { params });
+    if (method === 'DELETE') {
+      return this.http.delete<T>(url, { params });
     }
-    if (payload?.data || payload?.method === 'post') {
-      return this.http.post<T>(url + command, payload.data, {
+    if (data || method === 'POST') {
+      return this.http.post<T>(url, data, {
         params,
       });
     }
-    return this.http.get<T>(url + command, {
+    return this.http.get<T>(url, {
       params,
     });
+  }
+
+  private wsSend(
+    url: string,
+    method: 'GET' | 'PUT' | 'POST' | 'DELETE' = 'GET',
+    body?: any
+  ) {
+    this.websocketService.send('httpEncapsulatedRequest', {
+      url,
+      method,
+      body,
+    });
+    return EMPTY;
+  }
+
+  private wsSendWithResponse<T>(
+    url: string,
+    method: 'GET' | 'PUT' | 'POST' | 'DELETE' = 'GET',
+    body?: never
+  ) {
+    const event = 'testEvent';
+    return this.websocketService.on<T>(
+      event,
+      (): WsMessage<HttpEncapsulatedRequest> => ({
+        event: 'httpEncapsulatedRequest',
+        data: {
+          url,
+          method,
+          body,
+        },
+        responseEvent: event,
+      })
+    );
   }
 }

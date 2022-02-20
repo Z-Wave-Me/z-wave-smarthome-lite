@@ -3,5 +3,5 @@ export interface PayloadInterface {
   params?: { key: string; value: string | number }[];
   command?: string | number;
   responseEvent?: string;
-  method?: 'POST' | 'GET' | 'DELETE' | 'PUT';
+  method?: 'GET' | 'PUT' | 'POST' | 'DELETE';
 }

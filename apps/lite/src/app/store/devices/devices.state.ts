@@ -202,7 +202,7 @@ export class DevicesState {
     );
     if (typeof level === 'number') {
       return this.apiService.send('devices', {
-        command: id + '/command/exact/',
+        command: id + '/command/exact',
         params: { level },
       });
     }
@@ -261,21 +261,25 @@ export class DevicesState {
       console.log('updateServer', devices);
       return concat(
         ...devices.map((device) =>
-          this.apiService.send('devices', {
-            command: device.id,
-            method: 'put',
-            data: {
-              location: device.location ?? 0,
-              metrics: {
-                title: device.title,
-                icon: device.metrics.icon,
-                level: device.metrics.level,
+          this.apiService.send(
+            'devices',
+            {
+              command: device.id,
+              method: 'PUT',
+              data: {
+                location: device.location ?? 0,
+                metrics: {
+                  title: device.title,
+                  icon: device.metrics.icon,
+                  level: device.metrics.level,
+                },
+                permanently_hidden: false,
+                tags: device.tags,
+                visibility: device.visibility ?? !device.hidden,
               },
-              permanently_hidden: false,
-              tags: device.tags,
-              visibility: device.visibility ?? !device.hidden,
             },
-          })
+            true
+          )
         )
       );
     }

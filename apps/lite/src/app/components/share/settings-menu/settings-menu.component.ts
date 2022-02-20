@@ -118,7 +118,7 @@ export class SettingsMenuComponent {
     faIconLibrary.addIcons(falFilter, fasFilter);
     this.tag$ = store.select(({ filter }: FilterStateModel) => filter.tag);
   }
-  // readonly items = ['Edit', 'Download', 'Rename', 'Delete'];
+  // readonly items = ['Edit', 'Download', 'Rename', 'DELETE'];
   toggle(open: boolean) {
     this.open = open;
   }

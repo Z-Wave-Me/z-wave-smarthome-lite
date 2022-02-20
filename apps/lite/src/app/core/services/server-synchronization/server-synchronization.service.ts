@@ -31,7 +31,7 @@ export class ServerSynchronizationService implements OnDestroy {
             ...profiles.map(({ id, ...profile }) =>
               this.apiService.send('profiles', {
                 command: id,
-                method: 'put',
+                method: 'PUT',
                 data: {
                   beta: profile.beta,
                   dashboard: profile.dashboard,

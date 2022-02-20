@@ -22,16 +22,18 @@ export class AuthGuard implements CanLoad {
   ) {}
 
   canLoad(): Observable<boolean | UrlTree> {
-    return this.apiService.send<ZWayResponse<IProfile> | null>('session').pipe(
-      map((response) => {
-        if (response?.data.id) {
-          this.store.dispatch(new SetUser(response.data));
-          return true;
-        }
-        return this.router.createUrlTree(['/firstAccess']);
-      }),
-      catchError(() => of(this.router.createUrlTree(['/firstAccess'])))
-    );
+    return this.apiService
+      .send<ZWayResponse<IProfile>>('session', undefined, true)
+      .pipe(
+        map((response) => {
+          if (response?.data.id) {
+            this.store.dispatch(new SetUser(response.data));
+            return true;
+          }
+          return this.router.createUrlTree(['/firstAccess']);
+        }),
+        catchError(() => of(this.router.createUrlTree(['/firstAccess'])))
+      );
 
     // return this.store.select(LocalStorageState.token).pipe(
     //   mapTo(true)

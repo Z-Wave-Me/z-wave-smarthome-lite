@@ -204,7 +204,7 @@
   "delay": "Delay",
   "delete": "Delete",
   "delete_checked": "Delete checked",
-  "delete_confirm_label": "Are you sure you want to delete __label__?",
+  "delete_confirm_label": "Are you sure you want to delete {{__label__}}?",
   "delete_element": "Delete element",
   "delete_history": "Delete history",
   "delete_no_smartstart_warning": "Device requires to be excluded  manually or reset to factory default in order to leave the Z-Wave Network",

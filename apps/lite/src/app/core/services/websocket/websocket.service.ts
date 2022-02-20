@@ -6,13 +6,22 @@ import {
   WebSocketSubjectConfig,
 } from 'rxjs/webSocket';
 import {
+  BehaviorSubject,
   EMPTY,
   MonoTypeOperatorFunction,
   Observable,
   ReplaySubject,
   startWith,
 } from 'rxjs';
-import { delay, map, retryWhen, share, takeUntil } from 'rxjs/operators';
+import {
+  delay,
+  filter,
+  map,
+  retryWhen,
+  share,
+  takeUntil,
+  tap,
+} from 'rxjs/operators';
 import {
   WebSocketConfig,
   WsMessage,
@@ -26,7 +35,7 @@ export class WebsocketService {
 
   private readonly websocket$: WebSocketSubject<WsMessage<unknown>>;
   private readonly configuration: WebSocketSubjectConfig<WsMessage<unknown>>;
-  private readonly connect$ = new ReplaySubject<boolean>(1);
+  private readonly connect$ = new BehaviorSubject<boolean>(false);
   private RECONNECT_INTERVAL = 3_000;
 
   constructor(@Inject(config) private readonly wsConfig: WebSocketConfig) {
@@ -63,25 +72,29 @@ export class WebsocketService {
           if ((data as { body: string }).body) {
             return JSON.parse((data as { body: string }).body).data as T;
           }
-          // console.log(
-          //   '--------------------------------->' +
-          //     JSON.stringify(data) +
-          //     '<------------------------------------'
-          // );
           return data as T;
+        }),
+        filter((value) => !!value),
+        tap((data) => {
+          console.group('WS SERVICE LOG [ ', event, ' ]');
+          console.log(data);
+          console.groupEnd();
         }),
         this.reconnect(this.RECONNECT_INTERVAL)
       );
   }
 
   send<T>(event: string, data: T): void {
+    console.warn('SENDING', event, data);
     this.websocket$.next({ event, data });
   }
 
   isConnect(): Observable<boolean> {
-    return this.connect$.asObservable().pipe(startWith(false));
+    return this.connect$.asObservable();
   }
-
+  isConnectSnapshot(): boolean {
+    return this.connect$.value;
+  }
   private reconnect<T>(reconnectInterval: number): MonoTypeOperatorFunction<T> {
     return retryWhen((errors) => errors.pipe(delay(reconnectInterval)));
   }

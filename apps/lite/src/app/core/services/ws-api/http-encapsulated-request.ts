@@ -1,5 +1,5 @@
 export interface HttpEncapsulatedRequest {
-  method: 'POST' | 'GET' | 'DELETE' | 'PUT';
+  method: 'GET' | 'PUT' | 'POST' | 'DELETE';
   url: string;
   body?: Record<string, unknown> | string;
 }

@@ -21,12 +21,14 @@ export class AlreadyAuthorizedGuard implements CanActivate {
   ) {}
 
   canActivate() {
-    return this.apiService.send<ZWayResponse<IProfile> | null>('session').pipe(
-      map((response) => {
-        if (response) this.store.dispatch(new SetUser(response.data));
-        return this.router.createUrlTree(['/dashboard']);
-      }),
-      catchError(() => of(true))
-    );
+    return this.apiService
+      .send<ZWayResponse<IProfile>>('session', undefined, true)
+      .pipe(
+        map((response) => {
+          if (response) this.store.dispatch(new SetUser(response.data));
+          return this.router.createUrlTree(['/dashboard']);
+        }),
+        catchError(() => of(true))
+      );
   }
 }

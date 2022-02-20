@@ -192,16 +192,37 @@ export class ServerStreamService implements OnDestroy {
   }
 
   private subscribeProfile() {
-    this.store.dispatch(new UpdateProfile());
-    return this.webSocketService.on<never>('me.z-wave.profile').pipe(
-      takeUntil(this.destroy$),
-      tap((profile) => {
-        console.log(profile);
-        this.store.dispatch(
-          new SetProfile(LocalStorageState.profileAdapter(profile))
-        );
-      })
-    );
+    return this.webSocketService
+      .on<Location[] | Location | number>(
+        'me.z-wave.profile',
+        (): WsMessage<HttpEncapsulatedRequest> => ({
+          event: 'httpEncapsulatedRequest',
+          data: {
+            url:
+              ServerStreamService.baseApiUrl +
+              ServerStreamService.apiList['profiles'],
+            method: 'GET',
+          },
+          responseEvent: 'me.z-wave.profile',
+        })
+      )
+      .pipe(
+        takeUntil(this.destroy$),
+        tap((profile) => {
+          console.log('PROFILE', profile);
+          if (Array.isArray(profile))
+            profile.map((p) =>
+              this.store.dispatch(
+                new SetProfile(LocalStorageState.profileAdapter(p))
+              )
+            );
+          else
+            this.store.dispatch(
+              new SetProfile(LocalStorageState.profileAdapter(profile))
+            );
+        })
+      );
+    // this.store.dispatch(new UpdateProfile());
   }
 
   private subscribeNotifications() {

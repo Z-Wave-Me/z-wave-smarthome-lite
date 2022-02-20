@@ -24,12 +24,18 @@ export class FirstAccessGuard implements CanActivate {
   ) {}
 
   canActivate(): Observable<boolean | UrlTree> {
-    return this.apiService.send<ZWayResponse<IFirstAccess>>('firstAccess').pipe(
-      map(({ data }) => {
-        // data.firstaccess = true;
-        this.store.dispatch(new SetServerInfo(data.remote_id, data.ip_address));
-        return data.firstaccess ? true : this.router.createUrlTree(['/login']);
-      })
-    );
+    return this.apiService
+      .send<ZWayResponse<IFirstAccess>>('firstAccess', undefined, true)
+      .pipe(
+        map(({ data }) => {
+          // data.firstaccess = true;
+          this.store.dispatch(
+            new SetServerInfo(data.remote_id, data.ip_address)
+          );
+          return data.firstaccess
+            ? true
+            : this.router.createUrlTree(['/login']);
+        })
+      );
   }
 }
