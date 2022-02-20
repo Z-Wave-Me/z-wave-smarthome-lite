@@ -7,16 +7,17 @@ import {
   HttpRequest,
   HttpResponse,
 } from '@angular/common/http';
-import { Observable, of } from 'rxjs';
+import { Observable, of, throwError } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 import { Store } from '@ngxs/store';
 import { ServerStatus } from '@store/locals/locals.actions';
 import { LocalStorageState } from '@store/local-storage/local-storage.state';
 import { Logout } from '@store/local-storage/local-storage.actions';
+import { Router } from '@angular/router';
 
 @Injectable()
 export class ApiInterceptor implements HttpInterceptor {
-  constructor(private store: Store) {}
+  constructor(private store: Store, private readonly router: Router) {}
 
   intercept(request: HttpRequest<unknown>, next: HttpHandler) {
     // let errorsCount = 0;
@@ -37,15 +38,16 @@ export class ApiInterceptor implements HttpInterceptor {
           this.store.dispatch(new ServerStatus(true));
           // errorsCount = 0;
         }
+      }),
+      catchError((err) => {
+        console.warn('http error: ', err.status, err.message);
+        if (err.status === 0) {
+          this.store.dispatch(new ServerStatus(false));
+          console.warn('offline');
+        }
+        // if (err.status === 401) return this.router.navigate(['login']);
+        return throwError(err);
       })
-      // catchError((err) => {
-      //   console.warn('http error: ', err.status, err.message);
-      //   if (err.status === 0) {
-      //     this.store.dispatch(new ServerStatus(false));
-      //     console.warn('offline');
-      //   }
-      //   return of(err);
-      // })
       // tap({
       //   next: (event) => {
       //     if (event instanceof HttpResponse) {

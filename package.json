@@ -14,6 +14,7 @@
     "prebuild": "npm --no-git-tag-version version patch",
     "build": "nx build",
     "postbuild": "bash ./tools/scripts/fix-for-mobyle-app.sh",
+    "testbuild": "nx build && npm run postbuild",
     "test": "nx test",
     "doc": "npx compodoc -p tsconfig.doc.json",
     "serveDocs": "compodoc -s"

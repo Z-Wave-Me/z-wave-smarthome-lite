@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@angular/core';
+import { Inject, Injectable, OnDestroy } from '@angular/core';
 import { config } from './websocket.token';
 import {
   webSocket,
@@ -12,6 +12,7 @@ import {
   Observable,
   ReplaySubject,
   startWith,
+  Subscription,
 } from 'rxjs';
 import {
   delay,
@@ -30,9 +31,9 @@ import {
 @Injectable({
   providedIn: 'root',
 })
-export class WebsocketService {
+export class WebsocketService implements OnDestroy {
   private static readonly baseEvent = 'me.z-wave.';
-
+  private subscription?: Subscription;
   private readonly websocket$: WebSocketSubject<WsMessage<unknown>>;
   private readonly configuration: WebSocketSubjectConfig<WsMessage<unknown>>;
   private readonly connect$ = new BehaviorSubject<boolean>(false);
@@ -49,9 +50,6 @@ export class WebsocketService {
       url: this.wsConfig.url,
     };
     this.websocket$ = webSocket<WsMessage<unknown>>(this.configuration);
-    this.on<void>('connectionStatusEvent')
-      // .pipe(takeUntil(this.destroy$))
-      .subscribe();
   }
 
   on<T>(
@@ -75,11 +73,11 @@ export class WebsocketService {
           return data as T;
         }),
         filter((value) => !!value),
-        tap((data) => {
-          console.group('WS SERVICE LOG [ ', event, ' ]');
-          console.log(data);
-          console.groupEnd();
-        }),
+        // tap((data) => {
+        //   console.group('WS SERVICE LOG [ ', event, ' ]');
+        //   console.log(data);
+        //   console.groupEnd();
+        // }),
         this.reconnect(this.RECONNECT_INTERVAL)
       );
   }
@@ -97,5 +95,16 @@ export class WebsocketService {
   }
   private reconnect<T>(reconnectInterval: number): MonoTypeOperatorFunction<T> {
     return retryWhen((errors) => errors.pipe(delay(reconnectInterval)));
+  }
+  connect() {
+    this.subscription = this.on<void>('connectionStatusEvent')
+      // .pipe(takeUntil(this.destroy$))
+      .subscribe();
+  }
+
+  ngOnDestroy(): void {
+    this.subscription?.unsubscribe();
+    this.websocket$.complete();
+    this.connect$.complete();
   }
 }

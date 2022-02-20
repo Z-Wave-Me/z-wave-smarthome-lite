@@ -1,11 +1,15 @@
 import { Injectable } from '@angular/core';
 import { CanActivate, Router, UrlTree } from '@angular/router';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { ApiService } from '@core/services/api/api.service';
-import { map } from 'rxjs/operators';
-import { ZWayResponse } from '@store/local-storage/local-storage.state';
+import { catchError, map } from 'rxjs/operators';
+import {
+  IProfile,
+  ZWayResponse,
+} from '@store/local-storage/local-storage.state';
 import { Store } from '@ngxs/store';
 import { SetServerInfo } from '@store/local-storage/local-storage.actions';
+import { HttpClient } from '@angular/common/http';
 
 interface IFirstAccess {
   firstaccess: boolean;
@@ -20,12 +24,17 @@ export class FirstAccessGuard implements CanActivate {
   constructor(
     private readonly apiService: ApiService,
     private readonly store: Store,
-    private readonly router: Router
+    private readonly router: Router,
+    private readonly httpClient: HttpClient
   ) {}
 
   canActivate(): Observable<boolean | UrlTree> {
-    return this.apiService
-      .send<ZWayResponse<IFirstAccess>>('firstAccess', undefined, true)
+    // return this.apiService
+    //   .send<ZWayResponse<IFirstAccess>>('firstAccess', undefined, true)
+    return this.httpClient
+      .get<ZWayResponse<IFirstAccess>>(
+        '/ZAutomation/api/v1/system/first-access'
+      )
       .pipe(
         map(({ data }) => {
           // data.firstaccess = true;
@@ -35,7 +44,8 @@ export class FirstAccessGuard implements CanActivate {
           return data.firstaccess
             ? true
             : this.router.createUrlTree(['/login']);
-        })
+        }),
+        catchError(() => of(this.router.createUrlTree(['/login'])))
       );
   }
 }

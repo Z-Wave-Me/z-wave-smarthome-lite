@@ -123,6 +123,19 @@
           </span>
         </div>
       </tui-island>
+      <tui-island
+        size="m"
+        class="settings-item"
+        (click)="endSession.callback()"
+        *ngIf="endSession"
+      >
+        <div class="tui-island__content">
+          <span>
+            <fa-icon [icon]="endSession.icon"></fa-icon>
+            {{ _t(endSession.text) }}
+          </span>
+        </div>
+      </tui-island>
     </div>
   </div>
 </ng-container>

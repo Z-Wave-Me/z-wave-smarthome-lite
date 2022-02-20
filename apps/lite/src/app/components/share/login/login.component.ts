@@ -10,6 +10,7 @@ import { ApiService } from '@core/services/api/api.service';
 import { TUI_VALIDATION_ERRORS } from '@taiga-ui/kit';
 import { TuiNotification, TuiNotificationsService } from '@taiga-ui/core';
 import { TranslocoService } from '@ngneat/transloco';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'z-wave-login',
@@ -42,7 +43,8 @@ export class LoginComponent {
     private readonly formBuilder: FormBuilder,
     private readonly apiService: ApiService,
     private readonly notificationsService: TuiNotificationsService,
-    private readonly translocoService: TranslocoService
+    private readonly translocoService: TranslocoService,
+    private readonly httpClient: HttpClient
   ) {
     this.restoreForm = formBuilder.group({
       mail: ['', [Validators.required, Validators.email]],
@@ -61,10 +63,15 @@ export class LoginComponent {
     if (this.loginForm.valid) {
       this.loading = true;
       const { password, login } = this.loginForm.value;
-      this.loginForm.get('password')?.setValue('');
+      // this.httpClient
+      //   .post<{ data: { id: number } }>('/ZAutomation/api/v1/login', {
+      //     password,
+      //     login,
+      //   })
       this.apiService
         .send<{ data: { sid: string; id: number } }>('login', {
           data: { password, login },
+          method: 'POST',
         })
         .pipe(
           first(),
@@ -74,6 +81,7 @@ export class LoginComponent {
           }),
           catchError(() => {
             this.loading = false;
+            this.loginForm.get('password')?.setValue('');
             this.loginForm.get('password')?.setErrors({
               other: this.translocoService.translate('error_load_user'),
             });

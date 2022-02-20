@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
 // import { faUserCog } from '@fortawesome/pro-regular-svg-icons';
 import { faUserCircle as faUserCog } from '@fortawesome/free-regular-svg-icons';
 import { FormBuilder, FormControl } from '@angular/forms';
@@ -6,7 +6,7 @@ import { Select, Store } from '@ngxs/store';
 import { DestroyService } from '@core/services/destroy/destroy.service';
 import { LocalStorageState } from '@store/local-storage/local-storage.state';
 import { map, switchMap, takeUntil, tap } from 'rxjs/operators';
-import { NightMode } from '@store/local-storage/local-storage.actions';
+import { Logout, NightMode } from '@store/local-storage/local-storage.actions';
 import { Observable, of } from 'rxjs';
 import { DevicesState } from '@store/devices/devices.state';
 // import { FilterState } from '@store/filter/filter.state';
@@ -21,6 +21,7 @@ import {
   faSortAlphaDown,
   faTags,
   faCogs,
+  faSignOutAlt,
 } from '@fortawesome/free-solid-svg-icons';
 import {
   AddFilter,
@@ -36,7 +37,11 @@ import {
 } from '@store/filter/filter.state';
 import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import { Router } from '@angular/router';
-
+import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
+import { DeviceDetectorService } from '@core/services/device-detector/device-detector.service';
+import { DOCUMENT, Location } from '@angular/common';
+import { WINDOW } from '@ng-web-apis/common';
+import { faRoute } from '@fortawesome/free-solid-svg-icons';
 export interface MenuItem {
   type: string;
   count: number;
@@ -71,12 +76,17 @@ export class SettingsMenuComponent {
   readonly faTags = faTags;
   readonly faSortAlphaDown = faSortAlphaDown;
   readonly faSettingCogs = faCogs;
-
+  readonly faSignOut = faSignOutAlt;
+  readonly faRouter = faRoute;
   readonly typesAndCount$: Observable<MenuItem[]>;
   readonly tag$: Observable<string | undefined>;
   readonly showFilters$: Observable<boolean>;
   readonly order$: Observable<string>;
-
+  endSession?: {
+    icon: IconDefinition;
+    text: string;
+    callback: () => void;
+  };
   themeSwitcher?: FormControl;
   open = false;
 
@@ -86,7 +96,9 @@ export class SettingsMenuComponent {
     private readonly store: Store,
     private readonly formBuilder: FormBuilder,
     private readonly destroyService$: DestroyService,
-    private readonly router: Router
+    private readonly router: Router,
+    private readonly deviceDetectorService: DeviceDetectorService,
+    @Inject(WINDOW) private readonly window: Window
   ) {
     this.order$ = store.select(
       ({ filter }: FilterStateModel) => filter.orderBy.name
@@ -117,8 +129,11 @@ export class SettingsMenuComponent {
     );
     faIconLibrary.addIcons(falFilter, fasFilter);
     this.tag$ = store.select(({ filter }: FilterStateModel) => filter.tag);
+
+    this.logoutSetup();
   }
   // readonly items = ['Edit', 'Download', 'Rename', 'DELETE'];
+
   toggle(open: boolean) {
     this.open = open;
   }
@@ -155,5 +170,28 @@ export class SettingsMenuComponent {
 
   setOrder(order: [Order, boolean], name: string): void {
     this.store.dispatch(new SetOrder('elements', ...order, name));
+  }
+
+  private logoutSetup() {
+    if (
+      this.deviceDetectorService.isIOS ||
+      this.deviceDetectorService.isAndroid
+    ) {
+      const url =
+        '/htdocs' +
+        (this.deviceDetectorService.isAndroid ? '/android/' : '/ios/') +
+        'index.htm';
+      this.endSession = {
+        icon: this.faRouter,
+        text: 'my_hubs',
+        callback: () => (window.location.href = url),
+      };
+    } else {
+      this.endSession = {
+        icon: faSignOutAlt,
+        callback: () => this.store.dispatch(new Logout()),
+        text: 'nav_logout',
+      };
+    }
   }
 }

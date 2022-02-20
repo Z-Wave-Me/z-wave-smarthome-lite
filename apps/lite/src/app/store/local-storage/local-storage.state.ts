@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import {
   Action,
   createSelector,
@@ -8,7 +8,7 @@ import {
   Store,
 } from '@ngxs/store';
 import { Pages, ShowOptions } from '@modules/interfaces/pages.interfaces';
-import { map, tap } from 'rxjs/operators';
+import { map, mapTo, tap } from 'rxjs/operators';
 import { ApiService } from '@core/services/api/api.service';
 import {
   Login,
@@ -23,6 +23,9 @@ import { TranslocoService } from '@ngneat/transloco';
 import { AlertService } from '@core/services/alert/alert.service';
 import { ChangeDevice } from '@store/devices/devices.actions';
 import { patch } from '@ngxs/store/operators';
+import { HttpClient } from '@angular/common/http';
+import { Router } from '@angular/router';
+import { WINDOW } from '@ng-web-apis/common';
 
 export interface ZWayResponse<T> {
   code: number;
@@ -202,7 +205,8 @@ export class LocalStorageState {
     private readonly apiService: ApiService,
     private readonly translocoService: TranslocoService,
     private readonly store: Store,
-    private readonly alertService: AlertService
+    private readonly httpClient: HttpClient,
+    @Inject(WINDOW) private readonly window: Window
   ) {}
 
   @Action(Login)
@@ -243,28 +247,28 @@ export class LocalStorageState {
   // uuid: "3c879de0-846b-4195-490d-ae1ad8c08790"
 
   @Action(Logout)
-  logout({ setState }: StateContext<LocalStorageStateModel>) {
-    setState(defaults);
-    // return this.apiService.send('logout').pipe(
-    //   tap(() => {
-    //     setState(defaults);
-    //   }),
-    //   mapTo(true)
-    // );
+  logout({ patchState }: StateContext<LocalStorageStateModel>) {
+    return this.httpClient.get('/ZAutomation/api/v1/logout').pipe(
+      tap(() => {
+        patchState({ profiles: {}, id: 0 });
+        this.window.location.reload();
+      })
+    );
   }
 
   @Action(UpdateProfile)
   updateProfile({ getState }: StateContext<LocalStorageStateModel>) {
     const id = getState().id;
-    console.error('  @Action(UpdateProfile)', id);
-    return this.apiService.send<any>('profiles', { command: id }, true).pipe(
-      map((profile) => ({ ...profile.data })),
-      tap((profile) => {
-        this.store.dispatch(
-          new SetProfile(LocalStorageState.profileAdapter(profile))
-        );
-      })
-    );
+    return this.apiService
+      .send<{ data: object }>('profiles', { command: id }, true)
+      .pipe(
+        map((profile) => ({ ...profile.data })),
+        tap((profile) => {
+          this.store.dispatch(
+            new SetProfile(LocalStorageState.profileAdapter(profile))
+          );
+        })
+      );
   }
 
   @Action(SetProfile)
