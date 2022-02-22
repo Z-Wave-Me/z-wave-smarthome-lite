@@ -1,7 +1,7 @@
 <tui-theme-night *ngIf="nightMode$ | async"></tui-theme-night>
 <tui-root
-  class="z-wave-root tui-text_body-m"
   [@routeAnimations]="prepareRoute(outlet)"
+  class="z-wave-root tui-text_body-m"
 >
   <router-outlet #outlet="outlet"></router-outlet>
 </tui-root>

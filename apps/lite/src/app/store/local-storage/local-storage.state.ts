@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import {
   Action,
   createSelector,
@@ -8,7 +8,7 @@ import {
   Store,
 } from '@ngxs/store';
 import { Pages, ShowOptions } from '@modules/interfaces/pages.interfaces';
-import { map, mapTo, tap } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 import { ApiService } from '@core/services/api/api.service';
 import {
   Login,
@@ -20,12 +20,10 @@ import {
   UpdateProfile,
 } from '@store/local-storage/local-storage.actions';
 import { TranslocoService } from '@ngneat/transloco';
-import { AlertService } from '@core/services/alert/alert.service';
-import { ChangeDevice } from '@store/devices/devices.actions';
+import { ChangeDevice, UpdateAllDevices } from '@store/devices/devices.actions';
 import { patch } from '@ngxs/store/operators';
 import { HttpClient } from '@angular/common/http';
-import { Router } from '@angular/router';
-import { WINDOW } from '@ng-web-apis/common';
+import { UpdateAllLocations } from '@store/locations/locations.action';
 
 export interface ZWayResponse<T> {
   code: number;
@@ -44,11 +42,12 @@ export interface IProfile {
   hideSingleDeviceEvents: string[];
   hideSystemEvents?: boolean;
   interval?: number;
-  login: string;
+  // login: string;
   role: number;
   name?: string;
   nightMode: boolean;
   rooms?: number[];
+  devices?: string[];
   synchronized: boolean;
   lang: string;
   showOptions: ShowOptions[];
@@ -61,7 +60,6 @@ export class LocalStorageStateModel {
   ipAddress?: string;
   token?: string;
   lang!: string;
-  // uuid: "3c879de0-846b-4195-490d-ae1ad8c08790"
 }
 
 const defaults: LocalStorageStateModel = {
@@ -76,14 +74,23 @@ const defaults: LocalStorageStateModel = {
 })
 @Injectable()
 export class LocalStorageState {
+  constructor(
+    private readonly apiService: ApiService,
+    private readonly translocoService: TranslocoService,
+    private readonly store: Store,
+    private readonly httpClient: HttpClient
+  ) {}
+
   @Selector()
   static profiles({ profiles }: LocalStorageStateModel) {
     return Object.values(profiles);
   }
+
   @Selector()
   static serverInfo({ remoteId, ipAddress }: LocalStorageStateModel) {
     return { remoteId, ipAddress };
   }
+
   @Selector()
   static profile(state: LocalStorageStateModel): IProfile {
     const {
@@ -98,10 +105,11 @@ export class LocalStorageState {
       interval,
       lang,
       name,
-      login,
+      // login,
       role,
       nightMode,
       rooms,
+      devices,
       synchronized,
       showOptions,
     } = state.profiles[state.id];
@@ -116,11 +124,12 @@ export class LocalStorageState {
       hideSystemEvents,
       interval,
       lang,
-      login,
+      // login,
       role,
       name,
       nightMode,
       rooms,
+      devices,
       synchronized,
       showOptions,
     };
@@ -136,15 +145,15 @@ export class LocalStorageState {
     return state.lang ?? 'en';
   }
 
-  @Selector()
-  static dashboard(state: LocalStorageStateModel): string[] {
-    return state.profiles[state.id].dashboard;
-  }
-
   // @Selector()
   // static token(state: LocalStorageStateModel): string | undefined {
   //   return state.token;
   // }
+
+  @Selector()
+  static dashboard(state: LocalStorageStateModel): string[] {
+    return state.profiles[state.id].dashboard;
+  }
 
   static showOptions(
     place: Pages
@@ -180,6 +189,7 @@ export class LocalStorageState {
     night_mode: nightMode,
     role,
     rooms,
+    devices,
   }: any) {
     return {
       id,
@@ -197,35 +207,15 @@ export class LocalStorageState {
       nightMode,
       role,
       rooms,
+      devices,
       synchronized: true,
     };
   }
-
-  constructor(
-    private readonly apiService: ApiService,
-    private readonly translocoService: TranslocoService,
-    private readonly store: Store,
-    private readonly httpClient: HttpClient,
-    @Inject(WINDOW) private readonly window: Window
-  ) {}
 
   @Action(Login)
   login({ patchState }: StateContext<LocalStorageStateModel>, { id }: Login) {
     patchState({ id });
     this.store.dispatch(new UpdateProfile());
-    // return this.apiService.send('login', { data: payload }).pipe(
-    //   // tap((data) => console.warn(data)),
-    //   tap({
-    //     next: ({ data: { sid: token, id } }) => {
-    //       patchState({ token, id });
-    //       // patchState({ token, lang, role });
-    //       this.store.dispatch(new UpdateProfile());
-    //     },
-    //     error: ({ statusText }) => {
-    //       this.alertService.error(statusText);
-    //     },
-    //   })
-    // );
   }
 
   // beta: true
@@ -251,7 +241,6 @@ export class LocalStorageState {
     return this.httpClient.get('/ZAutomation/api/v1/logout').pipe(
       tap(() => {
         patchState({ profiles: {}, id: 0 });
-        this.window.location.reload();
       })
     );
   }
@@ -279,7 +268,6 @@ export class LocalStorageState {
     const id = profile.id ?? getState().id;
     if (!id) return;
     const profiles = { ...getState().profiles } ?? {};
-    const currentDashboard = profiles?.[id]?.dashboard ?? [];
     profiles[id] = { ...(profiles[id] ?? {}), ...profile };
     setState(
       patch({
@@ -287,14 +275,9 @@ export class LocalStorageState {
         lang: id === getState().id ? profile.lang ?? getState().lang : 'en',
       })
     );
-    const { dashboard } = profile;
-    if (dashboard)
-      dashboard
-        .filter((el: string) => !currentDashboard.includes(el))
-        .concat(currentDashboard.filter((el) => !dashboard.includes(el)))
-        .map((id: string) => {
-          this.store.dispatch(new ChangeDevice({ id }));
-        });
+    if (profile.id === getState().id) {
+      this.updateLocationAndDevices(profiles[id] ?? {}, profile);
+    }
   }
 
   @Action(NightMode)
@@ -313,8 +296,8 @@ export class LocalStorageState {
         }),
       })
     );
-    // patchState({ nightMode, synchronized: false });
   }
+
   @Action(SetUser)
   setUser(
     { patchState }: StateContext<LocalStorageStateModel>,
@@ -327,11 +310,41 @@ export class LocalStorageState {
       );
     }
   }
+
   @Action(SetServerInfo)
   setServerInfo(
     { patchState }: StateContext<LocalStorageStateModel>,
     { remoteId, ipAddress }: SetServerInfo
   ) {
     patchState({ remoteId, ipAddress });
+  }
+
+  private updateLocationAndDevices(
+    storedProfile: IProfile,
+    updatedProfile: Partial<IProfile>
+  ) {
+    const { dashboard = [], rooms = [], devices = [] } = updatedProfile;
+    const {
+      dashboard: currentDashboard = [],
+      rooms: currentRooms = [],
+      devices: currentDevices = [],
+    } = storedProfile;
+    dashboard
+      .filter((el: string) => !currentDashboard.includes(el))
+      .concat(currentDashboard.filter((el) => !dashboard.includes(el)))
+      .map((id: string) => {
+        this.store.dispatch(new ChangeDevice({ id }));
+      });
+    const roomsCount = [...new Set([...currentRooms, ...rooms])].length;
+    if (roomsCount !== currentRooms.length || roomsCount !== rooms.length) {
+      this.store.dispatch(new UpdateAllLocations());
+    }
+    const devicesCount = [...new Set([...currentDevices, ...devices])].length;
+    if (
+      devicesCount !== currentDevices.length ||
+      devicesCount !== devices.length
+    ) {
+      this.store.dispatch(new UpdateAllDevices());
+    }
   }
 }

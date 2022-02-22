@@ -40,12 +40,9 @@ export class ApiInterceptor implements HttpInterceptor {
         }
       }),
       catchError((err) => {
-        console.warn('http error: ', err.status, err.message);
         if (err.status === 0) {
           this.store.dispatch(new ServerStatus(false));
-          console.warn('offline');
         }
-        // if (err.status === 401) return this.router.navigate(['login']);
         return throwError(err);
       })
       // tap({

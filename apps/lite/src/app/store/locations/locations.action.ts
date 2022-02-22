@@ -6,11 +6,13 @@ export class DestroyLocations {
 
 export class UpdateLocations {
   static readonly type = '[Locations] Update';
-  constructor(public locations: Location[] | Location | number) {}
+  constructor(
+    public locations: Location[] | Location | number,
+    public reset = false
+  ) {}
 }
-export class UpdateLocations2 {
-  static readonly type = '[Locations] Update2';
-  constructor() {}
+export class UpdateAllLocations {
+  static readonly type = '[Locations] Update All Locations';
 }
 
 export class RemoveLocation {

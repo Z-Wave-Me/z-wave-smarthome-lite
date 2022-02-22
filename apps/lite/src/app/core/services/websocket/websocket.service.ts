@@ -7,22 +7,11 @@ import {
 } from 'rxjs/webSocket';
 import {
   BehaviorSubject,
-  EMPTY,
   MonoTypeOperatorFunction,
   Observable,
-  ReplaySubject,
-  startWith,
   Subscription,
 } from 'rxjs';
-import {
-  delay,
-  filter,
-  map,
-  retryWhen,
-  share,
-  takeUntil,
-  tap,
-} from 'rxjs/operators';
+import { delay, filter, map, retryWhen, share } from 'rxjs/operators';
 import {
   WebSocketConfig,
   WsMessage,
@@ -83,28 +72,29 @@ export class WebsocketService implements OnDestroy {
   }
 
   send<T>(event: string, data: T): void {
-    console.warn('SENDING', event, data);
     this.websocket$.next({ event, data });
   }
 
   isConnect(): Observable<boolean> {
     return this.connect$.asObservable();
   }
+
   isConnectSnapshot(): boolean {
     return this.connect$.value;
   }
-  private reconnect<T>(reconnectInterval: number): MonoTypeOperatorFunction<T> {
-    return retryWhen((errors) => errors.pipe(delay(reconnectInterval)));
-  }
+
   connect() {
-    this.subscription = this.on<void>('connectionStatusEvent')
-      // .pipe(takeUntil(this.destroy$))
-      .subscribe();
+    if (!this.subscription)
+      this.subscription = this.on<void>('connectionStatusEvent').subscribe();
   }
 
   ngOnDestroy(): void {
     this.subscription?.unsubscribe();
     this.websocket$.complete();
     this.connect$.complete();
+  }
+
+  private reconnect<T>(reconnectInterval: number): MonoTypeOperatorFunction<T> {
+    return retryWhen((errors) => errors.pipe(delay(reconnectInterval)));
   }
 }

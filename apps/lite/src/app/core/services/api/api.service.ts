@@ -195,7 +195,7 @@ export class ApiService {
     method: 'GET' | 'PUT' | 'POST' | 'DELETE' = 'GET',
     body?: never
   ) {
-    const event = 'testEvent';
+    const event = Date.now().toString();
     return this.websocketService.on<T>(
       event,
       (): WsMessage<HttpEncapsulatedRequest> => ({

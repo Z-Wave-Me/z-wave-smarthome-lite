@@ -8,11 +8,14 @@
       "prefix": "z-wave",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:browser",
+          "builder": "@angular-builders/custom-webpack:browser",
           "outputs": [
             "{options.outputPath}"
           ],
           "options": {
+            "customWebpackConfig": {
+              "path": "./webpack.config.js"
+            },
             "outputPath": "dist/apps/lite",
             "index": "apps/lite/src/index.html",
             "main": "apps/lite/src/main.ts",

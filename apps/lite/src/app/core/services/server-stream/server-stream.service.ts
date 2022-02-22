@@ -25,10 +25,7 @@ import { WsMessage } from '@core/services/websocket/websocket.interfaces';
 import { HttpEncapsulatedRequest } from '@core/services/ws-api/http-encapsulated-request';
 import { apiList, baseApiUrl } from '@core/services/ws-api/api-list';
 import { Device } from '@store/devices/deviceInterface';
-import {
-  SetProfile,
-  UpdateProfile,
-} from '@store/local-storage/local-storage.actions';
+import { SetProfile } from '@store/local-storage/local-storage.actions';
 import { Notifications } from '@store/notifications/notifications.state';
 import { LocalStorageState } from '@store/local-storage/local-storage.state';
 
@@ -208,19 +205,15 @@ export class ServerStreamService implements OnDestroy {
       )
       .pipe(
         takeUntil(this.destroy$),
-        tap((profile) => {
-          console.log('PROFILE', profile);
-          if (Array.isArray(profile))
-            profile.map((p) =>
+        tap((profile) =>
+          [profile]
+            .flat()
+            .map((p) =>
               this.store.dispatch(
                 new SetProfile(LocalStorageState.profileAdapter(p))
               )
-            );
-          else
-            this.store.dispatch(
-              new SetProfile(LocalStorageState.profileAdapter(profile))
-            );
-        })
+            )
+        )
       );
     // this.store.dispatch(new UpdateProfile());
   }

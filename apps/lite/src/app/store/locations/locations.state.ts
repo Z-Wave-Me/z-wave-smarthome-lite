@@ -5,17 +5,17 @@ import {
   CreateRoom,
   RemoveCustomImg,
   RemoveLocation,
+  UpdateAllLocations,
   UpdateLocations,
-  UpdateLocations2,
   UploadCustomImg,
 } from './locations.action';
 import { patch } from '@ngxs/store/operators';
 import { Location } from '@store/locations/location';
 import { TranslocoService } from '@ngneat/transloco';
 import { ApiService } from '@core/services/api/api.service';
-import { map, tap } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { DevicesStateModel } from '@store/devices/devices.state';
-import { ChangeDevice } from '@store/devices/devices.actions';
+import { ChangeDevice, UpdateAllDevices } from '@store/devices/devices.actions';
 
 export class LocationsStateModel {
   ids!: number[];
@@ -42,15 +42,15 @@ export class LocationsState {
   @Action(UpdateLocations)
   update(
     state: StateContext<LocationsStateModel>,
-    { locations }: UpdateLocations
+    { locations, reset }: UpdateLocations
   ): void {
-    const ids = new Set(state.getState().ids);
+    const ids = reset ? new Set() : new Set(state.getState().ids);
     const entities: { [id: number]: Location } = {};
     if (typeof locations === 'number') {
       this.removeLocationFromStore(state, { locationId: locations });
     } else {
-      if (!Array.isArray(locations)) locations = [locations];
-      locations
+      [locations]
+        .flat()
         // .sort((a, b) => a.title.localeCompare(b.title))
         .map((location) => {
           if (location.id === 0) {
@@ -97,26 +97,7 @@ export class LocationsState {
       method: 'PUT',
     });
   }
-  private removeLocationFromStore(
-    { getState, setState }: StateContext<LocationsStateModel>,
-    { locationId }: RemoveLocation
-  ) {
-    const state = getState();
-    this.store
-      .selectSnapshot(({ devices }: { devices: DevicesStateModel }) =>
-        Object.values(devices.entities)
-      )
-      .filter((el) => el.location === locationId)
-      .map((el) =>
-        this.store.dispatch(new ChangeDevice({ ...el, location: 0 }, true))
-      );
-    setState({
-      ids: state.ids?.filter((id) => id !== locationId),
-      entities: Object.fromEntries(
-        Object.entries(state.entities).filter((_, key) => key !== locationId)
-      ),
-    });
-  }
+
   @Action(RemoveLocation)
   removeLocation(
     state: StateContext<LocationsStateModel>,
@@ -192,12 +173,36 @@ export class LocationsState {
     });
     // .pipe(map(() => this.store.dispatch(new UpdateLocations2())));
   }
-  @Action(UpdateLocations2)
-  updateLocations2() {
-    return this.apiService.send<{ data: Location[] }>('locations').pipe(
-      map(({ data: locations }) => {
-        this.store.dispatch(new UpdateLocations(locations));
+
+  @Action(UpdateAllLocations)
+  updateAllLocations() {
+    console.log('call');
+    return this.apiService.send<Location[]>('locations', undefined, true).pipe(
+      map((locations) => {
+        this.store.dispatch(new UpdateLocations(locations, true));
+        this.store.dispatch(new UpdateAllDevices());
       })
     );
+  }
+
+  private removeLocationFromStore(
+    { getState, setState }: StateContext<LocationsStateModel>,
+    { locationId }: RemoveLocation
+  ) {
+    const state = getState();
+    this.store
+      .selectSnapshot(({ devices }: { devices: DevicesStateModel }) =>
+        Object.values(devices.entities)
+      )
+      .filter((el) => el.location === locationId)
+      .map((el) =>
+        this.store.dispatch(new ChangeDevice({ ...el, location: 0 }, true))
+      );
+    setState({
+      ids: state.ids?.filter((id) => id !== locationId),
+      entities: Object.fromEntries(
+        Object.entries(state.entities).filter((_, key) => key !== locationId)
+      ),
+    });
   }
 }

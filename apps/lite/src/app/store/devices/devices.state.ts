@@ -13,6 +13,7 @@ import {
   DestroyDevices,
   ProgressDevice,
   ToggleLevel,
+  UpdateAllDevices,
   UpdateDevices,
 } from './devices.actions';
 import { patch } from '@ngxs/store/operators';
@@ -28,6 +29,7 @@ import { ServerTime } from '@store/locals/locals.actions';
 import { ApiService } from '@core/services/api/api.service';
 import { Device, OrderByLocations } from '@store/devices/deviceInterface';
 import { LocalStorageState } from '@store/local-storage/local-storage.state';
+import { filter, map } from 'rxjs/operators';
 
 const orderFactory =
   (order: Order, place: OrderByLocations, decs: boolean = false) =>
@@ -256,6 +258,7 @@ export class DevicesState {
     }
     return EMPTY;
   }
+
   updateServer(devices: Device[] | string) {
     if (Array.isArray(devices)) {
       console.log('updateServer', devices);
@@ -285,6 +288,7 @@ export class DevicesState {
     }
     return EMPTY;
   }
+
   @Action(UpdateDevices)
   updateDevice(
     { getState, setState }: StateContext<DevicesStateModel>,
@@ -355,5 +359,18 @@ export class DevicesState {
         )
       );
     }
+  }
+
+  @Action(UpdateAllDevices)
+  updateAllDevices() {
+    return this.apiService
+      .send<{ data: { devices: Device[] } }>('devices', undefined, true)
+      .pipe(
+        filter((data) => !!data.data),
+        map(({ data: { devices } }) => {
+          console.log(devices);
+          this.store.dispatch(new UpdateDevices(devices));
+        })
+      );
   }
 }

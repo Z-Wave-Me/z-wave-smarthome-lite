@@ -4,8 +4,8 @@ import {
   IProfile,
   LocalStorageState,
 } from '@store/local-storage/local-storage.state';
-import { EMPTY, merge, Observable, Subject, switchMap } from 'rxjs';
-import { filter, map, takeUntil, tap } from 'rxjs/operators';
+import { merge, Observable, Subject, switchMap } from 'rxjs';
+import { filter, map, takeUntil } from 'rxjs/operators';
 import { ApiService } from '@core/services/api/api.service';
 
 @Injectable({
@@ -14,6 +14,7 @@ import { ApiService } from '@core/services/api/api.service';
 export class ServerSynchronizationService implements OnDestroy {
   @Select(LocalStorageState.profiles) profiles$!: Observable<IProfile[]>;
   private readonly destroy$ = new Subject<void>();
+
   constructor(
     private readonly store: Store,
     private readonly apiService: ApiService
@@ -25,9 +26,8 @@ export class ServerSynchronizationService implements OnDestroy {
           (profiles ?? []).filter(({ synchronized }) => !synchronized)
         ),
         filter((profiles) => !!profiles.length),
-        switchMap((profiles: IProfile[]) => {
-          console.warn(profiles);
-          return merge(
+        switchMap((profiles: IProfile[]) =>
+          merge(
             ...profiles.map(({ id, ...profile }) =>
               this.apiService.send('profiles', {
                 command: id,
@@ -42,7 +42,8 @@ export class ServerSynchronizationService implements OnDestroy {
                   hide_system_events: profile.hideSystemEvents,
                   interval: profile.interval,
                   lang: profile.lang,
-                  login: profile.login,
+                  // login: profile.login,
+                  devices: profile.devices,
                   name: profile.name,
                   night_mode: profile.nightMode,
                   role: profile.role,
@@ -50,8 +51,8 @@ export class ServerSynchronizationService implements OnDestroy {
                 },
               })
             )
-          );
-        })
+          )
+        )
       )
       .subscribe();
   }

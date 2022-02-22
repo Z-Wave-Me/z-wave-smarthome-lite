@@ -17,6 +17,9 @@ export class UpdateDevices {
   constructor(public devices: Device[], public structureChanged = false) {}
 }
 
+export class UpdateAllDevices {
+  static readonly type = '[Devices] Update All Devices';
+}
 // export class SetDevices {
 //   static readonly type = '[Devices] Set Device';
 //   constructor(public devices: Device[]) {}

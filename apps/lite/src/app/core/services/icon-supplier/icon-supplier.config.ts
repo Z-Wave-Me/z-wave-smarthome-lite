@@ -5,6 +5,8 @@ export const config: IconSupplierConfig = {
     level: {
       open: 'door-open.png',
       closed: 'door-closed.png',
+      on: 'door-open.png',
+      off: 'door-closed.png',
     },
   },
   window_tilt: {
