@@ -4,14 +4,18 @@ import {
   Component,
   ViewChild,
 } from '@angular/core';
-import { Store } from '@ngxs/store';
+import { Select, Store } from '@ngxs/store';
 import { EMPTY, Observable, switchMap, timer } from 'rxjs';
-import { LocationsStateModel } from '@store/locations/locations.state';
+import {
+  LocationsState,
+  LocationsStateModel,
+} from '@store/locations/locations.state';
 import { filter, takeUntil, tap } from 'rxjs/operators';
 import { RestorePositionService } from '@core/services/restore-position/restore-position.service';
 import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
 import { NavigationEnd, NavigationStart, Router } from '@angular/router';
 import { DestroyService } from '@core/services/destroy/destroy.service';
+import { LocalStorageState } from '@store/local-storage/local-storage.state';
 
 @Component({
   selector: 'z-wave-rooms-gallery',
@@ -21,20 +25,16 @@ import { DestroyService } from '@core/services/destroy/destroy.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RoomsGalleryComponent implements AfterViewInit {
-  readonly ids$: Observable<number[] | undefined>;
-  @ViewChild(CdkVirtualScrollViewport) viewport?: CdkVirtualScrollViewport;
-
+  @Select(LocationsState.ids) ids$!: Observable<number[]>;
+  @Select(LocalStorageState.isAdmin) isAdmin!: Observable<boolean>;
+  @ViewChild(CdkVirtualScrollViewport)
+  viewport?: CdkVirtualScrollViewport;
   constructor(
     private readonly store: Store,
     private readonly router: Router,
     private readonly destroyService: DestroyService,
     private readonly restorePositionService: RestorePositionService
-  ) {
-    this.ids$ = store.select(
-      ({ locations: { ids } }: { locations: LocationsStateModel }) =>
-        ids ? [...ids].reverse() : ids
-    );
-  }
+  ) {}
 
   ngAfterViewInit(): void {
     this.restorePositionService.restore(this.router, this.viewport);

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Action, State, StateContext, Store } from '@ngxs/store';
+import { Action, Selector, State, StateContext, Store } from '@ngxs/store';
 import {
   ChangeLocation,
   CreateRoom,
@@ -33,6 +33,10 @@ const defaults: LocationsStateModel = {
 })
 @Injectable()
 export class LocationsState {
+  @Selector()
+  static ids({ ids }: LocationsStateModel) {
+    return ids;
+  }
   constructor(
     private readonly translocoService: TranslocoService,
     private readonly apiService: ApiService,
@@ -72,7 +76,7 @@ export class LocationsState {
       state.setState(
         patch({
           entities: patch(entities),
-          ids: [...ids],
+          ids: [...ids].reverse(),
         })
       );
     }

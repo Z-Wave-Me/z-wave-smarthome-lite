@@ -24,7 +24,7 @@ import { DOCUMENT } from '@angular/common';
   changeDetection: ChangeDetectionStrategy.OnPush,
   animations: [jumpOutAnimation],
 })
-export class AppComponent implements OnInit, OnDestroy {
+export class AppComponent implements OnDestroy {
   @Select(LocalStorageState.lang) lang$!: Observable<string>;
   @Select(LocalStorageState.nightMode) nightMode$!: Observable<boolean>;
   private subscription: Subscription = Subscription.EMPTY;
@@ -34,8 +34,7 @@ export class AppComponent implements OnInit, OnDestroy {
     private readonly store: Store,
     private readonly translocoService: TranslocoService,
     private readonly destroyService$: DestroyService,
-    @Inject(DOCUMENT) private readonly document: Document,
-    @Inject(WINDOW) private readonly window: Window
+    @Inject(DOCUMENT) private readonly document: Document
   ) {
     this.lang$
       .pipe(
@@ -46,15 +45,6 @@ export class AppComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
-  }
-
-  ngOnInit(): void {
-    this.actions
-      .pipe(ofActionDispatched(Logout))
-      .pipe(first())
-      .subscribe(() => {
-        this.window.location.reload();
-      });
   }
 
   ngOnDestroy(): void {

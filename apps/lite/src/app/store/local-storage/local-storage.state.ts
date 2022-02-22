@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import {
   Action,
   createSelector,
@@ -24,6 +24,7 @@ import { ChangeDevice, UpdateAllDevices } from '@store/devices/devices.actions';
 import { patch } from '@ngxs/store/operators';
 import { HttpClient } from '@angular/common/http';
 import { UpdateAllLocations } from '@store/locations/locations.action';
+import { WINDOW } from '@ng-web-apis/common';
 
 export interface ZWayResponse<T> {
   code: number;
@@ -78,9 +79,13 @@ export class LocalStorageState {
     private readonly apiService: ApiService,
     private readonly translocoService: TranslocoService,
     private readonly store: Store,
-    private readonly httpClient: HttpClient
+    private readonly httpClient: HttpClient,
+    @Inject(WINDOW) private readonly window: Window
   ) {}
-
+  @Selector()
+  static isAdmin({ id, profiles }: LocalStorageStateModel) {
+    return profiles[id]?.role === 1;
+  }
   @Selector()
   static profiles({ profiles }: LocalStorageStateModel) {
     return Object.values(profiles);
@@ -241,6 +246,7 @@ export class LocalStorageState {
     return this.httpClient.get('/ZAutomation/api/v1/logout').pipe(
       tap(() => {
         patchState({ profiles: {}, id: 0 });
+        this.window.location.reload();
       })
     );
   }
