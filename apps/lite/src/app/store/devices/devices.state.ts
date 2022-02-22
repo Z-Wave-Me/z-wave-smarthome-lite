@@ -32,9 +32,9 @@ import { LocalStorageState } from '@store/local-storage/local-storage.state';
 import { filter, map } from 'rxjs/operators';
 
 const orderFactory =
-  (order: Order, place: OrderByLocations, decs: boolean = false) =>
+  (order: Order, place: OrderByLocations, descending: boolean = false) =>
   (a: Device, b: Device): number => {
-    const sign = decs ? -1 : 1;
+    const sign = descending ? -1 : 1;
     let delta;
     switch (order) {
       case 'elements':
@@ -142,7 +142,7 @@ export class DevicesState {
   static devicesTypeAndCount(
     { entities }: DevicesStateModel,
     { showHidden }: FilterStateModel
-  ): Pick<any, 'type' | 'count'>[] {
+  ) {
     return [
       ...Object.values(entities)
         .filter((entity) => (showHidden ? true : entity.visibility))
@@ -168,9 +168,9 @@ export class DevicesState {
   static tagsList({ entities }: DevicesStateModel): string[] {
     return [
       ...new Set<string>(
-        Object.values(entities).reduce((acc, cur) => {
-          return [...acc, ...cur.tags];
-        }, Array<string>())
+        Object.values(entities)
+          .map((device) => device.tags)
+          .flat()
       ),
     ];
   }
