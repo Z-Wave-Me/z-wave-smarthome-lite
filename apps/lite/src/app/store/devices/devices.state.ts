@@ -361,6 +361,10 @@ export class DevicesState {
     }
   }
 
+  /**
+   * It sends a request to the API to get all devices.
+   * @returns The `UpdateDevices` action.
+   */
   @Action(UpdateAllDevices)
   updateAllDevices() {
     return this.apiService

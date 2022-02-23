@@ -10,10 +10,19 @@ import {
 import { Injectable, NgModule } from '@angular/core';
 import { environment } from '../../environments/environment';
 
+/**
+ *  It gets the translation for the given language
+ */
+
 @Injectable({ providedIn: 'root' })
 export class TranslocoHttpLoader implements TranslocoLoader {
   constructor(private http: HttpClient) {}
 
+  /**
+   * It gets the translation for the given language.
+   * @param {string} lang - The language code.
+   * @returns The observable of the HTTP request.
+   */
   getTranslation(lang: string) {
     return this.http.get<Translation>(`./assets/i18n/${lang}.json`);
   }
@@ -27,7 +36,6 @@ export class TranslocoHttpLoader implements TranslocoLoader {
       useValue: translocoConfig({
         availableLangs: ['en', 'ru'],
         defaultLang: 'en',
-        // Remove this option if your application doesn't support changing language in runtime.
         reRenderOnLangChange: true,
         prodMode: environment.production,
         fallbackLang: 'en',
