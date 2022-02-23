@@ -54,12 +54,17 @@ export class BaseWidgetComponent implements OnInit {
     console.log('swipeRight');
   }
 
+  /**
+   * Navigate to the element page with the given id
+   */
   @HostListener('press', ['$event'])
-  press(event: TouchEvent) {
+  press() {
     this.router.navigate(['/element', this.id]);
-    console.log('press', event.type, event);
   }
 
+  /**
+   * It dispatches a ToggleLevel action to the store.
+   */
   @HostListener('tap')
   tap() {
     this.store.dispatch(new ToggleLevel(this.id));
@@ -69,7 +74,6 @@ export class BaseWidgetComponent implements OnInit {
       complete: () =>
         this.renderer.removeClass(this.widgetRef.nativeElement, 'shake'),
     });
-    console.log('tap');
   }
 
   ngOnInit(): void {

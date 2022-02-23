@@ -36,6 +36,9 @@ export class ElementControlComponent implements OnInit {
     private readonly router: Router
   ) {}
 
+  /**
+   * It takes the id from the URL and returns the device with that id
+   */
   ngOnInit(): void {
     this.context$ = this.activatedRoute.params.pipe(
       switchMap(({ id }) =>

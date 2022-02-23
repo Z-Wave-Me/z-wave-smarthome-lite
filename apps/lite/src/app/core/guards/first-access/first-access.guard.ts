@@ -23,6 +23,11 @@ export class FirstAccessGuard implements CanActivate {
     private readonly router: Router
   ) {}
 
+  /**
+   * It checks if the server has been accessed before. If it has, it returns true. If it hasn't, it redirects to the login
+   * page.
+   * @returns An Observable<boolean | UrlTree>
+   */
   canActivate(): Observable<boolean | UrlTree> {
     return (
       this.apiService

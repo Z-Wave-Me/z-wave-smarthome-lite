@@ -61,6 +61,10 @@ export class ServerStreamService implements OnDestroy {
     this.destroy$.complete();
   }
 
+  /**
+   * If the connection is open, then use WebSocket, otherwise use HTTP
+   * @param {ServerStreamConfig} config - ServerStreamConfig
+   */
   subscribe(config: ServerStreamConfig): void {
     this.connection$
       .pipe(
@@ -73,6 +77,11 @@ export class ServerStreamService implements OnDestroy {
       .subscribe();
   }
 
+  /**
+   * It returns an Observable that emits a void value.
+   * @param {ServerStreamConfig} config - The configuration object that was passed to the server stream.
+   * @returns An Observable of void.
+   */
   private httpAccess(config: ServerStreamConfig): Observable<void> {
     if (config.api === 'devices') {
       return this.updateDevices(config);
@@ -87,6 +96,10 @@ export class ServerStreamService implements OnDestroy {
     return ServerStreamService.wsAccessMap.get(config.api)?.(this) ?? EMPTY;
   }
 
+  /**
+   * Subscribe to the `me.z-wave.devices` event and dispatch an action to update the devices state
+   * @returns The observable that emits the devices.
+   */
   private subscribeDevices() {
     return this.webSocketService
       .on<Device | { devices: Device[]; structureChanged: boolean }>(
@@ -120,6 +133,10 @@ export class ServerStreamService implements OnDestroy {
       );
   }
 
+  /**
+   * It subscribes to the `me.z-wave.locations` event and returns a stream of `Location` objects.
+   * @returns The observable that emits the locations.
+   */
   private subscribeLocations() {
     return this.webSocketService
       .on<Location[] | Location | number>(
@@ -141,6 +158,10 @@ export class ServerStreamService implements OnDestroy {
       );
   }
 
+  /**
+   * It sends a request to the server for the devices.
+   * @param {ServerStreamConfig}  - `api`: The API endpoint to call.
+   */
   private updateDevices({
     api,
     timeBetweenRequests,
@@ -171,6 +192,11 @@ export class ServerStreamService implements OnDestroy {
     );
   }
 
+  /**
+   * It sends a request to the server for the locations.
+   * @param {ServerStreamConfig}  - `api` is the API endpoint to hit.
+   * @returns An observable of void.
+   */
   private updateLocations({
     api,
     timeBetweenRequests,
@@ -188,6 +214,9 @@ export class ServerStreamService implements OnDestroy {
     );
   }
 
+  /**
+   * Subscribe to the `me.z-wave.profile` event and dispatch the profile to the store
+   */
   private subscribeProfile() {
     return this.webSocketService
       .on<Location[] | Location | number>(
@@ -218,6 +247,10 @@ export class ServerStreamService implements OnDestroy {
     // this.store.dispatch(new UpdateProfile());
   }
 
+  /**
+   * It subscribes to the notifications stream and prints out the notifications.
+   * @returns The observable that emits the notifications.
+   */
   private subscribeNotifications() {
     return this.webSocketService
       .on<Notifications>(

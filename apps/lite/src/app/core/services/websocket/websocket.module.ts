@@ -10,6 +10,11 @@ import { WebSocketConfig } from './websocket.interfaces';
   providers: [WebsocketService],
 })
 export class WebsocketModule {
+  /**
+   * It returns a ModuleWithProviders object.
+   * @param {WebSocketConfig} wsConfig - WebSocketConfig
+   * @returns The module with the providers.
+   */
   public static config(wsConfig: WebSocketConfig): ModuleWithProviders<any> {
     return {
       ngModule: WebsocketModule,

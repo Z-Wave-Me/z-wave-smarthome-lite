@@ -16,6 +16,10 @@ export class MobileTitleService {
     private readonly translocoService: TranslocoService,
     private readonly store: Store
   ) {}
+  /**
+   * It returns an Observable that emits the title of the current route
+   * @returns The title of the current page.
+   */
   title$(): Observable<string> {
     return this.route.events.pipe(
       filter((event) => event instanceof NavigationEnd),

@@ -31,6 +31,11 @@ export class IconSupplierService {
     this.config = config;
   }
 
+  /**
+   * Given a level, return the string representation of that level
+   * @param {number | string} level - The level of logging to be displayed.
+   * @returns The levelMap function is being called with the level variable as an argument.
+   */
   private static levelMap(level: number | string): string {
     if (!isNaN(+level)) {
       if (+level === 0) {
@@ -44,7 +49,11 @@ export class IconSupplierService {
     return level?.toString();
   }
 
-  // Default icon
+  /**
+   * Given a device, return the icon for that device
+   * @param {Device}  - Device
+   * @returns The icon path.
+   */
   assignElementIcon({
     metrics: { icon: iconType, level },
     customIcons,
@@ -63,6 +72,11 @@ export class IconSupplierService {
     return baseUrl + icon;
   }
 
+  /**
+   * Given a string, return the icon name
+   * @param {string} iconName - The name of the icon to be displayed.
+   * @returns The icon name.
+   */
   deviceTypeIconSupplier(iconName: string): string {
     return IconSupplierService.iconMap.get(iconName) ?? 'fa-caret-right';
   }

@@ -57,7 +57,7 @@ export class MainSensorComponent implements OnChanges, AfterViewInit {
     return this.position + 'px';
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
+  ngOnChanges(): void {
     this.currentValue = Math.round(this.currentValue);
     this.height = this.borderRef?.nativeElement.offsetHeight + 2;
     this.position = Math.trunc(

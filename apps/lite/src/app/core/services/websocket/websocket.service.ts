@@ -41,6 +41,13 @@ export class WebsocketService implements OnDestroy {
     this.websocket$ = webSocket<WsMessage<unknown>>(this.configuration);
   }
 
+  /**
+   * It returns an observable that emits events of type T when the event is received
+   * @param {string} event - The event name to listen to.
+   * @param subMsg - A function that returns a message to be sent to the server.
+   * @param unsubMsg - A function that returns a message to unsubscribe from the event.
+   * @returns An observable that emits the data from the websocket.
+   */
   on<T>(
     event: string,
     subMsg: () => unknown = () => null,
@@ -71,18 +78,34 @@ export class WebsocketService implements OnDestroy {
       );
   }
 
+  /**
+   * Send a message to the server
+   * @param {string} event - The name of the event.
+   * @param {T} data - The data to be sent to the server.
+   */
   send<T>(event: string, data: T): void {
     this.websocket$.next({ event, data });
   }
 
+  /**
+   * Returns an Observable that emits a boolean value that indicates whether the client is connected to the server
+   * @returns An Observable of boolean.
+   */
   isConnect(): Observable<boolean> {
     return this.connect$.asObservable();
   }
 
+  /**
+   * Returns a boolean value that indicates whether the connection is currently active
+   * @returns The value of the connect$ stream.
+   */
   isConnectSnapshot(): boolean {
     return this.connect$.value;
   }
 
+  /**
+   * When the connection status event is emitted, subscribe to it
+   */
   connect() {
     if (!this.subscription)
       this.subscription = this.on<void>('connectionStatusEvent').subscribe();
@@ -94,6 +117,12 @@ export class WebsocketService implements OnDestroy {
     this.connect$.complete();
   }
 
+  /**
+   * `reconnect` is a function that takes a number and returns a function that takes an observable and returns an
+   * observable
+   * @param {number} reconnectInterval - The number of milliseconds to wait before reconnecting.
+   * @returns A MonoTypeOperatorFunction<T>
+   */
   private reconnect<T>(reconnectInterval: number): MonoTypeOperatorFunction<T> {
     return retryWhen((errors) => errors.pipe(delay(reconnectInterval)));
   }

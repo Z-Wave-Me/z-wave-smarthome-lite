@@ -21,6 +21,11 @@ export class AuthGuard implements CanLoad {
     private readonly apiService: ApiService
   ) {}
 
+  /**
+   * It sends a request to the API to check if the user is logged in. If the user is logged in, it sets the user in the
+   * store and returns true. If the user is not logged in, it redirects to the login page.
+   * @returns An Observable<boolean | UrlTree>
+   */
   canLoad(): Observable<boolean | UrlTree> {
     return this.apiService
       .send<ZWayResponse<IProfile>>('session', undefined, true)

@@ -103,6 +103,10 @@ export class PersonalSettingsComponent implements AfterViewInit {
       .subscribe();
   }
 
+  /**
+   * Remove the given device ID from the list of hidden devices
+   * @param {string} removeId - string
+   */
   excludeFromHidden(removeId: string) {
     this.store.dispatch(
       new SetProfile({

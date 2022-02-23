@@ -118,6 +118,13 @@ export class ApiService {
     private readonly websocketService: WebsocketService
   ) {}
 
+  /**
+   * If the websocket is connected, send the request over the websocket. Otherwise, send the request over the http
+   * @param {string} event - The name of the event to send.
+   * @param {Payload} [payload] - The payload object that contains the data to send to the server.
+   * @param [withResponse=false] - If true, the response will be returned as a promise.
+   * @returns A Promise<T>
+   */
   send<T>(event: string, payload?: Payload, withResponse = false) {
     const url = this.apiList[event];
     if (!url) {
@@ -152,6 +159,14 @@ export class ApiService {
     );
   }
 
+  /**
+   * It sends a request to the server, and returns the response
+   * @param {string} url - The URL to send the request to.
+   * @param {'GET' | 'PUT' | 'POST' | 'DELETE'} [method=GET] - The HTTP method to use.
+   * @param {HttpParams} params - HttpParams,
+   * @param {any} data - The data to be sent to the server.
+   * @returns The observable of the HTTP request.
+   */
   private httpSend<T>(
     url: string,
     method: 'GET' | 'PUT' | 'POST' | 'DELETE' = 'GET',
@@ -177,6 +192,13 @@ export class ApiService {
     });
   }
 
+  /**
+   * Send a request to the server
+   * @param {string} url - The URL to send the request to.
+   * @param {'GET' | 'PUT' | 'POST' | 'DELETE'} [method=GET] - The HTTP method to use.
+   * @param {any} [body] - The body of the request.
+   * @returns Nothing.
+   */
   private wsSend(
     url: string,
     method: 'GET' | 'PUT' | 'POST' | 'DELETE' = 'GET',
@@ -190,6 +212,13 @@ export class ApiService {
     return EMPTY;
   }
 
+  /**
+   * It sends a message to the websocket server, and returns a promise that resolves to the response from the server
+   * @param {string} url - The URL to send the request to.
+   * @param {'GET' | 'PUT' | 'POST' | 'DELETE'} [method=GET] - The HTTP method to use.
+   * @param {never} [body] - The body of the request.
+   * @returns A promise that resolves to the response.
+   */
   private wsSendWithResponse<T>(
     url: string,
     method: 'GET' | 'PUT' | 'POST' | 'DELETE' = 'GET',

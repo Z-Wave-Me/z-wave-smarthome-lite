@@ -20,6 +20,10 @@ export class AlreadyAuthorizedGuard implements CanActivate {
     private readonly router: Router
   ) {}
 
+  /**
+   * It sends a request to the API to get the user's profile.
+   * @returns The `of(true)` is being returned.
+   */
   canActivate() {
     return this.apiService.send<ZWayResponse<IProfile>>('session').pipe(
       map((response) => {
