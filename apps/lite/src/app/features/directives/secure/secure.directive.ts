@@ -9,23 +9,24 @@ import {
 import { Store } from '@ngxs/store';
 import { config, Role } from './config';
 import { Subscription } from 'rxjs';
+import { LocalStorageState } from '@store/local-storage/local-storage.state';
 
 @Directive({
-  selector: '[appSecure]',
+  selector: '[zWaveSecure]',
 })
 export class SecureDirective implements OnDestroy {
   private subscription?: Subscription;
   constructor(
-    private element: ElementRef,
-    private templateRef: TemplateRef<any>,
-    private viewContainer: ViewContainerRef,
-    private store: Store
+    private readonly element: ElementRef,
+    private readonly templateRef: TemplateRef<never>,
+    private readonly viewContainer: ViewContainerRef,
+    private readonly store: Store
   ) {}
   @Input()
   set appSecure(role: Role) {
     this.subscription = this.store
-      .select<number>((state) => state.localStorage.role)
-      .subscribe((code) => {
+      .select(LocalStorageState.profile)
+      .subscribe(({ role: code }) => {
         if (config[role].indexOf(code) !== -1) {
           this.viewContainer.createEmbeddedView(this.templateRef);
         } else {

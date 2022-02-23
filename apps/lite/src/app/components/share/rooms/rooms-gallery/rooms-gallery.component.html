@@ -5,10 +5,11 @@
   <cdk-virtual-scroll-viewport
     class="rooms tui-container_adaptive tui-zero-scrollbar"
     itemSize="200"
-    tuiScrollable
+    appendOnly
+    zWaveRestorePosition
   >
     <z-wave-room-widget
-      *cdkVirtualFor="let id of ids"
+      *cdkVirtualFor="let id of ids; templateCacheSize: 0"
       [id]="id"
     ></z-wave-room-widget>
     <z-wave-add-room-widget *ngIf="isAdmin | async"></z-wave-add-room-widget>

@@ -36,6 +36,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { DeviceListModule } from '@components/share/device-list/device-list.module';
 import { AddRoomWidgetComponent } from './add-room-widget/add-room-widget.component';
 import { ScrollingModule } from '@angular/cdk/scrolling';
+import { RestorePositionModule } from '@features/directives/restore-position/restore-position.module';
 
 @NgModule({
   declarations: [
@@ -78,6 +79,7 @@ import { ScrollingModule } from '@angular/cdk/scrolling';
     FormsModule,
     TuiDataListModule,
     ScrollingModule,
+    RestorePositionModule,
   ],
 })
 export class RoomsModule {}

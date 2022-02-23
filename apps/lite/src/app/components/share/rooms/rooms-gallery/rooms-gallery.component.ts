@@ -1,19 +1,7 @@
-import {
-  AfterViewInit,
-  ChangeDetectionStrategy,
-  Component,
-  ViewChild,
-} from '@angular/core';
-import { Select, Store } from '@ngxs/store';
-import { EMPTY, Observable, switchMap, timer } from 'rxjs';
-import {
-  LocationsState,
-  LocationsStateModel,
-} from '@store/locations/locations.state';
-import { filter, takeUntil, tap } from 'rxjs/operators';
-import { RestorePositionService } from '@core/services/restore-position/restore-position.service';
-import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
-import { NavigationEnd, NavigationStart, Router } from '@angular/router';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { Select } from '@ngxs/store';
+import { Observable } from 'rxjs';
+import { LocationsState } from '@store/locations/locations.state';
 import { DestroyService } from '@core/services/destroy/destroy.service';
 import { LocalStorageState } from '@store/local-storage/local-storage.state';
 
@@ -24,25 +12,7 @@ import { LocalStorageState } from '@store/local-storage/local-storage.state';
   providers: [DestroyService],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class RoomsGalleryComponent implements AfterViewInit {
+export class RoomsGalleryComponent {
   @Select(LocationsState.ids) ids$!: Observable<number[]>;
   @Select(LocalStorageState.isAdmin) isAdmin!: Observable<boolean>;
-  @ViewChild(CdkVirtualScrollViewport)
-  viewport?: CdkVirtualScrollViewport;
-  constructor(
-    private readonly store: Store,
-    private readonly router: Router,
-    private readonly destroyService: DestroyService,
-    private readonly restorePositionService: RestorePositionService
-  ) {}
-
-  ngAfterViewInit(): void {
-    this.restorePositionService.restore(this.router, this.viewport);
-    this.router.events
-      .pipe(
-        takeUntil(this.destroyService),
-        this.restorePositionService.store(this.router, this.viewport)
-      )
-      .subscribe();
-  }
 }

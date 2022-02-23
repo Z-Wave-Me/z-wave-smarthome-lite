@@ -1,16 +1,24 @@
 import { Injectable } from '@angular/core';
-import { Action, Selector, State, StateContext } from '@ngxs/store';
-import { ServerStatus, ServerTime } from './locals.actions';
+import {
+  Action,
+  createSelector,
+  Selector,
+  State,
+  StateContext,
+} from '@ngxs/store';
+import { ServerStatus, ServerTime, StorePosition } from './locals.actions';
 import { patch } from '@ngxs/store/operators';
 
 export class LocalsStateModel {
   serverAvailable!: boolean;
   serverTime!: number;
+  scrollPosition!: Record<string, number>;
 }
 
 const defaults = {
   serverAvailable: true,
   serverTime: 0,
+  scrollPosition: {},
 };
 
 @State<LocalsStateModel>({
@@ -23,7 +31,12 @@ export class LocalsState {
   static serverAvailable({ serverAvailable }: LocalsStateModel): boolean {
     return serverAvailable;
   }
-
+  @Selector()
+  static position(route: string) {
+    return createSelector([LocalsState], ({ locals: { scrollPosition } }) => {
+      return scrollPosition?.[route] ?? 0;
+    });
+  }
   @Selector()
   static serverTime({ serverTime }: LocalsStateModel): number {
     return serverTime;
@@ -43,5 +56,18 @@ export class LocalsState {
     { serverTime }: ServerTime
   ): void {
     setState(patch({ serverTime: serverTime * 1_000 }));
+  }
+
+  @Action(StorePosition)
+  storePosition(
+    { setState, getState }: StateContext<LocalsStateModel>,
+    { route, position }: StorePosition
+  ) {
+    const scrollPosition = { ...getState().scrollPosition, [route]: position };
+    setState(
+      patch({
+        scrollPosition,
+      })
+    );
   }
 }

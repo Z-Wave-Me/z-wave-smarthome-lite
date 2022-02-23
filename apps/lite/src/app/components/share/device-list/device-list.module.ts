@@ -6,6 +6,7 @@ import { MobileDeviceWidgetModule } from '@components/mobile/mobile-device-widge
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { TuiScrollbarModule } from '@taiga-ui/core';
+import { RestorePositionModule } from '@features/directives/restore-position/restore-position.module';
 
 @NgModule({
   declarations: [DeviceListComponent],
@@ -16,6 +17,7 @@ import { TuiScrollbarModule } from '@taiga-ui/core';
     DragDropModule,
     ScrollingModule,
     TuiScrollbarModule,
+    RestorePositionModule,
   ],
   exports: [DeviceListComponent],
 })

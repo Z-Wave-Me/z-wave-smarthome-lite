@@ -12,6 +12,7 @@ export type Role =
   | 'remoteAccess'
   | 'devicesInclude'
   | 'rooms'
+  | 'addRoom'
   | 'element'
   | 'eventDelete'
   | 'configRooms'
@@ -34,6 +35,7 @@ export const config: { [role in Role]: number[] } = {
   remoteAccess: [1],
   devicesInclude: [1],
   rooms: [1, 2, 3, 4],
+  addRoom: [1],
   element: [1, 2, 3, 4],
   eventDelete: [1],
   configRooms: [1],
