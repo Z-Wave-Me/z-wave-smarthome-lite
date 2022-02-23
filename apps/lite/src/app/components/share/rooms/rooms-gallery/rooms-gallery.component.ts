@@ -3,7 +3,6 @@ import { Select } from '@ngxs/store';
 import { Observable } from 'rxjs';
 import { LocationsState } from '@store/locations/locations.state';
 import { DestroyService } from '@core/services/destroy/destroy.service';
-import { LocalStorageState } from '@store/local-storage/local-storage.state';
 
 @Component({
   selector: 'z-wave-rooms-gallery',
@@ -14,5 +13,4 @@ import { LocalStorageState } from '@store/local-storage/local-storage.state';
 })
 export class RoomsGalleryComponent {
   @Select(LocationsState.ids) ids$!: Observable<number[]>;
-  @Select(LocalStorageState.isAdmin) isAdmin!: Observable<boolean>;
 }

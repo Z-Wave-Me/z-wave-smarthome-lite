@@ -83,10 +83,6 @@ export class LocalStorageState {
     @Inject(WINDOW) private readonly window: Window
   ) {}
   @Selector()
-  static isAdmin({ id, profiles }: LocalStorageStateModel) {
-    return profiles[id]?.role === 1;
-  }
-  @Selector()
   static profiles({ profiles }: LocalStorageStateModel) {
     return Object.values(profiles);
   }
@@ -170,7 +166,7 @@ export class LocalStorageState {
     };
   }
 
-  static isEventsHideById(id: string): (...args: any) => boolean {
+  static isEventsHideById(id: string): (...args: never) => boolean {
     return createSelector(
       [LocalStorageStateModel],
       (state: LocalStorageStateModel) =>

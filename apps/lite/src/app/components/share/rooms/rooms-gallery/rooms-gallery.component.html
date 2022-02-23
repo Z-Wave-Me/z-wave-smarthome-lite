@@ -12,7 +12,7 @@
       *cdkVirtualFor="let id of ids; templateCacheSize: 0"
       [id]="id"
     ></z-wave-room-widget>
-    <z-wave-add-room-widget *ngIf="isAdmin | async"></z-wave-add-room-widget>
+    <z-wave-add-room-widget *zWaveSecure="'addRoom'"></z-wave-add-room-widget>
     <div class="filler"></div>
   </cdk-virtual-scroll-viewport>
 </ng-container>

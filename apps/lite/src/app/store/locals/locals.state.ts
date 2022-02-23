@@ -31,12 +31,14 @@ export class LocalsState {
   static serverAvailable({ serverAvailable }: LocalsStateModel): boolean {
     return serverAvailable;
   }
-  @Selector()
+
   static position(route: string) {
-    return createSelector([LocalsState], ({ locals: { scrollPosition } }) => {
-      return scrollPosition?.[route] ?? 0;
-    });
+    return createSelector(
+      [LocalsState],
+      ({ scrollPosition }) => scrollPosition?.[route] ?? 0
+    );
   }
+
   @Selector()
   static serverTime({ serverTime }: LocalsStateModel): number {
     return serverTime;
