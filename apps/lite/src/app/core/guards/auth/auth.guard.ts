@@ -11,6 +11,10 @@ import {
 import { ApiService } from '@core/services/api/api.service';
 import { SetUser } from '@store/local-storage/local-storage.actions';
 
+/**
+ *  It sends a request to the API to check if the user is logged in. If the user is logged in,
+ *  it sets the user in the store and returns true. If the user is not logged in, it redirects to the login page
+ */
 @Injectable({
   providedIn: 'root',
 })

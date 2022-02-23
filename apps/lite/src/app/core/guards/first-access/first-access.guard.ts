@@ -13,6 +13,10 @@ interface IFirstAccess {
   remote_id: number;
 }
 
+/**
+ * It checks if the server has been accessed before. If it has, it returns true.
+ * If it hasn't, it redirects to the login page
+ */
 @Injectable({
   providedIn: 'root',
 })

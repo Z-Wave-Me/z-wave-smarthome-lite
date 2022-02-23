@@ -17,11 +17,14 @@ import {
   WsMessage,
 } from '@core/services/websocket/websocket.interfaces';
 
+/**
+ *  It connects to the server and subscribes to the events
+ */
+
 @Injectable({
   providedIn: 'root',
 })
 export class WebsocketService implements OnDestroy {
-  private static readonly baseEvent = 'me.z-wave.';
   private subscription?: Subscription;
   private readonly websocket$: WebSocketSubject<WsMessage<unknown>>;
   private readonly configuration: WebSocketSubjectConfig<WsMessage<unknown>>;
@@ -111,6 +114,9 @@ export class WebsocketService implements OnDestroy {
       this.subscription = this.on<void>('connectionStatusEvent').subscribe();
   }
 
+  /**
+   * It unsubscribes from the subscription and completes the websocket$ and connect$ observables.
+   */
   ngOnDestroy(): void {
     this.subscription?.unsubscribe();
     this.websocket$.complete();

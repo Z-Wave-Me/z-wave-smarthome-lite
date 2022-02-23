@@ -10,6 +10,10 @@ import { ApiService } from '@core/services/api/api.service';
 import { Store } from '@ngxs/store';
 import { of } from 'rxjs';
 
+/**
+ * It checks if the user is already authorized. If so, it redirects the user to the dashboard
+ */
+
 @Injectable({
   providedIn: 'root',
 })

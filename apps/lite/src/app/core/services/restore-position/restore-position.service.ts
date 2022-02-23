@@ -4,6 +4,10 @@ import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
 import { pipe } from 'rxjs';
 import { filter, tap } from 'rxjs/operators';
 
+/**
+ *  When a navigation starts, store the current scroll position of the viewport.
+ *  When the router changes, scroll to the last visited page
+ */
 @Injectable({
   providedIn: 'root',
 })

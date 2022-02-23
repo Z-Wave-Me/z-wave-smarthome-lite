@@ -92,6 +92,11 @@ export class ServerStreamService implements OnDestroy {
     return EMPTY;
   }
 
+  /**
+   * It returns a function that will be called when a client connects to the server.
+   * @param {ServerStreamConfig} config - The configuration object for the server stream.
+   * @returns The `wsAccess` function returns a `ServerStream` object.
+   */
   private wsAccess(config: ServerStreamConfig) {
     return ServerStreamService.wsAccessMap.get(config.api)?.(this) ?? EMPTY;
   }
