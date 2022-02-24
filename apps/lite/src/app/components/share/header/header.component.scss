@@ -1,5 +1,3 @@
-@import 'apps/lite/src/app/styles/oldStyles/base/variables';
-
 #header_logo {
   max-width: 140px;
 }
@@ -51,7 +49,7 @@
     }
   }
 
-  height: $header-h;
+  height: var(--header-heigth);
   display: flex;
 
   .header-filler {

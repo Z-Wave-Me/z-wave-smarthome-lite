@@ -1,20 +1,20 @@
 <ng-container *transloco="let _t">
   <ng-container
-    *ngIf="{ room: (room$ | async), locations: (locations$ | async) } as data"
+    *ngIf="{ room: (room$ | async), devices: (devices$ | async) } as data"
   >
     <tui-island
       tuiTouchable="transform"
       tuiRipple="radial-gradient(circle, #5c0067 0%, #00d4ff 100%)"
       class="widget"
-      *ngIf="data.room?.id || data.locations?.length"
-      [ngClass]="{ inactive: !data.locations }"
+      *ngIf="data.room?.id || data.devices?.length"
+      [ngClass]="{ inactive: !data.devices }"
     >
       <div class="tui-island__title title">
         <span
           class="tui-space_right-1"
           style="color: var(--tui-text-02)"
-          *ngIf="data.locations"
-          >[{{ data.locations ? data.locations.length : 0 }}]</span
+          *ngIf="data.devices"
+          >[{{ data.devices ? data.devices.length : 0 }}]</span
         ><span class="room">{{ data.room?.title }}</span>
         <fa-icon [icon]="faSort" class="tui-space_left-5"></fa-icon>
       </div>

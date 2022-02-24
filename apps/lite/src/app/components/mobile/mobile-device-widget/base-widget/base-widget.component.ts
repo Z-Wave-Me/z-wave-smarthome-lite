@@ -49,11 +49,6 @@ export class BaseWidgetComponent implements OnInit {
     private readonly router: Router
   ) {}
 
-  @HostListener('swiperight')
-  swipeRight() {
-    console.log('swipeRight');
-  }
-
   /**
    * Navigate to the element page with the given id
    */
@@ -76,6 +71,9 @@ export class BaseWidgetComponent implements OnInit {
     });
   }
 
+  /**
+   * It returns a stream of the current context
+   */
   ngOnInit(): void {
     this.context$ = this.store.select(
       ({

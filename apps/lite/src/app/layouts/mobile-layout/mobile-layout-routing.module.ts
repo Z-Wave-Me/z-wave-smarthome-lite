@@ -19,7 +19,7 @@ const routes: Routes = [
           import('@components/share/elements/elements.module').then(
             ({ ElementsModule }) => ElementsModule
           ),
-        data: { animation: '/elements' },
+        data: { animation: '/elements', reuse: true },
       },
       {
         path: 'rooms',

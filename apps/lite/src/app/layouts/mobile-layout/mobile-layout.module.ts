@@ -10,7 +10,6 @@ import { TuiScrollbarModule } from '@taiga-ui/core';
 import { SwipeNavigationModule } from '@features/directives/swipe-navigation/swipe-navigation.module';
 import { SERVER_SYNCHRONIZATION } from '../main-layout/tokens/server-synchronization.token';
 import { ServerStreamService } from '@core/services/server-stream/server-stream.service';
-import { WebsocketService } from '@core/services/websocket/websocket.service';
 import { ServerSynchronizationService } from '@core/services/server-synchronization/server-synchronization.service';
 
 const deviceFactory = (serverStreamService: ServerStreamService) => {
@@ -81,11 +80,8 @@ const eventsFactory = (serverStreamService: ServerStreamService) => {
 })
 export class MobileLayoutModule {
   constructor(
-    @Inject(SERVER_SYNCHRONIZATION) serverSynchronization: string[],
-    private readonly websocketService: WebsocketService,
     private readonly serverSynchronizationService: ServerSynchronizationService
   ) {
     console.warn('MobileLayoutModule loaded');
-    this.websocketService.connect();
   }
 }

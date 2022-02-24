@@ -26,7 +26,7 @@ import {
 })
 export class WebsocketService implements OnDestroy {
   private subscription?: Subscription;
-  private readonly websocket$: WebSocketSubject<WsMessage<unknown>>;
+  private websocket$: WebSocketSubject<WsMessage<unknown>>;
   private readonly configuration: WebSocketSubjectConfig<WsMessage<unknown>>;
   private readonly connect$ = new BehaviorSubject<boolean>(false);
   private RECONNECT_INTERVAL = 3_000;
@@ -110,8 +110,10 @@ export class WebsocketService implements OnDestroy {
    * When the connection status event is emitted, subscribe to it
    */
   connect() {
-    if (!this.subscription)
-      this.subscription = this.on<void>('connectionStatusEvent').subscribe();
+    this.websocket$.complete();
+    this.websocket$ = webSocket<WsMessage<unknown>>(this.configuration);
+    this.subscription?.unsubscribe();
+    this.subscription = this.on<void>('connectionStatusEvent').subscribe();
   }
 
   /**

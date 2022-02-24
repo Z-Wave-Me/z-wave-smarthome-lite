@@ -26,7 +26,6 @@ import { HttpClientModule } from '@angular/common/http';
 import { TranslocoRootModule } from './transloco/transloco-root.module';
 import { ConfigService } from '@core/services/config/config.service';
 import { environment } from '../environments/environment';
-// import { TestComponent } from './components-old/test/test.component';
 import { NgxsStoragePluginModule } from '@ngxs/storage-plugin';
 import { ApiModule } from '@core/services/api/api.module';
 
@@ -34,7 +33,6 @@ import { states } from '@store/index';
 import { NgxsResetPluginModule } from 'ngxs-reset-plugin';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { EmptyLayoutModule } from './layouts/empty-layout/empty-layout.module';
-import { DropDownModule } from '@modules/drop-down/drop-down.module';
 import { LocalStorageState } from '@store/local-storage/local-storage.state';
 import { DestroyService } from '@core/services/destroy/destroy.service';
 import { WebsocketModule } from '@core/services/websocket/websocket.module';
@@ -89,17 +87,17 @@ export const initApp = (configurationService: ConfigService) => () =>
     TranslocoRootModule,
     ApiModule,
     EmptyLayoutModule,
-    DropDownModule,
+    // DropDownModule,
     FontAwesomeModule,
     WebsocketModule.config({
       url: environment.ws,
     }),
+    ReactiveFormsModule,
     TuiRootModule,
     TuiNotificationsModule,
     TuiThemeNightModule,
     TuiModeModule,
     TuiDialogModule,
-    ReactiveFormsModule,
     TuiInputModule,
     TuiTextfieldControllerModule,
     TuiHintControllerModule,

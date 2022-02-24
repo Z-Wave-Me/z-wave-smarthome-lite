@@ -10,6 +10,7 @@ import {
 } from '@store/local-storage/local-storage.state';
 import { ApiService } from '@core/services/api/api.service';
 import { SetUser } from '@store/local-storage/local-storage.actions';
+import { WebsocketService } from '@core/services/websocket/websocket.service';
 
 /**
  *  It sends a request to the API to check if the user is logged in. If the user is logged in,
@@ -22,7 +23,8 @@ export class AuthGuard implements CanLoad {
   constructor(
     private store: Store,
     private router: Router,
-    private readonly apiService: ApiService
+    private readonly apiService: ApiService,
+    private readonly websocketService: WebsocketService
   ) {}
 
   /**
@@ -35,6 +37,7 @@ export class AuthGuard implements CanLoad {
       .send<ZWayResponse<IProfile>>('session', undefined, true)
       .pipe(
         map((response) => {
+          this.websocketService.connect();
           this.store.dispatch(new SetUser(response.data));
           return true;
         }),

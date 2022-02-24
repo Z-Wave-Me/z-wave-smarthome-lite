@@ -76,7 +76,11 @@ export class LocationsState {
       state.setState(
         patch({
           entities: patch(entities),
-          ids: [...ids].reverse(),
+          ids: [...ids].sort((a, b) => {
+            if (a === 0) a = -Infinity;
+            if (b === 0) b = -Infinity;
+            return +(b as number) - +(a as number);
+          }),
         })
       );
     }

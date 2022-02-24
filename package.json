@@ -1,6 +1,6 @@
 {
   "name": "z-wave",
-  "version": "1.1.5",
+  "version": "1.1.6",
   "license": "MIT",
   "scripts": {
     "ng": "nx",
@@ -10,7 +10,7 @@
     "proxy:remote:host": "ng serve --proxy-config=./apps/lite/proxy/proxy.remote.conf.js -o --host 0.0.0.0",
     "start": "nx serve",
     "version": "npm run changelog && git add CHANGELOG.md",
-    "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s -r 0",
+    "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s",
     "prebuild": "npm --no-git-tag-version version patch",
     "build": "nx build",
     "postbuild": "bash ./tools/scripts/fix-for-mobyle-app.sh",

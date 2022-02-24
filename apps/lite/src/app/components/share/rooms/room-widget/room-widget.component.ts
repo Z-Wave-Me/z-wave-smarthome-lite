@@ -21,7 +21,7 @@ import { first, map } from 'rxjs/operators';
 export class RoomWidgetComponent {
   @Input() id!: number;
   readonly faSort = faSort;
-  readonly locations$: Observable<any>;
+  readonly devices$: Observable<any>;
   readonly room$: Observable<Location>;
 
   constructor(
@@ -30,7 +30,7 @@ export class RoomWidgetComponent {
     private readonly route: ActivatedRoute
   ) {
     this.room$ = store.select((state) => state.locations.entities[this.id]);
-    this.locations$ = store.select((state) => state.devices.locations[this.id]);
+    this.devices$ = store.select((state) => state.devices.locations[this.id]);
   }
 
   @HostListener('press')
@@ -41,7 +41,7 @@ export class RoomWidgetComponent {
 
   @HostListener('tap')
   tap() {
-    this.locations$
+    this.devices$
       .pipe(
         map((loc) => loc?.length),
         switchMap((count) =>
