@@ -1,0 +1,19 @@
+.devices-filters {
+  display: grid;
+  grid-template-columns: 2rem 1fr auto;
+  align-items: center;
+  .icon-wrapper {
+    text-align: left;
+    width: 1.5rem;
+    img {
+      object-fit: contain;
+      width: 100%;
+      display: block;
+    }
+  }
+  .title {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}

@@ -4,10 +4,7 @@ import { Observable, of } from 'rxjs';
 import { Store } from '@ngxs/store';
 
 import { catchError, map } from 'rxjs/operators';
-import {
-  IProfile,
-  ZWayResponse,
-} from '@store/local-storage/local-storage.state';
+import { IProfile } from '@store/local-storage/local-storage.state';
 import { ApiService } from '@core/services/api/api.service';
 import { SetUser } from '@store/local-storage/local-storage.actions';
 import { WebsocketService } from '@core/services/websocket/websocket.service';
@@ -33,15 +30,13 @@ export class AuthGuard implements CanLoad {
    * @returns An Observable<boolean | UrlTree>
    */
   canLoad(): Observable<boolean | UrlTree> {
-    return this.apiService
-      .send<ZWayResponse<IProfile>>('session', undefined, true)
-      .pipe(
-        map((response) => {
-          this.websocketService.connect();
-          this.store.dispatch(new SetUser(response.data));
-          return true;
-        }),
-        catchError(() => of(this.router.createUrlTree(['/login'])))
-      );
+    return this.apiService.send<IProfile>('session', undefined, true).pipe(
+      map((profile) => {
+        this.websocketService.connect();
+        this.store.dispatch(new SetUser(profile));
+        return true;
+      }),
+      catchError(() => of(this.router.createUrlTree(['/login'])))
+    );
   }
 }

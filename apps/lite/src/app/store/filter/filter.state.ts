@@ -32,6 +32,7 @@ export class FilterStateModel {
   filter!: FilterPredicate;
   tag?: string;
   showHidden!: boolean;
+  showBattery!: boolean;
   orderBy!: OrderBy;
   tagsList?: string[];
   search?: string;
@@ -43,6 +44,7 @@ const defaults: FilterStateModel = {
     deviceType: [],
   },
   showHidden: false,
+  showBattery: false,
   tagsList: [],
   orderBy: {
     name: 'orderElements',

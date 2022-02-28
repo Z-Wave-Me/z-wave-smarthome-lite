@@ -5,8 +5,8 @@ import { Observable } from 'rxjs';
 import { DOCUMENT } from '@angular/common';
 // import { faHome, faGlobeEurope } from '@fortawesome/pro-duotone-svg-icons';
 import {
-  faBell as faHome,
   faAngry as faGlobeEurope,
+  faBell as faHome,
 } from '@fortawesome/free-regular-svg-icons';
 import { remoteHosts } from '@components/share/server-status-widget/sever-status-widget/config';
 
@@ -22,10 +22,14 @@ export class SeverStatusWidgetComponent {
 
   faHome = faHome;
   faGlobeEurope = faGlobeEurope;
+
+  // time$: Observable<number>;
   constructor(
     private readonly store: Store,
     @Inject(DOCUMENT) private document: Document
-  ) {}
+  ) {
+    // this.time$ = timer(0, 1000).pipe(map(() => Date.now()));
+  }
 
   locationType(): 'local' | 'remote' {
     if (this.document.location.hostname in remoteHosts) {

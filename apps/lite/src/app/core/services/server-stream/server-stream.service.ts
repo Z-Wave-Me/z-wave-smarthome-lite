@@ -26,8 +26,9 @@ import { HttpEncapsulatedRequest } from '@core/services/ws-api/http-encapsulated
 import { apiList, baseApiUrl } from '@core/services/ws-api/api-list';
 import { Device } from '@store/devices/deviceInterface';
 import { SetProfile } from '@store/local-storage/local-storage.actions';
-import { Notifications } from '@store/notifications/notifications.state';
+import { SNotification } from '@store/notifications/notifications.state';
 import { LocalStorageState } from '@store/local-storage/local-storage.state';
+import { AddNotifications } from '@store/notifications/notifications.actions';
 
 @Injectable({
   providedIn: 'any',
@@ -42,7 +43,10 @@ export class ServerStreamService implements OnDestroy {
     ['profile', (obj: ServerStreamService) => obj.subscribeProfile()],
     ['locations', (obj: ServerStreamService) => obj.subscribeLocations()],
     ['devices', (obj: ServerStreamService) => obj.subscribeDevices()],
-    ['events', (obj: ServerStreamService) => obj.subscribeNotifications()],
+    [
+      'notifications',
+      (obj: ServerStreamService) => obj.subscribeNotifications(),
+    ],
   ]);
   private readonly connection$: Observable<boolean>;
   private readonly destroy$ = new Subject<void>();
@@ -174,13 +178,11 @@ export class ServerStreamService implements OnDestroy {
     let params: Payload | undefined;
     return timer(0, timeBetweenRequests ?? 3000).pipe(
       exhaustMap(() =>
-        this.apiService.send<{
-          data: DeviceResponseInterface<Device>;
-        }>(api, params)
+        this.apiService.send<DeviceResponseInterface<Device>>(api, params)
       ),
-      map(({ data }: { data: DeviceResponseInterface<Device> }) => {
-        return data;
-      }),
+      // map(({ data }: { data: DeviceResponseInterface<Device> }) => {
+      //   return data;
+      // }),
       map(({ updateTime, structureChanged, devices }) => {
         this.store.dispatch(new UpdateDevices(devices, !params));
         this.store.dispatch(new ServerTime(updateTime));
@@ -207,8 +209,8 @@ export class ServerStreamService implements OnDestroy {
     timeBetweenRequests,
   }: ServerStreamConfig): Observable<void> {
     return timer(0, timeBetweenRequests ?? 6000).pipe(
-      exhaustMap(() => this.apiService.send<{ data: Location[] }>(api)),
-      map(({ data: locations }: { data: Location[] }) => {
+      exhaustMap(() => this.apiService.send<Location[]>(api)),
+      map((locations: Location[]) => {
         this.store.dispatch(new UpdateLocations(locations));
       }),
       // finalize(() => console.log('Http UpdateLocations complete')),
@@ -258,22 +260,29 @@ export class ServerStreamService implements OnDestroy {
    */
   private subscribeNotifications() {
     return this.webSocketService
-      .on<Notifications>(
-        'me.z-wave.notifications',
-        (): WsMessage<HttpEncapsulatedRequest> => ({
-          event: 'httpEncapsulatedRequest',
-          data: {
-            url:
-              ServerStreamService.baseApiUrl +
-              ServerStreamService.apiList['notifications'],
-            method: 'GET',
-          },
-          responseEvent: 'me.z-wave.notifications',
-        })
+      .on<SNotification>(
+        'me.z-wave.notifications'
+        // (): WsMessage<HttpEncapsulatedRequest> => ({
+        //   event: 'httpEncapsulatedRequest',
+        //   data: {
+        //     url:
+        //       ServerStreamService.baseApiUrl +
+        //       ServerStreamService.apiList['notifications'],
+        //     method: 'GET',
+        //   },
+        //   responseEvent: 'me.z-wave.notifications',
+        // })
       )
       .pipe(
         takeUntil(this.destroy$),
-        tap((notifications) => console.warn(notifications))
+        tap((notifications) => {
+          // if ('notifications' in notifications)
+          //   this.store.dispatch(
+          //     new AddNotifications(notifications.notifications)
+          //   );
+          // else
+          this.store.dispatch(new AddNotifications(notifications));
+        })
       );
   }
 }

@@ -42,7 +42,10 @@ export class LocationsState {
     private readonly apiService: ApiService,
     private readonly store: Store
   ) {}
-
+  @Selector()
+  static locations({ entities }: LocationsStateModel) {
+    return entities;
+  }
   @Action(UpdateLocations)
   update(
     state: StateContext<LocationsStateModel>,

@@ -8,40 +8,24 @@ import { LocalStorageState } from '@store/local-storage/local-storage.state';
 import { map, switchMap, takeUntil, tap } from 'rxjs/operators';
 import { Logout, NightMode } from '@store/local-storage/local-storage.actions';
 import { Observable, of } from 'rxjs';
-import { DevicesState } from '@store/devices/devices.state';
 // import { FilterState } from '@store/filter/filter.state';
 import { IconSupplierService } from '@core/services/icon-supplier/icon-supplier.service';
 // import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
 // import { faFilter as fasFilter, faFilter as falFilter } from '@fortawesome/free-solid-svg-icons';
 // import { faFilter as falFilter } from '@fortawesome/pro-light-svg-icons';
 import {
-  faFilter as falFilter,
-  faFilter as fasFilter,
-  faLowVision,
-  faSortAlphaDown,
-  faTags,
   faCogs,
+  faFilter as fasFilter,
+  faFilter as falFilter,
+  faRoute,
   faSignOutAlt,
 } from '@fortawesome/free-solid-svg-icons';
-import {
-  AddFilter,
-  RemoveFilter,
-  SetOrder,
-  SetTag,
-  ToggleHidden,
-} from '@store/filter/filter.actions';
-import {
-  FilterState,
-  FilterStateModel,
-  Order,
-} from '@store/filter/filter.state';
 import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import { Router } from '@angular/router';
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import { DeviceDetectorService } from '@core/services/device-detector/device-detector.service';
-import { DOCUMENT, Location } from '@angular/common';
 import { WINDOW } from '@ng-web-apis/common';
-import { faRoute } from '@fortawesome/free-solid-svg-icons';
+
 export interface MenuItem {
   type: string;
   count: number;
@@ -56,32 +40,14 @@ export interface MenuItem {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SettingsMenuComponent {
-  readonly orderList: ReadonlyMap<string, [order: Order, desc: boolean]> =
-    new Map([
-      ['updateTimeDESC', ['updateTime', true]],
-      ['creationTimeDESC', ['creationTime', true]],
-      ['creationTimeASC', ['creationTime', false]],
-      ['titleASC', ['title', false]],
-      ['titleDESC', ['title', true]],
-      ['orderElements', ['elements', false]],
-    ]);
-
   @Select(LocalStorageState.nightMode) nightMode$!: Observable<boolean>;
-  @Select(DevicesState.showDevice) total$!: Observable<string[]>;
-  @Select(FilterState.activeFilters) activeFilters$!: Observable<boolean>;
-  @Select(DevicesState.tagsList) tagsList$!: Observable<string[]>;
 
   readonly faCogs = faUserCog;
-  readonly faLowVision = faLowVision;
-  readonly faTags = faTags;
-  readonly faSortAlphaDown = faSortAlphaDown;
   readonly faSettingCogs = faCogs;
   readonly faSignOut = faSignOutAlt;
   readonly faRouter = faRoute;
-  readonly typesAndCount$: Observable<MenuItem[]>;
-  readonly tag$: Observable<string | undefined>;
-  readonly showFilters$: Observable<boolean>;
-  readonly order$: Observable<string>;
+  readonly showElementsFilters$: Observable<boolean>;
+  readonly showNotificationsFilters$: Observable<boolean>;
   endSession?: {
     icon: IconDefinition;
     text: string;
@@ -100,11 +66,11 @@ export class SettingsMenuComponent {
     private readonly deviceDetectorService: DeviceDetectorService,
     @Inject(WINDOW) private readonly window: Window
   ) {
-    this.order$ = store.select(
-      ({ filter }: FilterStateModel) => filter.orderBy.name
-    );
-    this.showFilters$ = of(void 0).pipe(
+    this.showElementsFilters$ = of(void 0).pipe(
       map(() => this.router.url === '/elements')
+    );
+    this.showNotificationsFilters$ = of(void 0).pipe(
+      map(() => this.router.url === '/events')
     );
     this.nightMode$
       .pipe(
@@ -119,57 +85,13 @@ export class SettingsMenuComponent {
       )
       .subscribe();
 
-    this.typesAndCount$ = store.select(DevicesState.devicesTypeAndCount).pipe(
-      map((devices) =>
-        devices.map((device) => ({
-          ...device,
-          icon: iconSupplierService.deviceTypeIconSupplier(device.type),
-        }))
-      )
-    );
     faIconLibrary.addIcons(falFilter, fasFilter);
-    this.tag$ = store.select(({ filter }: FilterStateModel) => filter.tag);
 
     this.logoutSetup();
   }
-  // readonly items = ['Edit', 'Download', 'Rename', 'DELETE'];
 
   toggle(open: boolean) {
     this.open = open;
-  }
-
-  trackByFn(index: number): number {
-    return index;
-  }
-
-  addFilter(deviceType: string): void {
-    this.active(deviceType)
-      ? this.store.dispatch(new RemoveFilter({ deviceType: [deviceType] }))
-      : this.store.dispatch(new AddFilter({ deviceType: [deviceType] }));
-  }
-
-  active(deviceType: string): boolean {
-    return (
-      this.store.selectSnapshot(({ filter }) =>
-        filter.filter?.deviceType?.includes(deviceType)
-      ) ?? false
-    );
-  }
-
-  showHidden(): void {
-    this.store.dispatch(new ToggleHidden());
-  }
-
-  showHiddenActive(): boolean {
-    return this.store.selectSnapshot(({ filter }) => filter.showHidden);
-  }
-
-  addTagFilter(tag?: string): void {
-    this.store.dispatch(new SetTag(tag));
-  }
-
-  setOrder(order: [Order, boolean], name: string): void {
-    this.store.dispatch(new SetOrder('elements', ...order, name));
   }
 
   private logoutSetup() {

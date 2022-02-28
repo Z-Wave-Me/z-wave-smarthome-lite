@@ -51,6 +51,7 @@ import {
   TuiOverscrollModule,
   TuiValidatorModule,
 } from '@taiga-ui/cdk';
+import { BackgroundModeService } from '@core/services/background-mode/background-mode.service';
 
 export const initApp = (configurationService: ConfigService) => () =>
   configurationService.load().toPromise();
@@ -122,4 +123,6 @@ export const initApp = (configurationService: ConfigService) => () =>
   ],
   bootstrap: [AppComponent],
 })
-export class AppModule {}
+export class AppModule {
+  constructor(private readonly backgroundModeService: BackgroundModeService) {}
+}

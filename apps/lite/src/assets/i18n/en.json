@@ -7,7 +7,8 @@
   "dashboard": "Dashboard",
   "events": "Events",
   "automations": "Automations",
-
+  "thisWeek": "This week",
+  "allNotifications": "All events",
   "S0": "S0",
   "S2_Access": "S2 Access",
   "S2_Authenticated": "S2 Authenticated",

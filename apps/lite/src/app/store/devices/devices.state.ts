@@ -107,6 +107,7 @@ export class DevicesState {
     {
       filter,
       showHidden,
+      showBattery,
       tag,
       orderBy: { order, desc, place },
       search,
@@ -115,6 +116,7 @@ export class DevicesState {
     const orderBy = orderFactory(order, place, desc);
     return Object.values(entities)
       .filter((entre) => {
+        if (!showBattery && entre.deviceType === 'battery') return false;
         if (!showHidden && !entre.visibility) {
           return false;
         }
@@ -158,11 +160,19 @@ export class DevicesState {
     });
   }
 
-  static device(id: string, field: string) {
-    return createSelector([DevicesState], ({ entities }: DevicesStateModel) => {
-      return entities[id][field];
-    });
+  static getDeviceById(id: string) {
+    return createSelector(
+      [DevicesState],
+      ({ entities }: DevicesStateModel) => entities[id]
+    );
   }
+
+  // static deviceField(id: string, field: string) {
+  //   return createSelector(
+  //     [DevicesState],
+  //     ({ entities }: DevicesStateModel) => entities[id][field]
+  //   );
+  // }
 
   @Selector()
   static tagsList({ entities }: DevicesStateModel): string[] {
@@ -261,7 +271,6 @@ export class DevicesState {
 
   updateServer(devices: Device[] | string) {
     if (Array.isArray(devices)) {
-      console.log('updateServer', devices);
       return concat(
         ...devices.map((device) =>
           this.apiService.send(
@@ -301,33 +310,36 @@ export class DevicesState {
       this.store.selectSnapshot(LocalStorageState.profile)?.dashboard ?? [];
     let tagsList = new Set<string>();
     let serverTime = 0;
-    devices.map((device: Device) => {
-      ids.push(device.id);
-      if (serverTime < device.updateTime) {
-        serverTime = device.updateTime;
-      }
-      const additional = {
-        iconPath: this.iconSupplier.assignElementIcon(device),
-        title: device.metrics.title,
-        inProgress: false,
-        onDashboard: dashboard.includes(device.id),
-        intChartUrl: device.metrics.intchartUrl,
-        hasHistory: device.hasHistory, // TODO something wrong here
-        showNotification: !device.hasHistory, // TODO something wrong here
-        hideEvents: device.hide_events,
-      };
-      if (device.tags?.length) {
-        tagsList = new Set<string>([...tagsList, ...device.tags]);
-      }
-      if (!locationChanges) {
-        locationChanges = !getState().locations[device.location]?.includes(
-          device.id
-        );
-      }
-      // TODO need hide hidden devices
-      entities[device.id] = { ...device, ...additional } as Device;
-    });
-    this.store.dispatch(new ServerTime(serverTime));
+    devices
+      .filter((device) => !device.permanently_hidden)
+      .map((device: Device) => {
+        ids.push(device.id);
+        if (serverTime < device.updateTime) {
+          serverTime = device.updateTime;
+        }
+        const additional = {
+          iconPath: this.iconSupplier.assignElementIcon(device),
+          iconType: device.metrics.icon,
+          title: device.metrics.title,
+          inProgress: false,
+          onDashboard: dashboard.includes(device.id),
+          intChartUrl: device.metrics.intchartUrl,
+          hasHistory: device.hasHistory, // TODO something wrong here
+          showNotification: !device.hasHistory, // TODO something wrong here
+          hideEvents: device.hide_events,
+        };
+        if (device.tags?.length) {
+          tagsList = new Set<string>([...tagsList, ...device.tags]);
+        }
+        if (!locationChanges) {
+          locationChanges = !getState().locations[device.location]?.includes(
+            device.id
+          );
+        }
+
+        entities[device.id] = { ...device, ...additional } as Device;
+      });
+    this.store.dispatch(new ServerTime(serverTime * 1_000));
     this.store.dispatch(new SetTagsList([...tagsList]));
     let locations;
     if (structureChanged || locationChanges) {
@@ -372,7 +384,6 @@ export class DevicesState {
       .pipe(
         filter((data) => !!data.data),
         map(({ data: { devices } }) => {
-          console.log(devices);
           this.store.dispatch(new UpdateDevices(devices));
         })
       );

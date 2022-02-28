@@ -25,6 +25,7 @@ import { patch } from '@ngxs/store/operators';
 import { HttpClient } from '@angular/common/http';
 import { UpdateAllLocations } from '@store/locations/locations.action';
 import { WINDOW } from '@ng-web-apis/common';
+import { SetNotificationsFilters } from '@store/notifications/notifications.actions';
 
 export interface ZWayResponse<T> {
   code: number;
@@ -82,6 +83,7 @@ export class LocalStorageState {
     private readonly httpClient: HttpClient,
     @Inject(WINDOW) private readonly window: Window
   ) {}
+
   @Selector()
   static profiles({ profiles }: LocalStorageStateModel) {
     return Object.values(profiles);
@@ -269,16 +271,18 @@ export class LocalStorageState {
   ) {
     const id = profile.id ?? getState().id;
     if (!id) return;
-    const profiles = { ...getState().profiles } ?? {};
-    profiles[id] = { ...(profiles[id] ?? {}), ...profile };
+    const profiles = { ...getState().profiles };
+    const storeProfile = { ...profiles[id] };
+    profiles[id] = { ...profiles[id], ...profile };
     setState(
       patch({
         profiles: profiles,
         lang: id === getState().id ? profile.lang ?? getState().lang : 'en',
       })
     );
-    if (profile.id === getState().id) {
-      this.updateLocationAndDevices(profiles[id] ?? {}, profile);
+    if (id === getState().id) {
+      this.updateLocationAndDevices(storeProfile, profile);
+      this.store.dispatch(new SetNotificationsFilters());
     }
   }
 

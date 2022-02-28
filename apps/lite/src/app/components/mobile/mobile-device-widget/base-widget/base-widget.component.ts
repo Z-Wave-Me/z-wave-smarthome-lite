@@ -52,7 +52,7 @@ export class BaseWidgetComponent implements OnInit {
   /**
    * Navigate to the element page with the given id
    */
-  @HostListener('press', ['$event'])
+  @HostListener('press')
   press() {
     this.router.navigate(['/element', this.id]);
   }

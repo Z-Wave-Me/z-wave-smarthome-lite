@@ -1,0 +1,58 @@
+<ng-container *transloco="let _t">
+  <div
+    class="notification {{ notification.level }}"
+    [ngClass]="{
+      first: first,
+      last: last
+    }"
+  >
+    <div class="icon-wrapper">
+      <img class="notification-icon" [src]="notification.iconPath" alt="" />
+    </div>
+    <div class="info" *ngIf="notification.type.startsWith('device'); else base">
+      <span class="time">{{ notification.timestamp | date: 'HH:mm' }}</span>
+      <span class="title"> {{ notification.deviceName }} </span>:
+      <span class="level">{{ notification.deviceLevel }}</span>
+      <span class="room" *ngIf="notification.locationName">
+        - {{ notification.locationName }}</span
+      >
+    </div>
+    <tui-hosted-dropdown
+      class="control"
+      tuiDropdownAlign="right"
+      [content]="dropdown"
+      [(open)]="open"
+    >
+      <tui-svg
+        src="tuiIconChevronDown"
+        class="icon"
+        [class.icon_rotated]="open"
+      ></tui-svg>
+    </tui-hosted-dropdown>
+  </div>
+  <!--  <pre>-->
+  <!--  {{ notification | json }}-->
+  <!--    </pre-->
+  <!--  >-->
+  <ng-template #base>
+    <div class="info">
+      <span class="time">{{ notification.timestamp | date: 'HH:mm' }}</span>
+      <span class="title"> {{ notification.source }} </span>:
+      <span class="level">{{ notification.level }}</span>
+    </div>
+  </ng-template>
+  <ng-template #dropdown>
+    <tui-data-list>
+      <button *ngFor="let item of actions" tuiOption (click)="item.handler()">
+        <span>
+          <fa-icon
+            [icon]="item.icon"
+            class="tui-space_right-2"
+            [ngClass]="{ negative: item.color }"
+          ></fa-icon>
+          {{ _t(item.title) }}
+        </span>
+      </button>
+    </tui-data-list></ng-template
+  >
+</ng-container>

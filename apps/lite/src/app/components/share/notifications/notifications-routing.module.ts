@@ -1,11 +1,11 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { EventsListComponent } from '@components/share/events/events-list/events-list.component';
+import { NotificationsListComponent } from '@components/share/notifications/notifications-list/notifications-list.component';
 
 const routes: Routes = [
   {
     path: '',
-    component: EventsListComponent,
+    component: NotificationsListComponent,
   },
 ];
 
@@ -13,4 +13,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
 })
-export class EventsRoutingModule {}
+export class NotificationsRoutingModule {}

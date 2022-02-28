@@ -1,4 +1,4 @@
-<ng-container *ngIf="ids$ | async as ids; else loading" #viewport>
+<ng-container *ngIf="ids$ | async as ids; else loading">
   <ng-container *ngIf="ids.length; else placeHolder">
     <cdk-virtual-scroll-viewport
       class="device-list tui-zero-scrollbar"
@@ -7,9 +7,10 @@
       appendOnly
       zWaveRestorePosition
     >
-      <div *cdkVirtualFor="let id of ids; templateCacheSize: 0">
-        <z-wave-device-widget [id]="id"></z-wave-device-widget>
-      </div>
+      <z-wave-device-widget
+        *cdkVirtualFor="let id of ids; templateCacheSize: 0"
+        [id]="id"
+      ></z-wave-device-widget>
     </cdk-virtual-scroll-viewport>
   </ng-container>
 </ng-container>

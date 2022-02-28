@@ -32,11 +32,11 @@ const profileFactory = (serverStreamService: ServerStreamService) => {
   return 'profile';
 };
 
-const eventsFactory = (serverStreamService: ServerStreamService) => {
+const notificationsFactory = (serverStreamService: ServerStreamService) => {
   serverStreamService.subscribe({
-    api: 'events',
+    api: 'notifications',
   });
-  return 'events';
+  return 'notifications';
 };
 
 @NgModule({
@@ -70,16 +70,17 @@ const eventsFactory = (serverStreamService: ServerStreamService) => {
       deps: [ServerStreamService],
       multi: true,
     },
-    // {
-    //   provide: SERVER_SYNCHRONIZATION,
-    //   useFactory: eventsFactory,
-    //   deps: [ServerStreamService],
-    //   multi: true,
-    // },
+    {
+      provide: SERVER_SYNCHRONIZATION,
+      useFactory: notificationsFactory,
+      deps: [ServerStreamService],
+      multi: true,
+    },
   ],
 })
 export class MobileLayoutModule {
   constructor(
+    @Inject(SERVER_SYNCHRONIZATION) serverSynchronization: string[],
     private readonly serverSynchronizationService: ServerSynchronizationService
   ) {
     console.warn('MobileLayoutModule loaded');

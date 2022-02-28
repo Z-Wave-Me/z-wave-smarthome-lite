@@ -1,0 +1,76 @@
+@import '~@taiga-ui/core/styles/taiga-ui-local';
+
+:host {
+  .notification {
+    min-height: 66px;
+    max-height: 66px;
+    padding: 0.5rem;
+    gap: 0.5rem;
+    margin: -1px 0;
+    border: 1px solid var(--tui-base-05);
+    display: grid;
+    grid-template-columns: 42px 1fr 22px;
+
+    .icon {
+      @include transition(transform);
+
+      &_rotated {
+        transform: rotate(180deg);
+      }
+    }
+    &.warning {
+      background: var(--tui-warning-bg);
+    }
+    &.device-info {
+    }
+    &.error {
+      background: var(--tui-error-bg);
+    }
+    &.critical {
+      background-color: var(--tui-error-fill);
+    }
+    .icon-wrapper {
+      //aspect-ratio: 1;
+      align-self: center;
+      .notification-icon {
+        display: block;
+        object-fit: contain;
+        max-width: 100%;
+      }
+    }
+    .icon-wrapper,
+    .control {
+      text-align: center;
+      align-self: center;
+    }
+    &.first {
+      margin-top: 0;
+    }
+    &.last {
+      margin-bottom: 0;
+    }
+    .info {
+      .time {
+        font-style: italic;
+        color: var(--tui-text-02);
+        padding-right: 1rem;
+      }
+      .room {
+        font-style: italic;
+        color: var(--tui-text-02);
+      }
+      .location {
+        font-style: italic;
+        color: var(--tui-text-03);
+      }
+      .level {
+        white-space: nowrap;
+        font-style: italic;
+        font-weight: bolder;
+      }
+    }
+  }
+}
+.negative {
+  color: var(--tui-negative);
+}

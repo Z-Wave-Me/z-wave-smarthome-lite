@@ -28,12 +28,12 @@ const profileFactory = (serverStreamService: ServerStreamService) => {
   return 'profile';
 };
 
-const eventsFactory = (serverStreamService: ServerStreamService) => {
-  serverStreamService.subscribe({
-    api: 'events',
-  });
-  return 'events';
-};
+// const eventsFactory = (serverStreamService: ServerStreamService) => {
+//   serverStreamService.subscribe({
+//     api: 'events',
+//   });
+//   return 'events';
+// };
 @NgModule({
   declarations: [MainLayoutComponent],
   imports: [
@@ -70,7 +70,7 @@ const eventsFactory = (serverStreamService: ServerStreamService) => {
   ],
 })
 export class MainLayoutModule {
-  constructor(
-    @Inject(SERVER_SYNCHRONIZATION) serverSynchronization: string[]
-  ) {}
+  constructor(@Inject(SERVER_SYNCHRONIZATION) serverSynchronization: string[]) {
+    console.warn('MainLayoutModule constructor');
+  }
 }

@@ -1,7 +1,7 @@
 export interface Metric {
   level: number | string;
   icon: string;
-  title: string;
+  title?: string;
   [index: string]: string | number | undefined;
 }
 export interface Device {
@@ -20,7 +20,9 @@ export interface Device {
   hideEvents: boolean;
   id: string;
   iconPath: string;
+  iconType: string;
   metrics: Metric;
+  customIcons: unknown;
   order: {
     [key in OrderByLocations]: number;
   };

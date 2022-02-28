@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { IconSupplierConfig } from '@core/services/icon-supplier/icon-supplier';
 import { config } from './icon-supplier.config';
 import { Device } from '@store/devices/deviceInterface';
+import { SNotification } from '@store/notifications/notifications.state';
 
 @Injectable({
   providedIn: 'root',
@@ -57,7 +58,7 @@ export class IconSupplierService {
   assignElementIcon({
     metrics: { icon: iconType, level },
     customIcons,
-  }: Device): string {
+  }: Pick<Device, 'metrics' | 'customIcons'>): string {
     const baseUrl = this.iconsPath;
     let icon = 'placeholder.png';
     if (/^app\/img/.test(iconType)) {
@@ -70,6 +71,51 @@ export class IconSupplierService {
         icon;
     }
     return baseUrl + icon;
+  }
+
+  assignEventIcon(sNotification: SNotification, device: Device) {
+    if (device) {
+      return this.assignElementIcon({
+        metrics: { icon: device.iconType, level: sNotification.message.l },
+        customIcons: {},
+      });
+    }
+    let icon = this.iconsPath + 'placeholder.png';
+    switch (sNotification.type) {
+      case 'device-temperature':
+        icon = this.iconsPath + 'event-device-temperature.png';
+        break;
+      case 'device-electric':
+        icon = this.iconsPath + 'event-device-electric.png';
+        break;
+      case 'device-power':
+        icon = this.iconsPath + 'event-device-power.png';
+        break;
+      case 'device-status':
+        icon = this.iconsPath + 'event-device-status.png';
+        break;
+      case 'device-OnOff':
+        if (typeof sNotification.message === 'string' || !sNotification.message)
+          icon = this.iconsPath + 'event-device-on.png';
+        else
+          icon =
+            sNotification.message.l == 'on'
+              ? this.iconsPath + 'event-device-on.png'
+              : this.iconsPath + 'event-device-off.png';
+        break;
+      case 'device-luminiscence':
+        icon = this.iconsPath + 'event-device-luminiscence.png';
+        break;
+      case 'device':
+        icon = this.iconsPath + 'event-device.png';
+        break;
+      case 'module':
+        icon = this.iconsPath + 'event-module.png';
+        break;
+      default:
+        break;
+    }
+    return icon;
   }
 
   /**

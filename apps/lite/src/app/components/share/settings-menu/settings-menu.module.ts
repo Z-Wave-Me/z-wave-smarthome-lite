@@ -19,12 +19,18 @@ import {
 } from '@taiga-ui/kit';
 import { ReactiveFormsModule } from '@angular/forms';
 import { TuiSidebarModule } from '@taiga-ui/addon-mobile';
-import { TuiActiveZoneModule } from '@taiga-ui/cdk';
+import { TuiActiveZoneModule, TuiLetModule } from '@taiga-ui/cdk';
 import { TranslocoModule } from '@ngneat/transloco';
 import { RouterModule } from '@angular/router';
+import { ElementsFiltersComponent } from './elements-filters/elements-filters.component';
+import { NotificationFiltersComponent } from './notification-filters/notification-filters.component';
 
 @NgModule({
-  declarations: [SettingsMenuComponent],
+  declarations: [
+    SettingsMenuComponent,
+    ElementsFiltersComponent,
+    NotificationFiltersComponent,
+  ],
   imports: [
     CommonModule,
     TuiHostedDropdownModule,
@@ -45,6 +51,7 @@ import { RouterModule } from '@angular/router';
     TuiTextfieldControllerModule,
     TuiIslandModule,
     RouterModule,
+    TuiLetModule,
   ],
   exports: [SettingsMenuComponent],
 })

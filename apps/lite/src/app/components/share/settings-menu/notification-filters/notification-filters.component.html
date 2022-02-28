@@ -1,0 +1,61 @@
+<ng-container *transloco="let _t">
+  <tui-accordion [rounded]="false">
+    <tui-accordion-item
+      *ngIf="timeFilter$ | async as currentTimeFilter"
+      borders="top-bottom"
+    >
+      <fa-icon [icon]="faClock"></fa-icon>
+      <span> {{ _t(currentTimeFilter) }}</span>
+      <ng-template tuiAccordionItemContent>
+        <div
+          (click)="setTimeFilter(filter.value)"
+          *ngFor="let filter of timeFilterList | keyvalue"
+          [ngClass]="{ active: currentTimeFilter === filter.key }"
+          class="colorize"
+        >
+          {{ _t(filter.key) }}
+        </div>
+      </ng-template>
+    </tui-accordion-item>
+    <tui-accordion-item
+      *tuiLet="typeFilter$ | async as typeFilter"
+      borders="top-bottom"
+    >
+      <fa-icon [icon]="faMicrochip"></fa-icon>
+      <span> {{ typeFilter?.title }}</span>
+
+      <ng-template tuiAccordionItemContent>
+        <div>
+          <ng-container>
+            <div
+              (click)="setTypeFilter(filter.value)"
+              *ngFor="let filter of typeFilterList | keyvalue; trackBy: trackBy"
+              [ngClass]="{ active: filter.value === typeFilter?.id }"
+              class="colorize"
+            >
+              {{ _t(filter.key) }}
+            </div>
+          </ng-container>
+          <hr />
+          <ng-container *ngIf="devicesAndTypes$ | async as devicesAndTypes">
+            <div
+              (click)="setTypeFilter(device.key)"
+              *ngFor="
+                let device of devicesAndTypes | keyvalue;
+                trackBy: trackBy
+              "
+              [ngClass]="{ active: device.key === typeFilter?.id }"
+              class="colorize devices-filters"
+            >
+              <div class="icon-wrapper">
+                <img [src]="device.value.iconPath" alt="" />
+              </div>
+              <span class="title"> {{ device.value.title }}</span>
+              <span class="count"> [{{ device.value.count }}]</span>
+            </div>
+          </ng-container>
+        </div>
+      </ng-template>
+    </tui-accordion-item>
+  </tui-accordion>
+</ng-container>

@@ -4,6 +4,7 @@ import { defer, EMPTY, iif } from 'rxjs';
 import { WebsocketService } from '@core/services/websocket/websocket.service';
 import { HttpEncapsulatedRequest } from '@core/services/ws-api/http-encapsulated-request';
 import { WsMessage } from '@core/services/websocket/websocket.interfaces';
+import { map } from 'rxjs/operators';
 
 export interface Payload {
   data?: any;
@@ -154,7 +155,12 @@ export class ApiService {
         )
       ),
       defer(() =>
-        this.httpSend<T>(url + command, payload?.method, params, payload?.data)
+        this.httpSend<{ data: T }>(
+          url + command,
+          payload?.method,
+          params,
+          payload?.data
+        ).pipe(map(({ data }) => data))
       )
     );
   }

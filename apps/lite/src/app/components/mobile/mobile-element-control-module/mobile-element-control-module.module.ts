@@ -37,6 +37,7 @@ import { DeviceCommunicationModule } from '@components/share/device-communicatio
 import { HelpTextModule } from '@modules/help-text/help-text.module';
 import { SensorModule } from '@components/mobile/sensor/sensor.module';
 import { DefaultElementControlComponent } from '@components/mobile/mobile-element-control-module/default-element-control/default-element-control.component';
+import { SecureModule } from '@features/directives/secure/secure.module';
 
 @NgModule({
   declarations: [ElementControlComponent, DefaultElementControlComponent],
@@ -74,6 +75,7 @@ import { DefaultElementControlComponent } from '@components/mobile/mobile-elemen
     TuiInputTagModule,
     TuiWrapperModule,
     SensorModule,
+    SecureModule,
   ],
 })
 export class MobileElementControlModuleModule {}

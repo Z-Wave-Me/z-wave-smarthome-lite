@@ -40,8 +40,8 @@ const routes: Routes = [
       {
         path: 'events',
         loadChildren: () =>
-          import('@components/share/events/events.module').then(
-            ({ EventsModule }) => EventsModule
+          import('@components/share/notifications/notifications.module').then(
+            ({ NotificationsModule }) => NotificationsModule
           ),
         data: { animation: '/events' },
       },

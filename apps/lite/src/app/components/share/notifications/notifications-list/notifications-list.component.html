@@ -1,0 +1,24 @@
+<ng-container *ngIf="notifications$ | async as notifications">
+  <cdk-virtual-scroll-viewport
+    *ngIf="notifications.length; else placeHolder"
+    class="notifications-list tui-zero-scrollbar"
+    itemSize="66"
+    tuiScrollable
+    zWaveRestorePosition
+  >
+    <z-wave-notification-widget
+      *cdkVirtualFor="
+        let notification of notifications;
+        let first = first;
+        let last = last;
+        templateCacheSize: 0;
+        trackBy: trackBy
+      "
+      [notification]="notification"
+      [first]="first"
+      [last]="last"
+    >
+    </z-wave-notification-widget>
+  </cdk-virtual-scroll-viewport>
+</ng-container>
+<ng-template #placeHolder> nothing here </ng-template>

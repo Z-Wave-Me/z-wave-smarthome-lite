@@ -57,7 +57,7 @@ export class LocalsState {
     { setState }: StateContext<LocalsStateModel>,
     { serverTime }: ServerTime
   ): void {
-    setState(patch({ serverTime: serverTime * 1_000 }));
+    setState(patch({ serverTime: serverTime }));
   }
 
   @Action(StorePosition)
