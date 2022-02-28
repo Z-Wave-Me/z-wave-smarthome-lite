@@ -19,7 +19,7 @@
     <tui-scrollbar [hidden]="true" class="content" tuiOverscroll="scroll">
       <form [formGroup]="settings" class="personal-settings">
         <tui-input
-          class="settings-item"
+          class="personal-settings-item"
           [tuiTextfieldExampleText]="profile.name ?? ''"
           formControlName="name"
         >
@@ -30,7 +30,7 @@
         <tui-input
           [tuiTextfieldExampleText]="profile.email ?? ''"
           formControlName="email"
-          class="settings-item"
+          class="personal-settings-item"
         >
           {{ _t('lb_email') }}
           <span class="tui-required"></span>
@@ -39,7 +39,7 @@
         <tui-select
           formControlName="lang"
           [valueContent]="langContent"
-          class="settings-item"
+          class="personal-settings-item"
         >
           {{ _t('lb_language') }}
           <tui-data-list-wrapper
@@ -49,7 +49,7 @@
           ></tui-data-list-wrapper>
         </tui-select>
 
-        <tui-island size="m" class="settings-item">
+        <tui-island size="m" class="personal-settings-item">
           <div class="tui-island__content">
             <div class="tui-island__figure">
               <tui-toggle
@@ -61,7 +61,7 @@
             {{ _t('lb_hide_device_events') }}
           </div>
         </tui-island>
-        <tui-island size="m" class="settings-item">
+        <tui-island size="m" class="personal-settings-item">
           <div class="tui-island__content">
             <div class="tui-island__figure">
               <tui-toggle
@@ -76,7 +76,7 @@
         <ng-container *ngIf="hiddenDevices$ | async as hiddenDevices">
           <tui-island
             size="m"
-            class="settings-item"
+            class="personal-settings-item"
             *ngIf="hiddenDevices.length"
           >
             <div class="tui-island__header">
@@ -96,7 +96,7 @@
             </div>
           </tui-island>
         </ng-container>
-        <tui-island size="m" class="settings-item">
+        <tui-island size="m" class="personal-settings-item">
           <div class="tui-island__content">
             <span>
               <fa-icon [icon]="faMobileAlt" class="tui-space_right-2"></fa-icon>
