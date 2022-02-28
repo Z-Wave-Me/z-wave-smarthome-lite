@@ -1,4 +1,4 @@
-## 1.1.6 (2022-02-23)
+## 1.1.8 (2022-02-28)
 
 
 ### Bug Fixes
@@ -18,6 +18,8 @@
 * CHANGELOG ([b1258f0](https://github.com/Xel4ek/Z-Wave-Light/commit/b1258f0c1aaac92011f0a3d86ee4cc2bf0db7ab1))
 * clear reset filters when route ([7c4c3dd](https://github.com/Xel4ek/Z-Wave-Light/commit/7c4c3dde23bb95399c7d67f6eae16efcaf490aca))
 * login logout hubs added ([1364359](https://github.com/Xel4ek/Z-Wave-Light/commit/1364359b736db0ff23fe250867f832b52b1b826d))
+* notifications added ([b1d4475](https://github.com/Xel4ek/Z-Wave-Light/commit/b1d44756fa128aa3c64fc89e96e9c662b0103a85))
+* protect room settings ([ab13bcc](https://github.com/Xel4ek/Z-Wave-Light/commit/ab13bcc5fccc4a3e727aa3244ae46cad8cb8e0fa))
 * protect route login/firstAccess/app ([b7d87a2](https://github.com/Xel4ek/Z-Wave-Light/commit/b7d87a272c444c3108e488047f385d17c232940b))
 * restore position directive ([e5af47d](https://github.com/Xel4ek/Z-Wave-Light/commit/e5af47de0dbf19b087e58be2d148c14241391981))
 * side nav ([b7c1bee](https://github.com/Xel4ek/Z-Wave-Light/commit/b7c1bee35cba419864f352b8647555b113c3cf3d))
@@ -26,3 +28,6 @@
 * updated locations && devices when remote profile changes ([b5e06e0](https://github.com/Xel4ek/Z-Wave-Light/commit/b5e06e007b0451c2a644c6830a8d2a914e4dac2d))
 * versions ([c5b8253](https://github.com/Xel4ek/Z-Wave-Light/commit/c5b8253f3023845af5e39c43eb091cd179d3b494))
 * zWaveSecure directive ([6feb2ed](https://github.com/Xel4ek/Z-Wave-Light/commit/6feb2edc72b19654b1c7e117330151356c0c72f7))
+
+
+
