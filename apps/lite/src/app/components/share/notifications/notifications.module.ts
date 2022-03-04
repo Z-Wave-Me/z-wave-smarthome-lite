@@ -15,6 +15,7 @@ import {
 import { RestorePositionModule } from '@features/directives/restore-position/restore-position.module';
 import { NotificationWidgetComponent } from './notification-widget/notification-widget.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { HelpersModule } from '@components/share/helpers/helpers.module';
 
 @NgModule({
   declarations: [NotificationsListComponent, NotificationWidgetComponent],
@@ -30,6 +31,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
     TuiSvgModule,
     TuiDataListModule,
     FontAwesomeModule,
+    HelpersModule,
   ],
 })
 export class NotificationsModule {}

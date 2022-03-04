@@ -6,7 +6,6 @@ import {
 } from '@store/notifications/notifications.state';
 import { Observable } from 'rxjs';
 import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
-import { faRadar } from '@fortawesome/pro-thin-svg-icons';
 
 @Component({
   selector: 'z-wave-notifications-list',
@@ -16,11 +15,9 @@ import { faRadar } from '@fortawesome/pro-thin-svg-icons';
 })
 export class NotificationsListComponent {
   @ViewChild(CdkVirtualScrollViewport) viewport?: CdkVirtualScrollViewport;
-  // notifications$!: Observable<Notification[]>;
   @Select(NotificationsState.notifications) notifications$!: Observable<
     Notification[]
   >;
-  faRadar = faRadar;
   trackBy(_: number, { id }: Notification) {
     return id;
   }
