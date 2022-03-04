@@ -4,7 +4,6 @@ import {
   HostListener,
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { faStar as faPlus } from '@fortawesome/free-regular-svg-icons';
 import { Store } from '@ngxs/store';
 import {
   distinctUntilChanged,
@@ -17,6 +16,7 @@ import { LocationsStateModel } from '@store/locations/locations.state';
 import { TuiNotification, TuiNotificationsService } from '@taiga-ui/core';
 import { TranslocoService } from '@ngneat/transloco';
 import { from } from 'rxjs';
+import { faPlus } from '@fortawesome/pro-regular-svg-icons';
 
 @Component({
   selector: 'z-wave-add-room-widget',

@@ -1,11 +1,8 @@
 <ng-container *transloco="let _t">
   <tui-accordion [rounded]="false">
-    <tui-accordion-item
-      *ngIf="{ tag: tag$ | async } as data"
-      borders="top-bottom"
-    >
+    <tui-accordion-item *ngIf="{ tag: tag$ | async } as data">
       <div [ngClass]="{ active: data.tag }">
-        <fa-icon [icon]="faTags"></fa-icon>
+        <fa-icon [icon]="data.tag ? faTags : falTag"></fa-icon>
         <span> {{ _t('lb_tags') }}</span>
         <span *ngIf="!!data.tag">: {{ data.tag }}</span>
       </div>
@@ -29,13 +26,9 @@
         </div>
       </ng-template>
     </tui-accordion-item>
-    <tui-accordion-item
-      *ngIf="{ active: activeFilters$ | async } as filter"
-      borders="top-bottom"
-    >
+    <tui-accordion-item *ngIf="{ active: activeFilters$ | async } as filter">
       <div [ngClass]="{ active: filter.active }">
-        <!--          TODO [filter.active ? 'fas' : 'fal', 'filter']-->
-        <fa-icon [icon]="[filter.active ? 'fas' : 'fas', 'filter']"></fa-icon>
+        <fa-icon [icon]="filter.active ? fasFilter : falFilter"></fa-icon>
         <span *ngIf="filter.active"> {{ _t('filtered') }}</span>
         <span *ngIf="!filter.active"> {{ _t('all_elements') }}</span>
         <span class="btn-name item-cnt"> ({{ (total$ | async)?.length }})</span>
@@ -48,7 +41,7 @@
           class="type-selector colorize"
         >
           <!--              {{ device.icon }}-->
-          <i [ngClass]="device.icon" class="fas fa-fw"></i>
+          <fa-icon [icon]="device.icon"></fa-icon>
           <div class="selector-text">{{ _t(device.type) }}</div>
           <div class="device-type-count">({{ device.count }})</div>
         </div>
@@ -57,16 +50,15 @@
           [ngClass]="{ active: showHiddenActive() }"
           class="type-selector colorize"
         >
-          <fa-icon [icon]="faLowVision"></fa-icon>
+          <fa-icon [icon]="showHiddenActive() ? faLowVision : faEye"></fa-icon>
           <div class="selector-text">{{ _t('show_hidden') }}</div>
         </div>
       </ng-template>
     </tui-accordion-item>
-    <tui-accordion-item
-      *ngIf="order$ | async as currentOrder"
-      borders="top-bottom"
-    >
-      <fa-icon [icon]="faSortAlphaDown"></fa-icon>
+    <tui-accordion-item *ngIf="order$ | async as currentOrder">
+      <fa-icon
+        [icon]="orderList.get(currentOrder)?.icon ?? faSortAlphaDown"
+      ></fa-icon>
       <span> {{ _t(currentOrder) }}</span>
       <ng-template tuiAccordionItemContent>
         <div

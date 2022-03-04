@@ -187,7 +187,6 @@ export class LocationsState {
 
   @Action(UpdateAllLocations)
   updateAllLocations() {
-    console.log('call');
     return this.apiService.send<Location[]>('locations', undefined, true).pipe(
       map((locations) => {
         this.store.dispatch(new UpdateLocations(locations, true));

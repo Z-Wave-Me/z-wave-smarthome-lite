@@ -12,7 +12,7 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import { faFilePowerpoint as faPowerOff } from '@fortawesome/free-regular-svg-icons';
+import { faPowerOff } from '@fortawesome/pro-regular-svg-icons';
 
 @Component({
   selector: 'z-wave-main-sensor',

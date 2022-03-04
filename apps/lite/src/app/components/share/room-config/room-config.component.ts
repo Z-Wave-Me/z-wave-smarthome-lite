@@ -9,12 +9,7 @@ import { Location } from '@store/locations/location';
 import { FormGroup } from '@angular/forms';
 import { TranslocoService } from '@ngneat/transloco';
 import { DevicesStateModel } from '@store/devices/devices.state';
-import { faTrashAlt as faTrash } from '@fortawesome/free-regular-svg-icons';
-import {
-  faCheckCircle,
-  faCircle,
-  faPlusSquare as faLayerPlus,
-} from '@fortawesome/free-regular-svg-icons';
+import { faCheckCircle, faCircle } from '@fortawesome/free-regular-svg-icons';
 import { TuiInputComponent } from '@taiga-ui/kit';
 import {
   ChangeLocation,
@@ -24,6 +19,7 @@ import {
 } from '@store/locations/locations.action';
 import { TuiNotification, TuiNotificationsService } from '@taiga-ui/core';
 import { ChangeDevice } from '@store/devices/devices.actions';
+import { faLayerPlus, faTrash } from '@fortawesome/pro-regular-svg-icons';
 
 interface MainSensorDevice {
   title: string;

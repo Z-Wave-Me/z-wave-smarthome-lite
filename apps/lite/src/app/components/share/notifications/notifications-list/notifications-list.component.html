@@ -14,11 +14,18 @@
         templateCacheSize: 0;
         trackBy: trackBy
       "
-      [notification]="notification"
       [first]="first"
       [last]="last"
+      [notification]="notification"
     >
     </z-wave-notification-widget>
   </cdk-virtual-scroll-viewport>
 </ng-container>
-<ng-template #placeHolder> nothing here </ng-template>
+<ng-template #placeHolder>
+  <ng-container *transloco="let _t">
+    <div class="placeholder">
+      <fa-icon [icon]="faRadar" class="fa-2xl tui-space_right-3"></fa-icon
+      ><span>{{ _t('nothingFoundMessage') }}</span>
+    </div>
+  </ng-container>
+</ng-template>

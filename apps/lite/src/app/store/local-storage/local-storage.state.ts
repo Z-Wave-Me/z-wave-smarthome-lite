@@ -26,6 +26,7 @@ import { HttpClient } from '@angular/common/http';
 import { UpdateAllLocations } from '@store/locations/locations.action';
 import { WINDOW } from '@ng-web-apis/common';
 import { SetNotificationsFilters } from '@store/notifications/notifications.actions';
+import { ResetFilters } from '@store/notification-filters/notification-filters.actions';
 
 export interface ZWayResponse<T> {
   code: number;
@@ -241,6 +242,7 @@ export class LocalStorageState {
 
   @Action(Logout)
   logout({ patchState }: StateContext<LocalStorageStateModel>) {
+    this.store.dispatch(new ResetFilters());
     return this.httpClient.get('/ZAutomation/api/v1/logout').pipe(
       tap(() => {
         patchState({ profiles: {}, id: 0 });

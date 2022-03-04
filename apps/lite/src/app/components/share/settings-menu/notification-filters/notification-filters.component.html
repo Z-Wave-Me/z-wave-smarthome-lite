@@ -1,9 +1,6 @@
 <ng-container *transloco="let _t">
   <tui-accordion [rounded]="false">
-    <tui-accordion-item
-      *ngIf="timeFilter$ | async as currentTimeFilter"
-      borders="top-bottom"
-    >
+    <tui-accordion-item *ngIf="timeFilter$ | async as currentTimeFilter">
       <fa-icon [icon]="faClock"></fa-icon>
       <span> {{ _t(currentTimeFilter) }}</span>
       <ng-template tuiAccordionItemContent>
@@ -17,11 +14,8 @@
         </div>
       </ng-template>
     </tui-accordion-item>
-    <tui-accordion-item
-      *tuiLet="typeFilter$ | async as typeFilter"
-      borders="top-bottom"
-    >
-      <fa-icon [icon]="faMicrochip"></fa-icon>
+    <tui-accordion-item *tuiLet="typeFilter$ | async as typeFilter">
+      <fa-icon [icon]="faBell"></fa-icon>
       <span> {{ typeFilter?.title }}</span>
 
       <ng-template tuiAccordionItemContent>

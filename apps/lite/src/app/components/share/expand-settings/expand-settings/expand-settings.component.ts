@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { faAccusoft as faMicrochip } from '@fortawesome/free-brands-svg-icons';
+import { faGear } from '@fortawesome/pro-light-svg-icons';
 
 @Component({
   selector: 'z-wave-expand-settings',
@@ -7,7 +7,7 @@ import { faAccusoft as faMicrochip } from '@fortawesome/free-brands-svg-icons';
   styleUrls: ['./expand-settings.component.scss'],
 })
 export class ExpandSettingsComponent {
-  faMicrochip = faMicrochip;
+  faMicrochip = faGear;
 
   /**
    * Expand the element to the end of the page

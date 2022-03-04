@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
-// import { faUserCog } from '@fortawesome/pro-regular-svg-icons';
-import { faUserCircle as faUserCog } from '@fortawesome/free-regular-svg-icons';
+import { faSignOut, faUserCog } from '@fortawesome/pro-regular-svg-icons';
 import { FormBuilder, FormControl } from '@angular/forms';
 import { Select, Store } from '@ngxs/store';
 import { DestroyService } from '@core/services/destroy/destroy.service';
@@ -8,19 +7,10 @@ import { LocalStorageState } from '@store/local-storage/local-storage.state';
 import { map, switchMap, takeUntil, tap } from 'rxjs/operators';
 import { Logout, NightMode } from '@store/local-storage/local-storage.actions';
 import { Observable, of } from 'rxjs';
-// import { FilterState } from '@store/filter/filter.state';
 import { IconSupplierService } from '@core/services/icon-supplier/icon-supplier.service';
-// import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
-// import { faFilter as fasFilter, faFilter as falFilter } from '@fortawesome/free-solid-svg-icons';
-// import { faFilter as falFilter } from '@fortawesome/pro-light-svg-icons';
-import {
-  faCogs,
-  faFilter as fasFilter,
-  faFilter as falFilter,
-  faRoute,
-  faSignOutAlt,
-} from '@fortawesome/free-solid-svg-icons';
 import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
+import { faCogs, faMoon } from '@fortawesome/pro-solid-svg-icons';
+import { faRouter, faSunBright } from '@fortawesome/pro-light-svg-icons';
 import { Router } from '@angular/router';
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import { DeviceDetectorService } from '@core/services/device-detector/device-detector.service';
@@ -29,7 +19,7 @@ import { WINDOW } from '@ng-web-apis/common';
 export interface MenuItem {
   type: string;
   count: number;
-  icon: string;
+  icon: IconDefinition;
 }
 
 @Component({
@@ -41,11 +31,12 @@ export interface MenuItem {
 })
 export class SettingsMenuComponent {
   @Select(LocalStorageState.nightMode) nightMode$!: Observable<boolean>;
-
+  readonly faMoon = faMoon;
+  readonly faSun = faSunBright;
   readonly faCogs = faUserCog;
   readonly faSettingCogs = faCogs;
-  readonly faSignOut = faSignOutAlt;
-  readonly faRouter = faRoute;
+  readonly faSignOut = faSignOut;
+  readonly faRouter = faRouter;
   readonly showElementsFilters$: Observable<boolean>;
   readonly showNotificationsFilters$: Observable<boolean>;
   endSession?: {
@@ -85,8 +76,6 @@ export class SettingsMenuComponent {
       )
       .subscribe();
 
-    faIconLibrary.addIcons(falFilter, fasFilter);
-
     this.logoutSetup();
   }
 
@@ -110,7 +99,7 @@ export class SettingsMenuComponent {
       };
     } else {
       this.endSession = {
-        icon: faSignOutAlt,
+        icon: this.faSignOut,
         callback: () => this.store.dispatch(new Logout()),
         text: 'nav_logout',
       };

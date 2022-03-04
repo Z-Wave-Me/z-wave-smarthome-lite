@@ -12,6 +12,7 @@
   "S0": "S0",
   "S2_Access": "S2 Access",
   "S2_Authenticated": "S2 Authenticated",
+  "nothingFoundMessage": "Nothing found",
   "S2_Unauthenticated": "S2 Unauthenticated",
   "access_point_pwd_info": "The password is located on the back of your Z-Wave.Me Hub.",
   "actions_on": "Alarm Action",

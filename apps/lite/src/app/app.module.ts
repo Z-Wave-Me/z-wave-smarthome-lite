@@ -52,6 +52,7 @@ import {
   TuiValidatorModule,
 } from '@taiga-ui/cdk';
 import { BackgroundModeService } from '@core/services/background-mode/background-mode.service';
+import { NotificationFiltersState } from '@store/notification-filters/notification-filters.state';
 
 export const initApp = (configurationService: ConfigService) => () =>
   configurationService.load().toPromise();
@@ -66,7 +67,7 @@ export const initApp = (configurationService: ConfigService) => () =>
       developmentMode: !environment.production,
     }),
     NgxsStoragePluginModule.forRoot({
-      key: [LocalStorageState],
+      key: [LocalStorageState, NotificationFiltersState],
     }),
     environment.production
       ? []

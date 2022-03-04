@@ -14,6 +14,7 @@ import {
 import { DevicesState } from '@store/devices/devices.state';
 import { IconSupplierService } from '@core/services/icon-supplier/icon-supplier.service';
 import { TranslocoService } from '@ngneat/transloco';
+import { faBell } from '@fortawesome/pro-light-svg-icons';
 
 @Component({
   selector: 'z-wave-notification-filters',
@@ -77,7 +78,7 @@ export class NotificationFiltersComponent {
   devicesAndTypes$: Observable<
     Record<string, { title: string; count: number; iconPath: string }>
   >;
-  faMicrochip = faMicrochip;
+  faBell = faBell;
 
   constructor(
     private readonly store: Store,

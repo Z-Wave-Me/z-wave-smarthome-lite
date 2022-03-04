@@ -2,10 +2,11 @@ import { Component } from '@angular/core';
 import {
   faHome,
   faCouch,
-  faTh,
+  faGrid,
   faClipboardList,
   faCogs,
-} from '@fortawesome/free-solid-svg-icons';
+} from '@fortawesome/pro-solid-svg-icons';
+
 @Component({
   selector: 'z-wave-mobile-footer',
   templateUrl: './mobile-footer.component.html',
@@ -14,7 +15,7 @@ import {
 export class MobileFooterComponent {
   faHome = faHome;
   faCouch = faCouch;
-  faTh = faTh;
+  faTh = faGrid;
   faClipboardList = faClipboardList;
   faCogs = faCogs;
 }

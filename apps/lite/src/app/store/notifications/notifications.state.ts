@@ -166,6 +166,7 @@ export class NotificationsState {
 
   private notificationFilter(profile: IProfile) {
     return (notification: SNotification) => {
+      if (!notification) return false;
       if (profile.hideAllDeviceEvents && notification.type.startsWith('device'))
         return false;
       if (profile.hideSystemEvents && notification.type === 'module')
@@ -178,6 +179,7 @@ export class NotificationsState {
     sNotification: SNotification,
     locations: { [id: number]: Location }
   ): Notification {
+    // console.warn(sNotification);
     const notification = NotificationsState.serverAdapter(sNotification);
     const device = this.store.selectSnapshot(
       DevicesState.getDeviceById(sNotification.source)

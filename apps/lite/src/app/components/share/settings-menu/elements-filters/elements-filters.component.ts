@@ -18,18 +18,30 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { DevicesState } from '@store/devices/devices.state';
 
-import { faUserCircle as faUserCog } from '@fortawesome/free-regular-svg-icons';
+import { faUsersCog } from '@fortawesome/pro-light-svg-icons';
 import { MenuItem } from '@components/share/settings-menu/settings-menu.component';
 import {
   faCogs,
-  faFilter as fasFilter,
-  faFilter as falFilter,
   faLowVision,
-  faRoute,
-  faSignOutAlt,
+  faSignOut,
   faSortAlphaDown,
   faTags,
-} from '@fortawesome/free-solid-svg-icons';
+  faArrowDownTriangleSquare,
+} from '@fortawesome/pro-solid-svg-icons';
+
+import { faTags as falTag } from '@fortawesome/pro-light-svg-icons';
+import { faRouter } from '@fortawesome/pro-solid-svg-icons';
+import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
+import { faArrowDownBigSmall } from '@fortawesome/pro-regular-svg-icons/faArrowDownBigSmall';
+import {
+  faArrowDownZA,
+  faArrowUpAZ,
+  faArrowUpSmallBig,
+  faEye,
+  faEyeLowVision,
+} from '@fortawesome/pro-regular-svg-icons';
+import { faFilter as fasFilter } from '@fortawesome/pro-solid-svg-icons';
+import { faFilter as falFilter } from '@fortawesome/pro-light-svg-icons';
 
 @Component({
   selector: 'z-wave-elements-filters',
@@ -38,31 +50,50 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ElementsFiltersComponent {
-  readonly orderList: ReadonlyMap<string, [order: Order, desc: boolean]> =
-    new Map([
-      ['updateTimeDESC', ['updateTime', true]],
-      ['creationTimeDESC', ['creationTime', true]],
-      ['creationTimeASC', ['creationTime', false]],
-      ['titleASC', ['title', false]],
-      ['titleDESC', ['title', true]],
-      ['orderElements', ['elements', false]],
-    ]);
+  readonly orderList: ReadonlyMap<
+    string,
+    { order: Order; desc: boolean; icon: IconDefinition }
+  > = new Map([
+    [
+      'updateTimeDESC',
+      { order: 'updateTime', desc: true, icon: faArrowDownBigSmall },
+    ],
+    [
+      'creationTimeDESC',
+      { order: 'creationTime', desc: true, icon: faArrowDownBigSmall },
+    ],
+    [
+      'creationTimeASC',
+      { order: 'creationTime', desc: false, icon: faArrowUpSmallBig },
+    ],
+    ['titleASC', { order: 'title', desc: false, icon: faArrowUpAZ }],
+    ['titleDESC', { order: 'title', desc: true, icon: faArrowDownZA }],
+    [
+      'orderElements',
+      { order: 'elements', desc: false, icon: faArrowDownTriangleSquare },
+    ],
+  ]);
   open = false;
   @Select(DevicesState.showDevice) total$!: Observable<string[]>;
   @Select(FilterState.activeFilters) activeFilters$!: Observable<boolean>;
   @Select(DevicesState.tagsList) tagsList$!: Observable<string[]>;
 
-  readonly faCogs = faUserCog;
-  readonly faLowVision = faLowVision;
+  readonly faCogs = faUsersCog;
+  readonly faLowVision = faEyeLowVision;
+  readonly faEye = faEye;
   readonly faTags = faTags;
   readonly faSortAlphaDown = faSortAlphaDown;
   readonly faSettingCogs = faCogs;
-  readonly faSignOut = faSignOutAlt;
-  readonly faRouter = faRoute;
+  readonly faSignOut = faSignOut;
+  readonly faRouter = faRouter;
+
+  readonly falFilter = falFilter;
+  readonly fasFilter = fasFilter;
 
   readonly typesAndCount$: Observable<MenuItem[]>;
   readonly tag$: Observable<string | undefined>;
   readonly order$: Observable<string>;
+  falTag = falTag;
 
   constructor(
     private readonly iconSupplierService: IconSupplierService,
@@ -81,7 +112,7 @@ export class ElementsFiltersComponent {
         }))
       )
     );
-    faIconLibrary.addIcons(falFilter, fasFilter);
+    // faIconLibrary.addIcons(falFilter, fasFilter);
     this.tag$ = store.select(({ filter }: FilterStateModel) => filter.tag);
   }
 
@@ -119,7 +150,9 @@ export class ElementsFiltersComponent {
     this.store.dispatch(new SetTag(tag));
   }
 
-  setOrder(order: [Order, boolean], name: string): void {
-    this.store.dispatch(new SetOrder('elements', ...order, name));
+  setOrder(options: { order: Order; desc: boolean }, name: string): void {
+    this.store.dispatch(
+      new SetOrder('elements', options.order, options.desc, name)
+    );
   }
 }

@@ -3,26 +3,42 @@ import { IconSupplierConfig } from '@core/services/icon-supplier/icon-supplier';
 import { config } from './icon-supplier.config';
 import { Device } from '@store/devices/deviceInterface';
 import { SNotification } from '@store/notifications/notifications.state';
+import {
+  faCaretRight,
+  faDotCircle,
+  faFileAlt,
+  faFire,
+  faLightbulb,
+  faListUl,
+  faLock,
+  faStarHalf,
+  faThermometerHalf,
+  faToggleOff,
+  faToggleOn,
+  faVideo,
+} from '@fortawesome/pro-regular-svg-icons';
+import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
+import { faSun } from '@fortawesome/pro-light-svg-icons';
 
 @Injectable({
   providedIn: 'root',
 })
 export class IconSupplierService {
-  private static iconMap = new Map<string, string>([
-    ['text', 'fa-file-alt'],
-    ['camera', 'fa-video'],
-    ['switchRGBW', 'fa-star-half'],
-    ['switchControl', 'fa-toggle-off'],
-    ['switchBinary', 'fa-toggle-on'],
-    ['sensorMultiline', 'fa-list-ul'],
-    ['switchMultilevel', 'fa-lightbulb'],
-    ['thermostat', 'fa-thermometer-half'],
-    ['thermostatMode', 'fa-thermometer-half'],
-    ['toggleButton', 'fa-dot-circle'],
-    ['sensorDiscrete', 'fa-dot-circle'],
-    ['doorlock', 'fa-lock'],
-    ['sensorMultilevel', 'fa-sun'],
-    ['sensorBinary', 'fa-fire'],
+  private static iconMap = new Map<string, IconDefinition>([
+    ['text', faFileAlt],
+    ['camera', faVideo],
+    ['switchRGBW', faStarHalf],
+    ['switchControl', faToggleOff],
+    ['switchBinary', faToggleOn],
+    ['sensorMultiline', faListUl],
+    ['switchMultilevel', faLightbulb],
+    ['thermostat', faThermometerHalf],
+    ['thermostatMode', faThermometerHalf],
+    ['toggleButton', faDotCircle],
+    ['sensorDiscrete', faDotCircle],
+    ['doorlock', faLock],
+    ['sensorMultilevel', faSun],
+    ['sensorBinary', faFire],
   ]);
   private iconsPath = 'assets/img/icons/';
   private customIconsPath = 'assets/user/icons/';
@@ -123,7 +139,7 @@ export class IconSupplierService {
    * @param {string} iconName - The name of the icon to be displayed.
    * @returns The icon name.
    */
-  deviceTypeIconSupplier(iconName: string): string {
-    return IconSupplierService.iconMap.get(iconName) ?? 'fa-caret-right';
+  deviceTypeIconSupplier(iconName: string) {
+    return IconSupplierService.iconMap.get(iconName) ?? faCaretRight;
   }
 }
