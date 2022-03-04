@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { faClock } from '@fortawesome/free-regular-svg-icons';
-import { faMicrochip } from '@fortawesome/free-solid-svg-icons';
 import { Observable } from 'rxjs';
 import { Store } from '@ngxs/store';
 import { NotificationsState } from '@store/notifications/notifications.state';

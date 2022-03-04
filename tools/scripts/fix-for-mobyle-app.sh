@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
+./tools/scripts/venv/Scripts/python.exe ./tools/scripts/fix-for-mobyle-app.py
+
 DIST="./dist/apps/lite/"
 FILE=$(find $DIST -name "main.*.js")
-sed 's/;.\{2\}\.responseType="json"!==.\{2\}?.\+:"text"//' "$FILE" > tmp.js
-mv tmp.js "$FILE"
+gzip -k "$FILE"

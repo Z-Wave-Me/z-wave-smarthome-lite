@@ -36,7 +36,7 @@ export class SeverStatusWidgetComponent {
     this.document.location.reload();
   }
   locationType(): 'local' | 'remote' {
-    if (this.document.location.hostname in remoteHosts) {
+    if (remoteHosts.includes(this.document.location.hostname)) {
       return 'remote';
     }
     return 'local';

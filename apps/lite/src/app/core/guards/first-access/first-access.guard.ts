@@ -6,6 +6,7 @@ import { catchError, map } from 'rxjs/operators';
 import { ZWayResponse } from '@store/local-storage/local-storage.state';
 import { Store } from '@ngxs/store';
 import { SetServerInfo } from '@store/local-storage/local-storage.actions';
+import { HttpClient } from '@angular/common/http';
 
 interface IFirstAccess {
   firstaccess: boolean;
@@ -33,25 +34,12 @@ export class FirstAccessGuard implements CanActivate {
    * @returns An Observable<boolean | UrlTree>
    */
   canActivate(): Observable<boolean | UrlTree> {
-    return (
-      this.apiService
-        .send<ZWayResponse<IFirstAccess>>('firstAccess', undefined, true)
-        // return this.httpClient
-        //   .get<ZWayResponse<IFirstAccess>>(
-        //     '/ZAutomation/api/v1/system/first-access'
-        //   )
-        .pipe(
-          map(({ data }) => {
-            // data.firstaccess = true;
-            this.store.dispatch(
-              new SetServerInfo(data.remote_id, data.ip_address)
-            );
-            return data.firstaccess
-              ? true
-              : this.router.createUrlTree(['/login']);
-          }),
-          catchError(() => of(this.router.createUrlTree(['/login'])))
-        )
+    return this.apiService.send<IFirstAccess>('firstAccess').pipe(
+      map((data) => {
+        this.store.dispatch(new SetServerInfo(data.remote_id, data.ip_address));
+        return data.firstaccess ? true : this.router.createUrlTree(['/login']);
+      }),
+      catchError(() => of(this.router.createUrlTree(['/login'])))
     );
   }
 }

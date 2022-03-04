@@ -36,7 +36,7 @@ export class AuthGuard implements CanLoad {
         this.store.dispatch(new SetUser(profile));
         return true;
       }),
-      catchError(() => of(this.router.createUrlTree(['/login'])))
+      catchError(() => of(this.router.createUrlTree(['/firstAccess'])))
     );
   }
 }

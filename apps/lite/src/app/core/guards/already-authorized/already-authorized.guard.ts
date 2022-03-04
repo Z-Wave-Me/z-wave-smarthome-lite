@@ -4,12 +4,18 @@ import {
   IProfile,
   ZWayResponse,
 } from '@store/local-storage/local-storage.state';
-import { catchError, map } from 'rxjs/operators';
-import { SetUser } from '@store/local-storage/local-storage.actions';
+import { catchError, map, tap } from 'rxjs/operators';
+import {
+  SetServerInfo,
+  SetUser,
+} from '@store/local-storage/local-storage.actions';
 import { ApiService } from '@core/services/api/api.service';
 import { Store } from '@ngxs/store';
-import { of } from 'rxjs';
-
+interface IFirstAccess {
+  firstaccess: boolean;
+  ip_address: string;
+  remote_id: number;
+}
 /**
  * It checks if the user is already authorized. If so, it redirects the user to the dashboard
  */
@@ -34,7 +40,16 @@ export class AlreadyAuthorizedGuard implements CanActivate {
         if (response) this.store.dispatch(new SetUser(response.data));
         return this.router.createUrlTree(['/dashboard']);
       }),
-      catchError(() => of(true))
+      catchError(() =>
+        this.apiService.send<IFirstAccess>('firstAccess').pipe(
+          map((data) => {
+            this.store.dispatch(
+              new SetServerInfo(data.remote_id, data.ip_address)
+            );
+            return true;
+          })
+        )
+      )
     );
   }
 }

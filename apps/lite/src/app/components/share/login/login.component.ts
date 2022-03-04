@@ -63,16 +63,11 @@ export class LoginComponent {
     if (this.loginForm.valid) {
       this.loading = true;
       const { password, login } = this.loginForm.value;
-      // this.httpClient
-      //   .post<{ data: { id: number } }>('/ZAutomation/api/v1/login', {
-      //     password,
-      //     login,
-      //   })
-      this.apiService
-        .send<{ data: { sid: string; id: number } }>('login', {
-          data: { password, login },
-          method: 'POST',
-        })
+      this.httpClient
+        .post<{ data: { sid: string; id: number } }>(
+          '/ZAutomation/api/v1/login',
+          { password, login }
+        )
         .pipe(
           first(),
           map(({ data: { id } }) => {
