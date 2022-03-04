@@ -1,3 +1,12 @@
+## [1.2.2](https://github.com/Xel4ek/Z-Wave-Light/compare/v1.2.1...v1.2.2) (2022-03-04)
+
+
+### Bug Fixes
+
+* header status icon ([023f848](https://github.com/Xel4ek/Z-Wave-Light/commit/023f848a496db9717ee8713c503347c60193c5c9))
+
+
+
 ## 1.2.1 (2022-03-04)
 
 
