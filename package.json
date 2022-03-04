@@ -1,6 +1,6 @@
 {
   "name": "z-wave",
-  "version": "1.1.8",
+  "version": "1.2.0",
   "license": "MIT",
   "scripts": {
     "ng": "nx",
@@ -11,7 +11,7 @@
     "start": "nx serve",
     "version": "npm run changelog && git add CHANGELOG.md",
     "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s",
-    "prebuild": "npm --no-git-tag-version version patch",
+    "prebuild": "npm version patch",
     "build": "nx build",
     "postbuild": "bash ./tools/scripts/fix-for-mobyle-app.sh",
     "testbuild": "nx build --stats-json && npm run postbuild",
