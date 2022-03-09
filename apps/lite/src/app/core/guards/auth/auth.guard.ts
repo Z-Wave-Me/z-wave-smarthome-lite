@@ -8,6 +8,14 @@ import { IProfile } from '@store/local-storage/local-storage.state';
 import { ApiService } from '@core/services/api/api.service';
 import { SetUser } from '@store/local-storage/local-storage.actions';
 import { WebsocketService } from '@core/services/websocket/websocket.service';
+import { CookieService } from '@core/services/cookie/cookie.service';
+
+interface IFirstAccess {
+  firstaccess: boolean;
+  ip_address: string;
+  remote_id: number;
+  uuid: string;
+}
 
 /**
  *  It sends a request to the API to check if the user is logged in. If the user is logged in,
@@ -21,7 +29,8 @@ export class AuthGuard implements CanLoad {
     private store: Store,
     private router: Router,
     private readonly apiService: ApiService,
-    private readonly websocketService: WebsocketService
+    private readonly websocketService: WebsocketService,
+    private readonly cookieService: CookieService
   ) {}
 
   /**
@@ -32,9 +41,15 @@ export class AuthGuard implements CanLoad {
   canLoad(): Observable<boolean | UrlTree> {
     return this.apiService.send<IProfile>('session', undefined, true).pipe(
       map((profile) => {
-        this.websocketService.connect();
-        this.store.dispatch(new SetUser(profile));
-        return true;
+        if (
+          profile.sid &&
+          profile.sid === this.cookieService.get('ZWAYSession')
+        ) {
+          this.websocketService.connect();
+          this.store.dispatch(new SetUser(profile));
+          return true;
+        }
+        return this.router.createUrlTree(['/firstAccess']);
       }),
       catchError(() => of(this.router.createUrlTree(['/firstAccess'])))
     );

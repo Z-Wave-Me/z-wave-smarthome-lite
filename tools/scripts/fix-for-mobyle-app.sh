@@ -3,4 +3,5 @@
 
 DIST="./dist/apps/lite/"
 FILE=$(find $DIST -name "main.*.js")
-gzip -k "$FILE"
+gzip -k -f "$FILE"
+echo "gzip file updated"

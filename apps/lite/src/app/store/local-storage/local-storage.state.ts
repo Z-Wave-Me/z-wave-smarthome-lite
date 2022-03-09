@@ -53,6 +53,7 @@ export interface IProfile {
   devices?: string[];
   synchronized: boolean;
   lang: string;
+  sid?: string;
   showOptions: ShowOptions[];
 }
 

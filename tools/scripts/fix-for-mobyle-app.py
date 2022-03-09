@@ -10,4 +10,4 @@ with open(filename, 'r+') as f:
     r"if\(..\.responseType\)\{const ..=..\.responseType\.toLowerCase\(\);..\.responseType=\"json\"!==..\?..:\"text\"}",
     "", content))
   f.truncate()
-print('removed')
+print('{} fixed'.format(filename))

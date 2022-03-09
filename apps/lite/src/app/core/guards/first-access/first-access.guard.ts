@@ -7,6 +7,7 @@ import { ZWayResponse } from '@store/local-storage/local-storage.state';
 import { Store } from '@ngxs/store';
 import { SetServerInfo } from '@store/local-storage/local-storage.actions';
 import { HttpClient } from '@angular/common/http';
+import { CookieService } from '@core/services/cookie/cookie.service';
 
 interface IFirstAccess {
   firstaccess: boolean;
@@ -34,12 +35,18 @@ export class FirstAccessGuard implements CanActivate {
    * @returns An Observable<boolean | UrlTree>
    */
   canActivate(): Observable<boolean | UrlTree> {
-    return this.apiService.send<IFirstAccess>('firstAccess').pipe(
-      map((data) => {
-        this.store.dispatch(new SetServerInfo(data.remote_id, data.ip_address));
-        return data.firstaccess ? true : this.router.createUrlTree(['/login']);
-      }),
-      catchError(() => of(this.router.createUrlTree(['/login'])))
-    );
+    return this.apiService
+      .send<IFirstAccess>('firstAccess', undefined, true)
+      .pipe(
+        map((data) => {
+          this.store.dispatch(
+            new SetServerInfo(data.remote_id, data.ip_address)
+          );
+          return data.firstaccess
+            ? true
+            : this.router.createUrlTree(['/login']);
+        }),
+        catchError(() => of(this.router.createUrlTree(['/login'])))
+      );
   }
 }
