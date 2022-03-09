@@ -1,4 +1,4 @@
-import { Inject, NgModule } from '@angular/core';
+import { Inject, NgModule, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MobileLayoutRoutingModule } from './mobile-layout-routing.module';
 import { MobileLayoutComponent } from './mobile-layout/mobile-layout.component';
@@ -82,7 +82,5 @@ export class MobileLayoutModule {
   constructor(
     @Inject(SERVER_SYNCHRONIZATION) serverSynchronization: string[],
     private readonly serverSynchronizationService: ServerSynchronizationService
-  ) {
-    console.warn('MobileLayoutModule loaded');
-  }
+  ) {}
 }

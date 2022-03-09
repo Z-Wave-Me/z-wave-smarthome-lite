@@ -4,8 +4,15 @@ import {
   IProfile,
   LocalStorageState,
 } from '@store/local-storage/local-storage.state';
-import { merge, Observable, Subject, switchMap } from 'rxjs';
-import { filter, map, takeUntil } from 'rxjs/operators';
+import { merge, Observable, startWith, Subject, switchMap } from 'rxjs';
+import {
+  distinctUntilChanged,
+  filter,
+  first,
+  map,
+  takeUntil,
+  tap,
+} from 'rxjs/operators';
 import { ApiService } from '@core/services/api/api.service';
 
 @Injectable({

@@ -1,5 +1,15 @@
 import { Injectable } from '@angular/core';
-import { CanLoad, Router, UrlTree } from '@angular/router';
+import {
+  ActivatedRoute,
+  ActivatedRouteSnapshot,
+  CanActivate,
+  CanLoad,
+  Route,
+  Router,
+  RouterStateSnapshot,
+  UrlSegment,
+  UrlTree,
+} from '@angular/router';
 import { Observable, of } from 'rxjs';
 import { Store } from '@ngxs/store';
 
@@ -54,4 +64,29 @@ export class AuthGuard implements CanLoad {
       catchError(() => of(this.router.createUrlTree(['/firstAccess'])))
     );
   }
+
+  // canActivate(
+  //   route: ActivatedRouteSnapshot,
+  //   state: RouterStateSnapshot
+  // ):
+  //   | Observable<boolean | UrlTree>
+  //   | Promise<boolean | UrlTree>
+  //   | boolean
+  //   | UrlTree {
+  //   console.log(route, state);
+  //   return this.apiService.send<IProfile>('session', undefined, true).pipe(
+  //     map((profile) => {
+  //       if (
+  //         profile.sid &&
+  //         profile.sid === this.cookieService.get('ZWAYSession')
+  //       ) {
+  //         this.websocketService.connect();
+  //         this.store.dispatch(new SetUser(profile));
+  //         return true;
+  //       }
+  //       return this.router.createUrlTree(['/firstAccess']);
+  //     }),
+  //     catchError(() => of(this.router.createUrlTree(['/firstAccess'])))
+  //   );
+  // }
 }
