@@ -16,7 +16,6 @@ import { RestorePositionModule } from '@features/directives/restore-position/res
 import { NotificationWidgetComponent } from './notification-widget/notification-widget.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { HelpersModule } from '@components/share/helpers/helpers.module';
-import { TuiLetModule } from '@taiga-ui/cdk';
 
 @NgModule({
   declarations: [NotificationsListComponent, NotificationWidgetComponent],
@@ -33,7 +32,6 @@ import { TuiLetModule } from '@taiga-ui/cdk';
     TuiDataListModule,
     FontAwesomeModule,
     HelpersModule,
-    TuiLetModule,
   ],
 })
 export class NotificationsModule {}
