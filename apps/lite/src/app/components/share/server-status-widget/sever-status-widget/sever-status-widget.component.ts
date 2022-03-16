@@ -20,6 +20,7 @@ import { remoteHosts } from '@components/share/server-status-widget/sever-status
 export class SeverStatusWidgetComponent {
   @Select(LocalsState.serverAvailable) online$!: Observable<boolean>;
   @Select(LocalsState.serverTime) serverTime$!: Observable<number>;
+  @Select(LocalsState.localGMT) localGMT$!: Observable<string>;
 
   faHome = faHome;
   faGlobeEurope = faGlobeEurope;

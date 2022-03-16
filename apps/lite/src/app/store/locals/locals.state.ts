@@ -6,19 +6,33 @@ import {
   State,
   StateContext,
 } from '@ngxs/store';
-import { ServerStatus, ServerTime, StorePosition } from './locals.actions';
+import {
+  ServerStatus,
+  ServerTime,
+  SetServerDateOptions,
+  StorePosition,
+} from './locals.actions';
 import { patch } from '@ngxs/store/operators';
 
 export class LocalsStateModel {
   serverAvailable!: boolean;
   serverTime!: number;
   scrollPosition!: Record<string, number>;
+  localGMT!: string;
+}
+export interface IServerDateOptions {
+  localGMT: string;
+  localTimeString: string;
+  localTimeUT: number;
+  localTimeZone: string;
+  localTimeZoneOffset: number;
 }
 
 const defaults = {
   serverAvailable: true,
   serverTime: 0,
   scrollPosition: {},
+  localGMT: '',
 };
 
 @State<LocalsStateModel>({
@@ -30,6 +44,10 @@ export class LocalsState {
   @Selector()
   static serverAvailable({ serverAvailable }: LocalsStateModel): boolean {
     return serverAvailable;
+  }
+  @Selector()
+  static localGMT({ localGMT }: LocalsStateModel): string {
+    return localGMT;
   }
 
   static position(route: string) {
@@ -69,6 +87,17 @@ export class LocalsState {
     setState(
       patch({
         scrollPosition,
+      })
+    );
+  }
+  @Action(SetServerDateOptions)
+  setDateOptions(
+    { setState }: StateContext<LocalsStateModel>,
+    { options }: SetServerDateOptions
+  ) {
+    setState(
+      patch({
+        localGMT: options.localGMT,
       })
     );
   }

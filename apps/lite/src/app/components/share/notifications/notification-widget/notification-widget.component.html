@@ -5,12 +5,15 @@
       first: first,
       last: last
     }"
+    *tuiLet="localGMT$ | async as localGMT"
   >
     <div class="icon-wrapper">
       <img class="notification-icon" [src]="notification.iconPath" alt="" />
     </div>
     <div class="info" *ngIf="notification.type.startsWith('device'); else base">
-      <span class="time">{{ notification.timestamp | date: 'HH:mm' }}</span>
+      <span class="time">{{
+        notification.timestamp | date: 'HH:mm':localGMT ?? ''
+      }}</span>
       <span class="title"> {{ notification.deviceName }} </span>:
       <span class="level">{{ notification.deviceLevel }}</span>
       <span class="room" *ngIf="notification.locationName">

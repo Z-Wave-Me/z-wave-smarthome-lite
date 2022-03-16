@@ -1,5 +1,9 @@
 <div
-  *ngIf="{ online: (online$ | async), time: (serverTime$ | async) } as data"
+  *ngIf="{
+    online: (online$ | async),
+    time: (serverTime$ | async),
+    timeZone: localGMT$ | async
+  } as data"
   class="server-status"
 >
   <fa-icon
@@ -22,6 +26,6 @@
     }"
   ></fa-icon>
   <span [ngClass]="{ pause: !data.online }">
-    {{ data.time | date: 'HH:mm:ss' }}</span
+    {{ data.time | date: 'HH:mm:ss':data.timeZone ?? '' }}</span
   >
 </div>

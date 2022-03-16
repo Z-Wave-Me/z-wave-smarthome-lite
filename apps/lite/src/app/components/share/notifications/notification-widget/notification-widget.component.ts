@@ -7,8 +7,10 @@ import {
   faMinusCircle,
   faTimesCircle,
 } from '@fortawesome/free-solid-svg-icons';
-import { Store } from '@ngxs/store';
+import { Select, Store } from '@ngxs/store';
 import { SetTypeAndSourceFilters } from '@store/notification-filters/notification-filters.actions';
+import { LocalsState } from '@store/locals/locals.state';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'z-wave-notification-widget[notification]',
@@ -20,6 +22,7 @@ export class NotificationWidgetComponent {
   @Input() notification!: Notification;
   @Input() last = false;
   @Input() first = false;
+  @Select(LocalsState.localGMT) localGMT$!: Observable<string>;
   open = false;
   actions = [
     {
