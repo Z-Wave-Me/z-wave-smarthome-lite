@@ -36,7 +36,7 @@ export class FirstAccessGuard implements CanActivate {
    */
   canActivate(): Observable<boolean | UrlTree> {
     return this.apiService
-      .send<IFirstAccess>('firstAccess', undefined, true)
+      .send<IFirstAccess>('firstAccess', undefined, { withResponse: true })
       .pipe(
         map((data) => {
           this.store.dispatch(

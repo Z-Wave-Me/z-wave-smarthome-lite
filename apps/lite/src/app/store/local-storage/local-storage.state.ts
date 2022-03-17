@@ -256,7 +256,11 @@ export class LocalStorageState {
   updateProfile({ getState }: StateContext<LocalStorageStateModel>) {
     const id = getState().id;
     return this.apiService
-      .send<{ data: object }>('profiles', { command: id }, true)
+      .send<{ data: object }>(
+        'profiles',
+        { command: id },
+        { withResponse: true }
+      )
       .pipe(
         map((profile) => ({ ...profile.data })),
         tap((profile) => {

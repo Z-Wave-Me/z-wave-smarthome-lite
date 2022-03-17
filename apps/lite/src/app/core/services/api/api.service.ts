@@ -6,6 +6,10 @@ import { HttpEncapsulatedRequest } from '@core/services/ws-api/http-encapsulated
 import { WsMessage } from '@core/services/websocket/websocket.interfaces';
 import { map } from 'rxjs/operators';
 
+export interface SendOptions {
+  withResponse?: boolean;
+  useHttp?: boolean;
+}
 export interface Payload {
   data?: any;
   params?: {
@@ -120,13 +124,14 @@ export class ApiService {
   ) {}
 
   /**
-   * If the websocket is connected, send the request over the websocket. Otherwise, send the request over the http
+   * If the websocket is connected, use it. Otherwise, use the http
    * @param {string} event - The name of the event to send.
    * @param {Payload} [payload] - The payload object that contains the data to send to the server.
-   * @param [withResponse=false] - If true, the response will be returned as a promise.
-   * @returns A Promise<T>
+   * @param {SendOptions} options - SendOptions
+   * @returns The observable of the response.
    */
-  send<T>(event: string, payload?: Payload, withResponse = false) {
+  send<T>(event: string, payload?: Payload, options: SendOptions = {}) {
+    const { withResponse = false, useHttp = false } = options;
     const url = this.apiList[event];
     if (!url) {
       throw new Error('Bad Api event ' + event);
@@ -134,7 +139,7 @@ export class ApiService {
     const params = new HttpParams().appendAll(payload?.params ?? {});
     const command = payload?.command ? '/' + payload.command : '';
     return iif(
-      () => this.websocketService.isConnectSnapshot(),
+      () => !useHttp && this.websocketService.isConnectSnapshot(),
       defer(() =>
         iif(
           () => withResponse,

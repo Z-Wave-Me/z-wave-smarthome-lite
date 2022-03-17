@@ -159,10 +159,17 @@ export class LocationsState {
         img_type: 'user',
       })
     );
-    return this.apiService.send('upload', {
-      method: 'POST',
-      data: toUpload,
-    });
+    console.log(file, 'send file');
+    return this.apiService.send(
+      'upload',
+      {
+        method: 'POST',
+        data: toUpload,
+      },
+      {
+        useHttp: true,
+      }
+    );
   }
 
   @Action(CreateRoom)
@@ -187,12 +194,14 @@ export class LocationsState {
 
   @Action(UpdateAllLocations)
   updateAllLocations() {
-    return this.apiService.send<Location[]>('locations', undefined, true).pipe(
-      map((locations) => {
-        this.store.dispatch(new UpdateLocations(locations, true));
-        this.store.dispatch(new UpdateAllDevices());
-      })
-    );
+    return this.apiService
+      .send<Location[]>('locations', undefined, { withResponse: true })
+      .pipe(
+        map((locations) => {
+          this.store.dispatch(new UpdateLocations(locations, true));
+          this.store.dispatch(new UpdateAllDevices());
+        })
+      );
   }
 
   private removeLocationFromStore(

@@ -24,7 +24,7 @@ export class RoomWidgetComponent {
   readonly room$: Observable<Location>;
 
   constructor(
-    private store: Store,
+    private readonly store: Store,
     private readonly router: Router,
     private readonly route: ActivatedRoute
   ) {

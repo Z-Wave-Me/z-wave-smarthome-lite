@@ -156,7 +156,11 @@ export class NotificationsState {
       })
     );
     return this.apiService
-      .send<{ notifications: SNotification[] }>('notifications', {}, true)
+      .send<{ notifications: SNotification[] }>(
+        'notifications',
+        {},
+        { withResponse: true }
+      )
       .pipe(
         tap(({ notifications }) => {
           this.store.dispatch(new AddNotifications(notifications));

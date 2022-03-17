@@ -51,7 +51,7 @@ export class AppComponent implements OnInit {
 
   ngOnInit(): void {
     this.apiService
-      .send<IServerDateOptions>('time', undefined, true)
+      .send<IServerDateOptions>('time', undefined, { withResponse: true })
       .pipe(
         tap((serverDateOptions) =>
           this.store.dispatch(new SetServerDateOptions(serverDateOptions))

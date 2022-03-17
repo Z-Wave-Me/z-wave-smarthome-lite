@@ -290,7 +290,7 @@ export class DevicesState {
                 visibility: device.visibility ?? !device.hidden,
               },
             },
-            true
+            { withResponse: true }
           )
         )
       );
@@ -380,7 +380,9 @@ export class DevicesState {
   @Action(UpdateAllDevices)
   updateAllDevices() {
     return this.apiService
-      .send<{ data: { devices: Device[] } }>('devices', undefined, true)
+      .send<{ data: { devices: Device[] } }>('devices', undefined, {
+        withResponse: true,
+      })
       .pipe(
         filter((data) => !!data.data),
         map(({ data: { devices } }) => {
