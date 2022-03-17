@@ -339,7 +339,7 @@ export class DevicesState {
 
         entities[device.id] = { ...device, ...additional } as Device;
       });
-    this.store.dispatch(new ServerTime(serverTime * 1_000));
+    // this.store.dispatch(new ServerTime(serverTime * 1_000));
     this.store.dispatch(new SetTagsList([...tagsList]));
     let locations;
     if (structureChanged || locationChanges) {
