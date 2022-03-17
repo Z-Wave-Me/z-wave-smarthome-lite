@@ -67,6 +67,7 @@
     "dompurify": "2.2.9",
     "hammerjs": "^2.0.8",
     "ngx-device-detector": "^2.1.1",
+    "ngx-image-compress": "^13.1.9",
     "ngxs-reset-plugin": "^2.0.0",
     "rxjs": "7.5.2",
     "swiper": "^7.0.6",

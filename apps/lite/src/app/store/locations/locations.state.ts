@@ -13,10 +13,25 @@ import { patch } from '@ngxs/store/operators';
 import { Location } from '@store/locations/location';
 import { TranslocoService } from '@ngneat/transloco';
 import { ApiService } from '@core/services/api/api.service';
-import { map } from 'rxjs/operators';
+import { first, map } from 'rxjs/operators';
 import { DevicesStateModel } from '@store/devices/devices.state';
 import { ChangeDevice, UpdateAllDevices } from '@store/devices/devices.actions';
+import {
+  DataUrl,
+  DOC_ORIENTATION,
+  NgxImageCompressService,
+} from 'ngx-image-compress';
 
+function dataURLtoFile(inputURI: DataUrl, name: string) {
+  const inputMIME = inputURI.split(',')[0].split(':')[1].split(';')[0];
+  const binaryVal = atob(inputURI.split(',')[1]);
+  const blobArray = Array.prototype.map.call(binaryVal, (letter) =>
+    letter.charCodeAt(0)
+  );
+  return new File([new Uint8Array(blobArray as number[])], name, {
+    type: inputMIME,
+  });
+}
 export class LocationsStateModel {
   ids!: number[];
   entities!: { [id: number]: Location };
@@ -40,7 +55,8 @@ export class LocationsState {
   constructor(
     private readonly translocoService: TranslocoService,
     private readonly apiService: ApiService,
-    private readonly store: Store
+    private readonly store: Store,
+    private readonly compressService: NgxImageCompressService
   ) {}
   @Selector()
   static locations({ entities }: LocationsStateModel) {
@@ -149,27 +165,49 @@ export class LocationsState {
     { getState }: StateContext<LocationsStateModel>,
     { id, file }: { id: number; file: File }
   ) {
-    const toUpload = new FormData();
-    toUpload.append('files_files', file);
-    this.store.dispatch(
-      new ChangeLocation({
-        ...getState().entities[id],
-        user_img: file.name,
-        default_img: '',
-        img_type: 'user',
-      })
-    );
-    console.log(file, 'send file');
-    return this.apiService.send(
-      'upload',
-      {
-        method: 'POST',
-        data: toUpload,
-      },
-      {
-        useHttp: true,
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      if (typeof event.target?.result === 'string') {
+        this.compressService
+          .compressFile(
+            event.target.result,
+            DOC_ORIENTATION.Default,
+            100,
+            100,
+            400
+          )
+          .then((result) => {
+            const compressedFile = dataURLtoFile(result, file.name);
+            const toUpload = new FormData();
+            toUpload.append('files_files', compressedFile);
+            this.apiService
+              .send(
+                'upload',
+                {
+                  method: 'POST',
+                  data: toUpload,
+                },
+                {
+                  useHttp: true,
+                }
+              )
+              .pipe(first())
+              .subscribe({
+                complete: () => {
+                  this.store.dispatch(
+                    new ChangeLocation({
+                      ...getState().entities[id],
+                      user_img: file.name,
+                      default_img: '',
+                      img_type: 'user',
+                    })
+                  );
+                },
+              });
+          });
       }
-    );
+    };
+    reader.readAsDataURL(file);
   }
 
   @Action(CreateRoom)
