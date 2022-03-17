@@ -2,21 +2,20 @@ import {
   ChangeDetectionStrategy,
   Component,
   Inject,
-  OnDestroy,
   OnInit,
 } from '@angular/core';
 import { Actions, Select, Store } from '@ngxs/store';
 import { Router, RouterOutlet } from '@angular/router';
 import { TranslocoService } from '@ngneat/transloco';
-import { Observable, Subscription } from 'rxjs';
+import { Observable, switchMap, timer } from 'rxjs';
 import { LocalStorageState } from '@store/local-storage/local-storage.state';
-import { DestroyService } from '@core/services/destroy/destroy.service';
-import { first, takeUntil, tap } from 'rxjs/operators';
+import { takeUntil, tap } from 'rxjs/operators';
 import { jumpOutAnimation } from './layouts/mobile-layout/animations';
 import { DOCUMENT } from '@angular/common';
 import { ApiService } from '@core/services/api/api.service';
-import { SetServerDateOptions } from '@store/locals/locals.actions';
+import { ServerTime, SetServerDateOptions } from '@store/locals/locals.actions';
 import { IServerDateOptions } from '@store/locals/locals.state';
+import { TuiDestroyService } from '@taiga-ui/cdk';
 
 @Component({
   selector: 'z-wave-root',
@@ -24,18 +23,18 @@ import { IServerDateOptions } from '@store/locals/locals.state';
   styleUrls: ['./app.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   animations: [jumpOutAnimation],
+  providers: [TuiDestroyService],
 })
-export class AppComponent implements OnDestroy, OnInit {
+export class AppComponent implements OnInit {
   @Select(LocalStorageState.lang) lang$!: Observable<string>;
   @Select(LocalStorageState.nightMode) nightMode$!: Observable<boolean>;
-  private subscription: Subscription = Subscription.EMPTY;
 
   constructor(
     private readonly actions: Actions,
     private readonly router: Router,
     private readonly store: Store,
     private readonly translocoService: TranslocoService,
-    private readonly destroyService$: DestroyService,
+    private readonly destroyService$: TuiDestroyService,
     private readonly apiService: ApiService,
     @Inject(DOCUMENT) private readonly document: Document
   ) {
@@ -49,19 +48,19 @@ export class AppComponent implements OnDestroy, OnInit {
       )
       .subscribe();
   }
+
   ngOnInit(): void {
     this.apiService
       .send<IServerDateOptions>('time', undefined, true)
       .pipe(
-        first(),
         tap((serverDateOptions) =>
           this.store.dispatch(new SetServerDateOptions(serverDateOptions))
-        )
+        ),
+        switchMap(() => timer(0, 1000)),
+        tap(() => this.store.dispatch(new ServerTime(Date.now()))),
+        takeUntil(this.destroyService$)
       )
       .subscribe();
-  }
-  ngOnDestroy(): void {
-    this.subscription.unsubscribe();
   }
 
   prepareRoute(outlet: RouterOutlet) {

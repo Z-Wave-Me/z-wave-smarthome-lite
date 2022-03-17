@@ -17,7 +17,6 @@ import {
 import { DeviceResponseInterface } from '@core/services/server-stream/device-response.interface';
 import { DestroyDevices, UpdateDevices } from '@store/devices/devices.actions';
 import { Store } from '@ngxs/store';
-import { ServerTime } from '@store/locals/locals.actions';
 import { Location } from '@store/locations/location';
 import { UpdateLocations } from '@store/locations/locations.action';
 import { WebsocketService } from '@core/services/websocket/websocket.service';
@@ -56,7 +55,6 @@ export class ServerStreamService implements OnDestroy {
     private readonly webSocketService: WebsocketService,
     private readonly store: Store
   ) {
-    // this.connection$ = of(false).pipe(delay(200));
     this.connection$ = webSocketService.isConnect();
   }
 
@@ -73,7 +71,6 @@ export class ServerStreamService implements OnDestroy {
     this.connection$
       .pipe(
         switchMap((isConnect) => {
-          // console.log('Connection status ', isConnect);
           return isConnect ? this.wsAccess(config) : this.httpAccess(config);
         }),
         takeUntil(this.destroy$)
@@ -180,18 +177,14 @@ export class ServerStreamService implements OnDestroy {
       exhaustMap(() =>
         this.apiService.send<DeviceResponseInterface<Device>>(api, params)
       ),
-      // map(({ data }: { data: DeviceResponseInterface<Device> }) => {
-      //   return data;
-      // }),
       map(({ updateTime, structureChanged, devices }) => {
         this.store.dispatch(new UpdateDevices(devices, !params));
-        this.store.dispatch(new ServerTime(updateTime));
+        // this.store.dispatch(new ServerTime(updateTime));
         params = structureChanged
           ? undefined
           : { params: { since: updateTime } };
         console.groupEnd();
       }),
-      // finalize(() => console.log('Http UpdateDevices complete')),
       catchError((err, caches) => {
         console.log('updateDevices', JSON.stringify(err));
         return caches.pipe(delay(1000));
@@ -213,7 +206,6 @@ export class ServerStreamService implements OnDestroy {
       map((locations: Location[]) => {
         this.store.dispatch(new UpdateLocations(locations));
       }),
-      // finalize(() => console.log('Http UpdateLocations complete')),
       catchError((err, caches) => {
         console.log('updateLocations', JSON.stringify(err));
         return caches.pipe(delay(1000));
@@ -251,7 +243,6 @@ export class ServerStreamService implements OnDestroy {
             )
         )
       );
-    // this.store.dispatch(new UpdateProfile());
   }
 
   /**
@@ -260,27 +251,10 @@ export class ServerStreamService implements OnDestroy {
    */
   private subscribeNotifications() {
     return this.webSocketService
-      .on<SNotification>(
-        'me.z-wave.notifications'
-        // (): WsMessage<HttpEncapsulatedRequest> => ({
-        //   event: 'httpEncapsulatedRequest',
-        //   data: {
-        //     url:
-        //       ServerStreamService.baseApiUrl +
-        //       ServerStreamService.apiList['notifications'],
-        //     method: 'GET',
-        //   },
-        //   responseEvent: 'me.z-wave.notifications',
-        // })
-      )
+      .on<SNotification>('me.z-wave.notifications')
       .pipe(
         takeUntil(this.destroy$),
         tap((notifications) => {
-          // if ('notifications' in notifications)
-          //   this.store.dispatch(
-          //     new AddNotifications(notifications.notifications)
-          //   );
-          // else
           this.store.dispatch(new AddNotifications(notifications));
         })
       );
