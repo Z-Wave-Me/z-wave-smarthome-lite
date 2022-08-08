@@ -227,7 +227,6 @@ export class LocationsState {
       method: 'POST',
       data: room,
     });
-    // .pipe(map(() => this.store.dispatch(new UpdateLocations2())));
   }
 
   @Action(UpdateAllLocations)
