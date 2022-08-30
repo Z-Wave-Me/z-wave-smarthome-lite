@@ -27,6 +27,7 @@ import { UpdateAllLocations } from '@store/locations/locations.action';
 import { WINDOW } from '@ng-web-apis/common';
 import { SetNotificationsFilters } from '@store/notifications/notifications.actions';
 import { ResetFilters } from '@store/notification-filters/notification-filters.actions';
+import { CookieService } from 'ngx-cookie-service';
 
 export interface ZWayResponse<T> {
   code: number;
@@ -83,6 +84,7 @@ export class LocalStorageState {
     private readonly translocoService: TranslocoService,
     private readonly store: Store,
     private readonly httpClient: HttpClient,
+    private readonly cookieService: CookieService,
     @Inject(WINDOW) private readonly window: Window
   ) {}
 
@@ -246,7 +248,9 @@ export class LocalStorageState {
     this.store.dispatch(new ResetFilters());
     return this.httpClient.get('/ZAutomation/api/v1/logout').pipe(
       tap(() => {
+        this.cookieService.delete('ZBW_SESSID', '/');
         patchState({ profiles: {}, id: 0 });
+
         this.window.location.reload();
       })
     );

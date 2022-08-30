@@ -4,15 +4,15 @@ import {
   IProfile,
   ZWayResponse,
 } from '@store/local-storage/local-storage.state';
-import { catchError, map, tap } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
 import {
   SetServerInfo,
   SetUser,
 } from '@store/local-storage/local-storage.actions';
 import { ApiService } from '@core/services/api/api.service';
 import { Store } from '@ngxs/store';
-import { CookieService } from '@core/services/cookie/cookie.service';
 import { HttpClient } from '@angular/common/http';
+import { CookieService } from 'ngx-cookie-service';
 interface IFirstAccess {
   firstaccess: boolean;
   ip_address: string;

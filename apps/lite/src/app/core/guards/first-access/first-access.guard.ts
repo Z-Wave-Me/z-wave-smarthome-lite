@@ -3,11 +3,8 @@ import { CanActivate, Router, UrlTree } from '@angular/router';
 import { Observable, of } from 'rxjs';
 import { ApiService } from '@core/services/api/api.service';
 import { catchError, map } from 'rxjs/operators';
-import { ZWayResponse } from '@store/local-storage/local-storage.state';
 import { Store } from '@ngxs/store';
 import { SetServerInfo } from '@store/local-storage/local-storage.actions';
-import { HttpClient } from '@angular/common/http';
-import { CookieService } from '@core/services/cookie/cookie.service';
 
 interface IFirstAccess {
   firstaccess: boolean;

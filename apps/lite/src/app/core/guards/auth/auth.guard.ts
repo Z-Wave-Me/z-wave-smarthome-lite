@@ -1,15 +1,5 @@
 import { Injectable } from '@angular/core';
-import {
-  ActivatedRoute,
-  ActivatedRouteSnapshot,
-  CanActivate,
-  CanLoad,
-  Route,
-  Router,
-  RouterStateSnapshot,
-  UrlSegment,
-  UrlTree,
-} from '@angular/router';
+import { CanLoad, Router, UrlTree } from '@angular/router';
 import { Observable, of } from 'rxjs';
 import { Store } from '@ngxs/store';
 
@@ -18,14 +8,7 @@ import { IProfile } from '@store/local-storage/local-storage.state';
 import { ApiService } from '@core/services/api/api.service';
 import { SetUser } from '@store/local-storage/local-storage.actions';
 import { WebsocketService } from '@core/services/websocket/websocket.service';
-import { CookieService } from '@core/services/cookie/cookie.service';
-
-interface IFirstAccess {
-  firstaccess: boolean;
-  ip_address: string;
-  remote_id: number;
-  uuid: string;
-}
+import { CookieService } from 'ngx-cookie-service';
 
 /**
  *  It sends a request to the API to check if the user is logged in. If the user is logged in,

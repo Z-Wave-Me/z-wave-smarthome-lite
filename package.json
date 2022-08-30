@@ -69,6 +69,7 @@
     "ngx-device-detector": "^2.1.1",
     "ngx-image-compress": "^13.1.9",
     "ngxs-reset-plugin": "^2.0.0",
+    "ngx-cookie-service": "13.2.1",
     "rxjs": "7.5.2",
     "swiper": "^7.0.6",
     "tslib": "2.3.1",
