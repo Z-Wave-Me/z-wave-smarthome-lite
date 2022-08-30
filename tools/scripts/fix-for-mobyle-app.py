@@ -1,8 +1,7 @@
-#!./tools/scripts/venv/Scripts/python.exe
 import glob
 import re
 
-filename = glob.glob(r'D:\projects\z-wave\z-wave\dist\apps\lite\main.*.js')[0]
+filename = glob.glob(r'dist/apps/lite/main.*.js')[0]
 with open(filename, 'r+') as f:
   content = f.read()
   f.seek(0)
