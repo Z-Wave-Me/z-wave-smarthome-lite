@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Optional } from '@angular/core';
 import {
   HttpErrorResponse,
   HttpEvent,
@@ -14,10 +14,15 @@ import { ServerStatus } from '@store/locals/locals.actions';
 import { LocalStorageState } from '@store/local-storage/local-storage.state';
 import { Logout } from '@store/local-storage/local-storage.actions';
 import { Router } from '@angular/router';
+import { LoggerService } from '@core/services/logger.service';
 
 @Injectable()
 export class ApiInterceptor implements HttpInterceptor {
-  constructor(private store: Store, private readonly router: Router) {}
+  constructor(
+    private store: Store,
+    private readonly router: Router,
+    @Optional() private readonly loggerService: LoggerService
+  ) {}
 
   intercept(request: HttpRequest<unknown>, next: HttpHandler) {
     // let errorsCount = 0;
@@ -37,9 +42,11 @@ export class ApiInterceptor implements HttpInterceptor {
         if (event instanceof HttpResponse) {
           this.store.dispatch(new ServerStatus(true));
           // errorsCount = 0;
+          this.loggerService.log(event);
         }
       }),
       catchError((err) => {
+        this.loggerService.log(err);
         if (err.status === 0) {
           this.store.dispatch(new ServerStatus(false));
         }

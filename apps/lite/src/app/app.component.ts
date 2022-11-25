@@ -3,6 +3,7 @@ import {
   Component,
   Inject,
   OnInit,
+  Optional,
 } from '@angular/core';
 import { Actions, Select, Store } from '@ngxs/store';
 import { Router, RouterOutlet } from '@angular/router';
@@ -16,6 +17,7 @@ import { ApiService } from '@core/services/api/api.service';
 import { ServerTime, SetServerDateOptions } from '@store/locals/locals.actions';
 import { IServerDateOptions } from '@store/locals/locals.state';
 import { TuiDestroyService } from '@taiga-ui/cdk';
+import { LoggerService } from '@core/services/logger.service';
 
 @Component({
   selector: 'z-wave-root',
@@ -36,7 +38,8 @@ export class AppComponent implements OnInit {
     private readonly translocoService: TranslocoService,
     private readonly destroyService$: TuiDestroyService,
     private readonly apiService: ApiService,
-    @Inject(DOCUMENT) private readonly document: Document
+    @Inject(DOCUMENT) private readonly document: Document,
+    @Optional() private readonly loggerService: LoggerService
   ) {
     this.lang$
       .pipe(
@@ -65,5 +68,9 @@ export class AppComponent implements OnInit {
 
   prepareRoute(outlet: RouterOutlet) {
     return outlet?.activatedRouteData?.animation;
+  }
+
+  save() {
+    this.loggerService.save();
   }
 }

@@ -36,6 +36,16 @@ export class AuthGuard implements CanLoad {
       .send<IProfile>('session', undefined, { withResponse: true })
       .pipe(
         map((profile) => {
+          console.error(
+            'GET SESSION' +
+              this.cookieService.get('ZWAYSession') +
+              '<-----------------------'
+          );
+          console.error(
+            'GET ALL COOKIES' +
+              JSON.stringify(this.cookieService.getAll()) +
+              '<-----------------------'
+          );
           if (
             profile.sid &&
             profile.sid === this.cookieService.get('ZWAYSession')
