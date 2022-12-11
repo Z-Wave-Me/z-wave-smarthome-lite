@@ -14,7 +14,7 @@
         notification.timestamp | date: 'HH:mm':(localGMT$ | async) ?? ''
       }}</span>
       <span class="title"> {{ notification.deviceName }} </span>:
-      <span class="level">{{ notification.deviceLevel }}</span>
+      <span class="level">{{ notification.deviceLevel | significant }}</span>
       <span class="room" *ngIf="notification.locationName">
         - {{ notification.locationName }}</span
       >
