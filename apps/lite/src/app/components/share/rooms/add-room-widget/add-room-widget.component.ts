@@ -13,7 +13,7 @@ import {
 } from 'rxjs/operators';
 import { CreateRoom } from '@store/locations/locations.action';
 import { LocationsStateModel } from '@store/locations/locations.state';
-import { TuiNotification, TuiNotificationsService } from '@taiga-ui/core';
+import { TuiNotification, TuiAlertService } from '@taiga-ui/core';
 import { TranslocoService } from '@ngneat/transloco';
 import { from } from 'rxjs';
 import { faPlus } from '@fortawesome/pro-regular-svg-icons';
@@ -32,7 +32,7 @@ export class AddRoomWidgetComponent {
     private readonly router: Router,
     private readonly route: ActivatedRoute,
     private readonly store: Store,
-    private readonly tuiNotification: TuiNotificationsService,
+    private readonly tuiNotification: TuiAlertService,
     private readonly translocoService: TranslocoService
   ) {}
 
@@ -58,7 +58,7 @@ export class AddRoomWidgetComponent {
                 this.router.navigate(['config', id], { relativeTo: this.route })
               ).pipe(
                 switchMap(() =>
-                  this.tuiNotification.show(
+                  this.tuiNotification.open(
                     this.translocoService.translate<string>(
                       'roomCreateSuccess'
                     ),
@@ -68,7 +68,7 @@ export class AddRoomWidgetComponent {
                   )
                 )
               );
-            return this.tuiNotification.show(
+            return this.tuiNotification.open(
               this.translocoService.translate<string>('roomCreateError'),
               {
                 status: TuiNotification.Error,

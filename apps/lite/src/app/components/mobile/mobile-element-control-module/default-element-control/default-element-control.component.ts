@@ -5,9 +5,8 @@ import {
   OnInit,
 } from '@angular/core';
 import {
-  FormBuilder,
-  FormControl,
-  FormGroup,
+  UntypedFormBuilder,
+  UntypedFormGroup,
   Validators,
 } from '@angular/forms';
 import { ExcludeDevice } from '@components/mobile/mobile-element-control-module/interfaces';
@@ -16,10 +15,7 @@ import { pairwise, takeUntil, tap } from 'rxjs/operators';
 import { Store } from '@ngxs/store';
 import { ChangeDevice } from '@store/devices/devices.actions';
 import { DestroyService } from '@core/services/destroy/destroy.service';
-import {
-  SetProfile,
-  UpdateProfile,
-} from '@store/local-storage/local-storage.actions';
+import { SetProfile } from '@store/local-storage/local-storage.actions';
 import { startWith } from 'rxjs';
 import { LocalStorageState } from '@store/local-storage/local-storage.state';
 
@@ -33,12 +29,12 @@ import { LocalStorageState } from '@store/local-storage/local-storage.state';
 export class DefaultElementControlComponent implements OnInit {
   @Input()
   context!: Device & ExcludeDevice;
-  form!: FormGroup;
+  form!: UntypedFormGroup;
   mode: 'binary' | 'multi' = 'binary';
   disabled = false;
 
   constructor(
-    private readonly formBuilder: FormBuilder,
+    private readonly formBuilder: UntypedFormBuilder,
     private readonly store: Store,
     private readonly destroy$: DestroyService
   ) {}

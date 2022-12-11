@@ -3,7 +3,7 @@
     <tui-input formControlName="title" *zWaveSecure="'admin'"
       >{{ t('device_name') }}<span class="tui-required"></span>
     </tui-input>
-    <tui-field-error formControlName="title"></tui-field-error>
+    <tui-error [error]="[] | tuiFieldError | async" formControlName="title"></tui-error>
     <!--    <z-wave-device-commutation mode="referenced"></z-wave-device-commutation>-->
     <!--    <z-wave-device-commutation mode="generated"></z-wave-device-commutation>-->
     <div class="tui-form__row" *zWaveSecure="'admin'">

@@ -6,10 +6,7 @@ import { ElementsRoutingModule } from '@components/share/elements/elements-routi
 import { ElementsComponent } from './elements/elements.component';
 import { TuiInputModule } from '@taiga-ui/kit';
 import { ReactiveFormsModule } from '@angular/forms';
-import {
-  TuiHintControllerModule,
-  TuiTextfieldControllerModule,
-} from '@taiga-ui/core';
+import { TuiTextfieldControllerModule, TuiHintModule } from '@taiga-ui/core';
 import { TranslocoModule } from '@ngneat/transloco';
 
 @NgModule({
@@ -20,7 +17,7 @@ import { TranslocoModule } from '@ngneat/transloco';
     ElementsRoutingModule,
     ReactiveFormsModule,
     TuiInputModule,
-    TuiHintControllerModule,
+    TuiHintModule,
     TranslocoModule,
     TuiTextfieldControllerModule,
   ],

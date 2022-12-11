@@ -6,7 +6,7 @@ import { Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
 import { LocationsStateModel } from '@store/locations/locations.state';
 import { Location } from '@store/locations/location';
-import { FormGroup } from '@angular/forms';
+import { UntypedFormGroup } from '@angular/forms';
 import { TranslocoService } from '@ngneat/transloco';
 import { DevicesStateModel } from '@store/devices/devices.state';
 import { faCheckCircle, faCircle } from '@fortawesome/free-regular-svg-icons';
@@ -17,7 +17,7 @@ import {
   RemoveLocation,
   UploadCustomImg,
 } from '@store/locations/locations.action';
-import { TuiNotification, TuiNotificationsService } from '@taiga-ui/core';
+import { TuiNotification, TuiAlertService } from '@taiga-ui/core';
 import { ChangeDevice } from '@store/devices/devices.actions';
 import { faLayerPlus, faTrash } from '@fortawesome/pro-regular-svg-icons';
 
@@ -45,7 +45,7 @@ export class RoomConfigComponent {
   data$: Observable<Location>;
   assignedDevices$: Observable<MainSensorDevice[]>;
   availableDevices$: Observable<Omit<MainSensorDevice, 'deviceType'>[]>;
-  form?: FormGroup;
+  form?: UntypedFormGroup;
   config = {
     maxSize: '500.0 kB',
     extension: 'png,jpg,jpeg,gif',
@@ -58,7 +58,7 @@ export class RoomConfigComponent {
     private readonly store: Store,
     private readonly translocoService: TranslocoService,
     private readonly router: Router,
-    private readonly notifications: TuiNotificationsService
+    private readonly notifications: TuiAlertService
   ) {
     this.data$ = activatedRoute.url.pipe(
       takeUntil(destroy$),
@@ -171,7 +171,7 @@ export class RoomConfigComponent {
     this.router.navigate(['rooms']).then(() => {
       this.store.dispatch(new RemoveLocation(loc.id));
       this.notifications
-        .show(this.translocoService.translate<string>('delete_successful'), {
+        .open(this.translocoService.translate<string>('delete_successful'), {
           status: TuiNotification.Success,
         })
         .subscribe();

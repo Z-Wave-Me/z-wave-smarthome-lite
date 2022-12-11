@@ -1,16 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SettingsMenuComponent } from '@components/share/settings-menu/settings-menu.component';
-import {
-  TuiButtonModule,
-  TuiDataListModule,
-  TuiDropdownControllerModule,
-  TuiHostedDropdownModule,
-  TuiLinkModule,
-  TuiPrimitiveTextfieldModule,
-  TuiSvgModule,
-  TuiTextfieldControllerModule,
-} from '@taiga-ui/core';
+import { TuiButtonModule, TuiDataListModule, TuiHostedDropdownModule, TuiLinkModule, TuiPrimitiveTextfieldModule, TuiSvgModule, TuiTextfieldControllerModule, TuiDropdownModule } from '@taiga-ui/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import {
   TuiAccordionModule,
@@ -37,7 +28,7 @@ import { NotificationFiltersComponent } from './notification-filters/notificatio
     TuiSvgModule,
     TuiDataListModule,
     TuiButtonModule,
-    TuiDropdownControllerModule,
+    TuiDropdownModule,
     FontAwesomeModule,
     TuiToggleModule,
     ReactiveFormsModule,

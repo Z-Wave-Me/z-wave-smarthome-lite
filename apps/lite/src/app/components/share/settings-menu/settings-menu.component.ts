@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
 import { faSignOut, faUserCog } from '@fortawesome/pro-regular-svg-icons';
-import { FormBuilder, FormControl } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormControl } from '@angular/forms';
 import { Select, Store } from '@ngxs/store';
 import { DestroyService } from '@core/services/destroy/destroy.service';
 import { LocalStorageState } from '@store/local-storage/local-storage.state';
@@ -44,14 +44,14 @@ export class SettingsMenuComponent {
     text: string;
     callback: () => void;
   };
-  themeSwitcher?: FormControl;
+  themeSwitcher?: UntypedFormControl;
   open = false;
 
   constructor(
     private readonly iconSupplierService: IconSupplierService,
     private readonly faIconLibrary: FaIconLibrary,
     private readonly store: Store,
-    private readonly formBuilder: FormBuilder,
+    private readonly formBuilder: UntypedFormBuilder,
     private readonly destroyService$: DestroyService,
     private readonly router: Router,
     private readonly deviceDetectorService: DeviceDetectorService,

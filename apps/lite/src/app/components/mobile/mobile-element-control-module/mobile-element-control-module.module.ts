@@ -7,24 +7,24 @@ import {
   TuiAvatarModule,
   TuiBadgeModule,
   TuiDataListWrapperModule,
-  TuiFieldErrorModule,
   TuiInputModule,
   TuiInputTagModule,
   TuiLineClampModule,
   TuiSelectModule,
   TuiSelectOptionModule,
   TuiToggleModule,
+  TuiFieldErrorPipeModule,
 } from '@taiga-ui/kit';
 import {
   TuiButtonModule,
-  TuiColorModule,
   TuiDataListModule,
-  TuiHintControllerModule,
   TuiNotificationModule,
   TuiScrollbarModule,
   TuiSvgModule,
   TuiTextfieldControllerModule,
   TuiWrapperModule,
+  TuiHintModule,
+  TuiErrorModule,
 } from '@taiga-ui/core';
 import { ElementControlComponent } from './element-control/element-control.component';
 import { TuiElementModule, TuiOverscrollModule } from '@taiga-ui/cdk';
@@ -59,8 +59,8 @@ import { SecureModule } from '@features/directives/secure/secure.module';
     FormsModule,
     ReactiveFormsModule,
     TuiTextfieldControllerModule,
-    TuiHintControllerModule,
-    TuiFieldErrorModule,
+    TuiHintModule,
+    TuiFieldErrorPipeModule,
     TranslocoModule,
     DeviceCommunicationModule,
     TuiToggleModule,
@@ -69,13 +69,13 @@ import { SecureModule } from '@features/directives/secure/secure.module';
     TuiDataListWrapperModule,
     TuiNotificationModule,
     TuiButtonModule,
-    TuiColorModule,
     TuiSelectOptionModule,
     TuiDataListModule,
     TuiInputTagModule,
     TuiWrapperModule,
     SensorModule,
     SecureModule,
+    TuiErrorModule,
   ],
 })
 export class MobileElementControlModuleModule {}

@@ -7,22 +7,23 @@ import { TranslocoModule } from '@ngneat/transloco';
 import {
   TuiBadgeModule,
   TuiDataListWrapperModule,
-  TuiFieldErrorModule,
   TuiInputModule,
   TuiIslandModule,
   TuiLineClampModule,
   TuiSelectModule,
   TuiTagModule,
   TuiToggleModule,
+  TuiFieldErrorPipeModule,
 } from '@taiga-ui/kit';
 import {
-  TuiHintControllerModule,
   TuiScrollbarModule,
   TuiSvgModule,
   TuiTextfieldControllerModule,
+  TuiHintModule,
+  TuiErrorModule,
 } from '@taiga-ui/core';
 import { BackButtonModule } from '@features/directives/back-button/back-button.module';
-import { TuiForModule, TuiOverscrollModule } from '@taiga-ui/cdk';
+import { TuiOverscrollModule } from '@taiga-ui/cdk';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
@@ -41,14 +42,15 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
     ReactiveFormsModule,
     TuiInputModule,
     TuiTextfieldControllerModule,
-    TuiHintControllerModule,
-    TuiFieldErrorModule,
+    TuiHintModule,
+    TuiFieldErrorPipeModule,
     TuiSelectModule,
     TuiDataListWrapperModule,
     TuiIslandModule,
     TuiToggleModule,
     FontAwesomeModule,
     TuiTagModule,
+    TuiErrorModule,
   ],
 })
 export class PersonalSettingsModule {}

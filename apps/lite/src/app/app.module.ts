@@ -1,19 +1,5 @@
 import { NgDompurifySanitizer } from '@tinkoff/ng-dompurify';
-import {
-  TUI_SANITIZER,
-  TuiButtonModule,
-  TuiDialogModule,
-  TuiErrorModule,
-  TuiExpandModule,
-  TuiHintControllerModule,
-  TuiModeModule,
-  TuiNotificationModule,
-  TuiNotificationsModule,
-  TuiRootModule,
-  TuiScrollbarModule,
-  TuiTextfieldControllerModule,
-  TuiThemeNightModule,
-} from '@taiga-ui/core';
+import { TUI_SANITIZER, TuiButtonModule, TuiDialogModule, TuiErrorModule, TuiExpandModule, TuiModeModule, TuiNotificationModule, TuiRootModule, TuiScrollbarModule, TuiTextfieldControllerModule, TuiThemeNightModule, TuiAlertModule, TuiHintModule } from '@taiga-ui/core';
 import { BrowserModule, HammerModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
@@ -40,7 +26,6 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { LoginComponent } from '@components/share/login/login.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import {
-  TuiFieldErrorModule,
   TuiFieldErrorPipeModule,
   TuiFilterByInputPipeModule,
   TuiInputModule,
@@ -96,14 +81,14 @@ export const initApp = (configurationService: ConfigService) => () =>
     }),
     ReactiveFormsModule,
     TuiRootModule,
-    TuiNotificationsModule,
+    TuiAlertModule,
     TuiThemeNightModule,
     TuiModeModule,
     TuiDialogModule,
     TuiInputModule,
     TuiTextfieldControllerModule,
-    TuiHintControllerModule,
-    TuiFieldErrorModule,
+    TuiHintModule,
+    TuiFieldErrorPipeModule,
     TuiInputPasswordModule,
     TuiLetModule,
     TuiNotificationModule,

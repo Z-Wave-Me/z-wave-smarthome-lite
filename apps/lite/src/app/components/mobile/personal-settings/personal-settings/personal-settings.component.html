@@ -20,22 +20,22 @@
       <form [formGroup]="settings" class="personal-settings">
         <tui-input
           class="personal-settings-item"
-          [tuiTextfieldExampleText]="profile.name ?? ''"
+          
           formControlName="name"
         >
           {{ _t('lb_login') }}
           <span class="tui-required"></span>
-        </tui-input>
-        <tui-field-error formControlName="name"></tui-field-error>
+        <input tuiTextfield [attr.placeholder]="profile.name ?? ''"/> </tui-input>
+        <tui-error [error]="[] | tuiFieldError | async" formControlName="name"></tui-error>
         <tui-input
-          [tuiTextfieldExampleText]="profile.email ?? ''"
+          
           formControlName="email"
           class="personal-settings-item"
         >
           {{ _t('lb_email') }}
           <span class="tui-required"></span>
-        </tui-input>
-        <tui-field-error formControlName="email"></tui-field-error>
+        <input tuiTextfield [attr.placeholder]="profile.email ?? ''"/> </tui-input>
+        <tui-error [error]="[] | tuiFieldError | async" formControlName="email"></tui-error>
         <tui-select
           formControlName="lang"
           [valueContent]="langContent"

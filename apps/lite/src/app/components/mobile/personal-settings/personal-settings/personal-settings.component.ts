@@ -2,9 +2,12 @@ import {
   AfterViewInit,
   ChangeDetectionStrategy,
   Component,
-  OnInit,
 } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {
+  UntypedFormBuilder,
+  UntypedFormGroup,
+  Validators,
+} from '@angular/forms';
 import { Store } from '@ngxs/store';
 import {
   IProfile,
@@ -12,11 +15,8 @@ import {
 } from '@store/local-storage/local-storage.state';
 import { TranslocoService } from '@ngneat/transloco';
 import { TuiDestroyService } from '@taiga-ui/cdk';
-import { filter, map, pluck, switchMap, takeUntil, tap } from 'rxjs/operators';
-import {
-  SetProfile,
-  UpdateProfile,
-} from '@store/local-storage/local-storage.actions';
+import { filter, map, pluck, takeUntil } from 'rxjs/operators';
+import { SetProfile } from '@store/local-storage/local-storage.actions';
 import { environment } from '../../../../../environments/environment';
 import { faMobileAlt } from '@fortawesome/free-solid-svg-icons';
 import { Observable } from 'rxjs';
@@ -30,11 +30,13 @@ class Lang {
   };
   readonly img: string;
   readonly title: string;
+
   constructor(readonly id: string) {
     this.img = Lang.apiUrl + this.id + '.png';
     this.title = Lang.lang?.[id] ?? id;
   }
 }
+
 @Component({
   selector: 'z-wave-personal-settings',
   templateUrl: './personal-settings.component.html',
@@ -43,14 +45,15 @@ class Lang {
   providers: [TuiDestroyService],
 })
 export class PersonalSettingsComponent implements AfterViewInit {
-  settings: FormGroup;
+  settings: UntypedFormGroup;
   profile: IProfile;
   languages: Lang[];
   hiddenDevices$: Observable<{ id: string; title: string }[]>;
   version = environment.version;
   faMobileAlt = faMobileAlt;
+
   constructor(
-    private readonly formBuilder: FormBuilder,
+    private readonly formBuilder: UntypedFormBuilder,
     private readonly store: Store,
     private readonly translocoService: TranslocoService,
     private readonly destroy$: TuiDestroyService

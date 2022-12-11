@@ -2,13 +2,13 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { Select, Store } from '@ngxs/store';
 import { Router } from '@angular/router';
 import { Login } from '@store/local-storage/local-storage.actions';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { Observable, of } from 'rxjs';
 import { LocalStorageState } from '@store/local-storage/local-storage.state';
 import { catchError, first, map } from 'rxjs/operators';
 import { ApiService } from '@core/services/api/api.service';
 import { TUI_VALIDATION_ERRORS } from '@taiga-ui/kit';
-import { TuiNotification, TuiNotificationsService } from '@taiga-ui/core';
+import { TuiNotification, TuiAlertService } from '@taiga-ui/core';
 import { TranslocoService } from '@ngneat/transloco';
 import { HttpClient } from '@angular/common/http';
 
@@ -28,8 +28,8 @@ import { HttpClient } from '@angular/common/http';
   ],
 })
 export class LoginComponent {
-  loginForm: FormGroup;
-  restoreForm: FormGroup;
+  loginForm: UntypedFormGroup;
+  restoreForm: UntypedFormGroup;
   @Select(LocalStorageState.serverInfo) serverInfo$!: Observable<{
     remoteId: number;
     ipAddress: string;
@@ -40,9 +40,9 @@ export class LoginComponent {
   constructor(
     private store: Store,
     private router: Router,
-    private readonly formBuilder: FormBuilder,
+    private readonly formBuilder: UntypedFormBuilder,
     private readonly apiService: ApiService,
-    private readonly notificationsService: TuiNotificationsService,
+    private readonly notificationsService: TuiAlertService,
     private readonly translocoService: TranslocoService,
     private readonly httpClient: HttpClient
   ) {
@@ -92,7 +92,7 @@ export class LoginComponent {
     if (this.restoreForm.valid) {
       console.log('VALID');
       this.notificationsService
-        .show('Пароль отправлен по почте', {
+        .open('Пароль отправлен по почте', {
           label: 'Восстановление пароля',
           status: TuiNotification.Success,
         })

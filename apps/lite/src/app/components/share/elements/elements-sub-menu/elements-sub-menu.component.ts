@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 
 @Component({
   selector: 'z-wave-elements-sub-menu',
@@ -8,9 +8,9 @@ import { FormBuilder, FormGroup } from '@angular/forms';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ElementsSubMenuComponent {
-  autocompleteForm: FormGroup;
+  autocompleteForm: UntypedFormGroup;
 
-  constructor(private readonly formBuilder: FormBuilder) {
+  constructor(private readonly formBuilder: UntypedFormBuilder) {
     this.autocompleteForm = this.formBuilder.group({
       deviceName: [],
     });

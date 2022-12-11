@@ -27,7 +27,8 @@
       "@interfaces/*": ["app/interfaces/*"],
       "@styles/*": ["app/styles/*"],
       "@modules/*": ["app/modules/*"]
-    }
+    },
+    "target": "es2020"
   },
   "angularCompilerOptions": {
     "strictInjectionParameters": true,
