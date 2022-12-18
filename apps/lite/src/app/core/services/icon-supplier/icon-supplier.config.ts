@@ -3,85 +3,85 @@ import { IconSupplierConfig } from '@core/services/icon-supplier/icon-supplier';
 export const config: IconSupplierConfig = {
   door: {
     level: {
-      open: 'door-open.png',
-      closed: 'door-closed.png',
-      on: 'door-open.png',
-      off: 'door-closed.png',
+      open: 'door-open.svg',
+      closed: 'door-closed.svg',
+      on: 'door-open.svg',
+      off: 'door-closed.svg',
     },
   },
   window_tilt: {
     level: {
-      open: 'window-up.png',
-      closed: 'window-down.png',
+      open: 'window-up.svg',
+      closed: 'window-down.svg',
     },
   },
   window: {
     level: {
-      down: 'window-down.png',
-      half: 'window-half.png',
-      up: 'window-up.png',
-      open: 'window-open.png',
-      closed: 'window-closed.png',
-      on: 'window-open.png',
-      off: 'window-closed.png',
+      down: 'window-down.svg',
+      half: 'window-half.svg',
+      up: 'window-up.svg',
+      open: 'window-open.svg',
+      closed: 'window-closed.svg',
+      on: 'window-open.svg',
+      off: 'window-closed.svg',
     },
   },
   switch: {
     level: {
-      on: 'switch-on.png',
-      off: 'switch-off.png',
+      on: 'switch-on.svg',
+      off: 'switch-off.svg',
     },
   },
   siren: {
     level: {
-      on: 'siren-on.png',
-      off: 'siren-off.png',
+      on: 'siren-on.svg',
+      off: 'siren-off.svg',
     },
   },
   fan: {
     level: {
-      on: 'fan-on.png',
-      half: 'fan-half.png',
-      off: 'fan-off.png',
+      on: 'fan-on.svg',
+      half: 'fan-half.svg',
+      off: 'fan-off.svg',
     },
   },
   motion: {
     level: {
-      on: 'motion-on.png',
-      off: 'motion-off.png',
+      on: 'motion-on.svg',
+      off: 'motion-off.svg',
     },
   },
   blinds: {
     level: {
-      down: 'blind-down.png',
-      half: 'blind-half.png',
-      up: 'blind-up.png',
+      down: 'blind-down.svg',
+      half: 'blind-half.svg',
+      up: 'blind-up.svg',
     },
   },
   multilevel: {
     level: {
-      on: 'dimmer-on.png',
-      half: 'dimmer-half.png',
-      off: 'dimmer-off.png',
+      on: 'dimmer-on.svg',
+      half: 'dimmer-half.svg',
+      off: 'dimmer-off.svg',
     },
   },
   doorlockcontrol: {
-    default: 'lock-closed.png',
+    default: 'lock-closed.svg',
   },
   thermostat: {
-    default: 'thermostat.png',
+    default: 'thermostat.svg',
   },
   energy: {
-    default: 'energy.png',
+    default: 'energy.svg',
   },
   meter: {
-    default: 'meter.png',
+    default: 'meter.svg',
   },
   temperature: {
-    default: 'temperature.png',
+    default: 'temperature.svg',
   },
   camera: {
-    default: 'camera.png',
+    default: 'camera.svg',
   },
   alarm_smoke: {
     level: {
@@ -97,8 +97,8 @@ export const config: IconSupplierConfig = {
   },
   alarm_flood: {
     level: {
-      on: 'flood-on.png',
-      off: 'flood-off.png',
+      on: 'flood-on.svg',
+      off: 'flood-off.svg',
     },
   },
   alarm_burglar: {
@@ -111,31 +111,31 @@ export const config: IconSupplierConfig = {
     default: 'battery.png',
   },
   luminosity: {
-    default: 'luminosity.png',
+    default: 'luminosity.svg',
   },
   humidity: {
-    default: 'humidity.png',
+    default: 'humidity.svg',
   },
   ultraviolet: {
-    default: 'ultraviolet.png',
+    default: 'ultraviolet.svg',
   },
   barometer: {
-    default: 'barometer.png',
+    default: 'barometer.svg',
   },
   new: {
-    default: 'new.png',
+    default: 'new.svg',
   },
   rain: {
-    default: 'rain.png',
+    default: 'rain.svg',
   },
   co: {
-    default: 'co.png',
+    default: 'co.svg',
   },
   coo: {
-    default: 'coo.png',
+    default: 'coo.svg',
   },
   scene: {
-    default: 'scene.png',
+    default: 'scene.svg',
   },
   alarm_co: {
     level: {
@@ -151,46 +151,46 @@ export const config: IconSupplierConfig = {
   },
   tamper: {
     level: {
-      on: 'tamper-on.png',
-      off: 'tamper-off.png',
+      on: 'tamper-on.svg',
+      off: 'tamper-off.svg',
     },
   },
   security: {
     level: {
-      on: 'security-on.png',
-      pending: 'security-pending.png',
-      off: 'security-off.png',
+      on: 'lock-closed.svg',
+      pending: 'pending.svg',
+      off: 'lock-opened.svg',
       alarmed: 'security-alarmed.png',
     },
   },
   gesture: {
     level: {
-      press: 'press.png', // pressed / gedrückt
-      hold: 'hold.png', // hold / gedrückt gehalten
-      release: 'release.png', // released / losgelassen
-      swipe_up: 'swipe-up.png', // swiped / berührt
-      swipe_down: 'swipe-down.png', // swiped / berührt
-      swipe_left: 'swipe-left.png', // swiped / berührt
-      swipe_right: 'swipe-right.png', // swiped / berührt
-      swipe_top_left_to_bottom_right: 'swipe-top-left-to-bottom-right.png', // swiped / berührt
-      swipe_top_right_to_bottom_left: 'swipe-top-right-to-bottom-left.png', // swiped / berührt
-      swipe_bottom_left_to_top_right: 'swipe-bottom-left-to-top-right.png', // swiped / berührt
-      swipe_bottom_right_to_top_left: 'swipe-bottom-right-to-top-left.png', // swiped / berührt
+      press: 'press.svg', // pressed / gedrückt
+      hold: 'hold.svg', // hold / gedrückt gehalten
+      release: 'release.svg', // released / losgelassen
+      swipe_up: 'swipe-up.svg', // swiped / berührt
+      swipe_down: 'swipe-down.svg', // swiped / berührt
+      swipe_left: 'swipe-left.svg', // swiped / berührt
+      swipe_right: 'swipe-right.svg', // swiped / berührt
+      swipe_top_left_to_bottom_right: 'swipe-top-left-to-bottom-right.svg', // swiped / berührt
+      swipe_top_right_to_bottom_left: 'swipe-top-right-to-bottom-left.svg', // swiped / berührt
+      swipe_bottom_left_to_top_right: 'swipe-bottom-left-to-top-right.svg', // swiped / berührt
+      swipe_bottom_right_to_top_left: 'swipe-bottom-right-to-top-left.svg', // swiped / berührt
     },
   },
   climatecontrol: {
     level: {
-      comfort: 'climatecontrol_comfort.png',
-      schedule: 'climatecontrol_schedule.png',
-      energySave: 'climatecontrol_energysave.png',
-      frostProtection: 'climatecontrol_frostprotection.png',
-      default: 'climatecontrol_default.png',
+      comfort: 'climatecontrol_comfort.svg',
+      schedule: 'climatecontrol_schedule.svg',
+      energySave: 'climatecontrol_energysave.svg',
+      frostProtection: 'climatecontrol_frostprotection.svg',
+      default: 'climatecontrol_default.svg',
     },
   },
   valve: {
     level: {
-      on: 'valve-on.png',
-      off: 'valve-off.png',
+      on: 'valve-on.svg',
+      off: 'valve-off.svg',
     },
   },
   // deviceType: {
