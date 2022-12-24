@@ -786,7 +786,7 @@ SOFTWARE.
 MIT
 MIT License
 
-Copyright (c) 2019-2020 Netanel Basal, Shahar Kazaz, and Itay Oded.
+Copyright (c) 2019-2021 Netanel Basal, Shahar Kazaz, and Itay Oded.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -1407,6 +1407,8 @@ Apache-2.0
 
 @taiga-ui/kit
 Apache-2.0
+
+@taiga-ui/styles
 
 @tinkoff/ng-dompurify
 Apache-2.0
