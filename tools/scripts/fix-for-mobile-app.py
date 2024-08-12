@@ -1,3 +1,17 @@
+#!/usr/bin/python
+#
+# This file is part of Z-Way project
+#
+# Created by Alexei Itskovich
+#
+# Copyright (C) 2022 Z-Wave.Me
+# All rights reserved
+# info@z-wave.me
+#
+# This source file is subject to the terms and conditions of the
+# Z-Wave.Me Software License Agreement which restricts the manner
+# in which it may be used.
+
 import glob
 import re
 
