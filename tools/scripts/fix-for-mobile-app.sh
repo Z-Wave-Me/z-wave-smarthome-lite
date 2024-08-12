@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-python ./tools/scripts/fix-for-mobyle-app.py
+python ./tools/scripts/fix-for-mobile-app.py
 
 DIST="./dist/apps/lite/"
 FILE=$(find $DIST -name "main.*.js")

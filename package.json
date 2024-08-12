@@ -13,7 +13,7 @@
     "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s",
     "prebuild": "npm version patch",
     "build": "nx build",
-    "postbuild": "bash ./tools/scripts/fix-for-mobyle-app.sh",
+    "postbuild": "bash ./tools/scripts/fix-for-mobile-app.sh",
     "buildsize": "nx build --stats-json --prod=false && npm run postbuild",
     "testbuild": "nx build && npm run postbuild",
     "stats": "webpack-bundle-analyzer dist/apps/lite/stats.json",
